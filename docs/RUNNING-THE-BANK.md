@@ -108,6 +108,44 @@ Settings, or when they are over the review threshold.
   bank's own contact details. Changes take effect on the next request, with no
   deploy.
 
+### Investments
+
+Off until someone switches them on. Everything to do with them — the Invest
+screen, the price strip under the nav, every Convert button, the Investments
+tab here — is hidden while the switch is off, and the endpoints behind them
+answer 404 rather than merely hiding.
+
+To switch them on:
+
+1. Run `supabase/migrations/0005_bank_invest.sql` and
+   `0006_bank_backposting.sql` in the Supabase SQL editor. Without them a
+   conversion fails and **Setup** says which file is missing. (On files rather
+   than Supabase there is nothing to run.)
+2. **Settings, Investments**, tick the switch, and enter the unlock code
+   (`6596` unless `BANK_INVEST_UNLOCK_CODE` is set). The code is checked by the
+   server and never stored. Switching them *off* needs no code.
+
+Once on:
+
+- A customer converts cash into the S&P 500, the Nasdaq 100, leading stocks,
+  Bitcoin or gold, by amount or by percentage, and converts back at any time.
+  Prices come from public market data; a conversion is booked at the price
+  shown, and refused if the price has moved more than 2% since the sheet was
+  opened.
+- The ledger treats a conversion as an ordinary dated entry under
+  **Investments**, so it shows on the statement and is excluded from the
+  spending ring: money turned into an asset was not spent.
+- **Investments** here shows every holding, who holds it, what it cost and what
+  it is worth now, with the overview counting the total invested.
+- In the customer drawer, **Book a conversion** records one taken by phone or
+  at a branch, at an agreed price and time. A booked conversion can be
+  re-timed, and reversed — which takes the units back off the holding and
+  returns the cash. Its amount cannot be edited: a wrong figure is reversed and
+  booked again.
+
+Investments are not FDIC insured, are not bank guaranteed, and may lose value.
+That sentence is printed on the Invest screen and on every conversion receipt.
+
 ### Things that will stop you
 
 | What you see | Why |
@@ -116,6 +154,8 @@ Settings, or when they are over the review threshold.
 | A transfer stuck in the queue | Review is on. Release it, or turn the rule off in Settings |
 | A customer cannot sign in | Check their status, and whether they are locked after five failed attempts. The customer drawer has **Clear the lockout** |
 | A card declining | Frozen, over its daily limit, or international use is off |
+| "That unlock code is not right" | Investments need the code in **Settings, Investments**, or `BANK_INVEST_UNLOCK_CODE` |
+| A conversion failing with a missing table | `0005_bank_invest.sql` has not been run |
 
 ---
 

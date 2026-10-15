@@ -134,6 +134,9 @@ come next.
    | [`supabase/migrations/0001_init.sql`](../supabase/migrations/0001_init.sql) | `admins`, `is_admin()`, `enquiries`, `applications`, `chat_sessions`, `chat_messages`, the activity trigger and the realtime publication |
    | [`supabase/migrations/0002_email.sql`](../supabase/migrations/0002_email.sql) | `email_threads`, `email_messages` (skip if you are not receiving mail) |
    | [`supabase/migrations/0003_bank.sql`](../supabase/migrations/0003_bank.sql) | The banking application: customers, accounts, the ledger, transfers, cards, documents, alerts, the activity log, sessions and settings |
+   | [`supabase/migrations/0004_bank_sms.sql`](../supabase/migrations/0004_bank_sms.sql) | Text delivery recorded beside the email it went out with |
+   | [`supabase/migrations/0005_bank_invest.sql`](../supabase/migrations/0005_bank_invest.sql) | Investments: `bank_holdings`, `bank_trades`, `bank_market_quotes`. Only needed if investments are switched on |
+   | [`supabase/migrations/0006_bank_backposting.sql`](../supabase/migrations/0006_bank_backposting.sql) | A trade booked, re-timed or reversed by staff |
 
    Everything is behind row level security. `enquiries` has no anon policy at all:
    writes arrive through the API using the service role.

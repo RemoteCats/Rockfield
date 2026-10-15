@@ -332,6 +332,50 @@ async function reverse(transactionId, { reason = 'Reversed', actor = 'system', a
   return transaction;
 }
 
+/**
+ * Entries that moved the balance. A reversed entry did post - its money moved
+ * and was then moved back by the reversal, which is its own posted entry - so
+ * both count, and they cancel. Counting only 'posted' would drop the original
+ * and keep the reversal, leaving the running balances off by that amount.
+ */
+const COUNTED = ['posted', 'reversed'];
+
+/**
+ * Recompute the running "balance after" on every entry of an account, in value
+ * date order.
+ *
+ * balance_after is written once, when an entry posts, as the balance at that
+ * moment. Back-dating an entry - a walk-in deposit booked after the fact, a
+ * conversion recorded once the network came back - puts it before entries that
+ * were written earlier, and their running balances no longer add up. This
+ * walks the account from its first entry to its last and rewrites only the
+ * figures that changed. The account balance itself is the anchor and is not
+ * touched: back-dating changes when money moved, not how much there is.
+ */
+async function restate(accountId) {
+  return withLock(`account:${accountId}`, async () => {
+    const account = await db.accounts.findById(accountId);
+    if (!account) return 0;
+    const rows = (await db.transactions.find({ account_id: accountId }, { order: 'date.asc' }))
+      .filter((t) => COUNTED.includes(t.status))
+      .sort((a, b) => (a.date === b.date
+        ? String(a.created_at || '').localeCompare(String(b.created_at || ''))
+        : String(a.date || '').localeCompare(String(b.date || ''))));
+    const delta = (t) => signFor(account.type, t.direction) * Number(t.amount || 0);
+    let running = Number(account.balance || 0) - rows.reduce((sum, t) => sum + delta(t), 0);
+    let changed = 0;
+    for (const t of rows) {
+      running += delta(t);
+      if (Number(t.balance_after) !== running) {
+        // eslint-disable-next-line no-await-in-loop
+        await db.transactions.update(t.id, { balance_after: running });
+        changed += 1;
+      }
+    }
+    return changed;
+  });
+}
+
 /** Charge a fee against an account, if the amount is non-zero. */
 async function charge(accountId, cents, description, extra = {}) {
   if (!cents) return null;
@@ -471,6 +515,8 @@ function recentPeriods(count = 12, from = new Date()) {
 }
 
 module.exports = {
+  COUNTED,
+  restate,
   post,
   postMany,
   settle,

@@ -124,6 +124,9 @@ public/
   assets/bank/              generated placeholder artwork
 
 supabase/migrations/0003_bank.sql    the banking schema
+supabase/migrations/0004_bank_sms.sql       text delivery, beside the email
+supabase/migrations/0005_bank_invest.sql    holdings, trades, cached prices
+supabase/migrations/0006_bank_backposting.sql   a trade booked, re-timed or reversed by staff
 scripts/seed-bank.js                 npm run seed
 test/bank.test.js                    end-to-end API tests
 test/bank-browser.test.js            the same flows through a real browser
@@ -231,8 +234,10 @@ directory to start over.
 
 ### With Supabase
 
-1. Apply `supabase/migrations/0001_init.sql`, `0002_email.sql` and
-   `0003_bank.sql` in the SQL editor.
+1. Apply `supabase/migrations/0001_init.sql`, `0002_email.sql`,
+   `0003_bank.sql` and `0004_bank_sms.sql` in the SQL editor. Add
+   `0005_bank_invest.sql` and `0006_bank_backposting.sql` if you are going to
+   switch investments on.
 2. Set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` (and `SUPABASE_ANON_KEY`
    for the chat widget and the desk).
 3. Start the server. The first request seeds the bank if it is empty.
@@ -282,6 +287,8 @@ public demonstration.
 | `BANK_LOGIN_RATE_LIMIT` | Sign-in attempts per five minutes (20) |
 | `BANK_COOKIE_INSECURE` | `1` when serving over plain HTTP locally |
 | `BANK_SHOW_DEV_CODES` | `1` exposes one-time codes and the demo logins on a deployment |
+| `BANK_INVEST_UNLOCK_CODE` | The code the console asks for before investments can be switched on (`6596`) |
+| `MARKET_DATA_FIXTURE` | `1` serves fixed prices instead of calling a provider. For tests |
 | `SUPABASE_*`, `RESEND_*`, `FORM_*` | As in `.env.example` |
 
 Anything an operator should be able to change without a deploy — limits, fees,

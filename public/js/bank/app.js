@@ -115,8 +115,16 @@
     });
   }
 
+  /**
+   * One account, as a tile.
+   *
+   * The whole tile is the link to the account, laid over it rather than
+   * wrapped around it: a nested <a> is invalid, and the Convert and Transfer
+   * shortcuts are links of their own.
+   */
   const accountTile = (account) => `
-    <a class="rf-acct ${account.isCredit ? 'credit' : ''}" href="/accounts?id=${esc(account.id)}">
+    <div class="rf-acct ${account.isCredit ? 'credit' : ''}">
+      <a class="hs-acct-link" href="/accounts?id=${esc(account.id)}" aria-label="${esc(account.nickname || account.name)} details"></a>
       <div class="top">
         <strong>${esc(account.nickname || account.name)}</strong>
         ${account.status === 'active' ? '' : badge(account.status)}
@@ -129,12 +137,42 @@
     : `<span>${money(account.availableBalance)} available</span>`}
         ${account.holdAmount ? `<span>${money(account.holdAmount)} on hold</span>` : ''}
       </div>
-    </a>`;
+      ${account.isCredit || account.status !== 'active' ? '' : `<div class="hs-acct-actions">
+        <a href="/transfers?from=${esc(account.id)}">Transfer</a>
+        <a href="/invest?from=${esc(account.id)}" class="is-primary rf-invest-only">Convert</a>
+      </div>`}
+    </div>`;
 
   /* ---------------------------------------------------------- dashboard -- */
 
   async function dashboard() {
     const data = await api.get('/overview');
+
+    // Investments fill in beside the rest: a slow price feed never holds up a
+    // balance, and the card is not there at all when investments are off.
+    const investBox = qs('[data-dash-invest]');
+    if (investBox && document.documentElement.classList.contains('rf-invest-on')) {
+      api.get('/invest').then((inv) => {
+        if (!inv.holdings.length) {
+          investBox.innerHTML = '<strong>$0.00</strong><small>Turn part of your balance into the S&amp;P 500, Bitcoin, gold or leading stocks, in one tap.</small>';
+          return;
+        }
+        const L = window.HSAssets || { logo: () => '', color: () => 'var(--rf-navy)' };
+        const total = inv.totals.value || 1;
+        const rows = inv.holdings.map((h) => ({ ...h, share: h.value == null ? 0 : (h.value / total) * 100 }));
+        const pct = (n) => `${n >= 0 ? '+' : ''}${Number(n).toFixed(2)}%`;
+        investBox.innerHTML = `<strong>${money(inv.totals.value)}</strong>
+          <small>${inv.holdings.length} asset${inv.holdings.length === 1 ? '' : 's'} &middot; cost ${money(inv.totals.cost)} &middot; <span class="rf-amt ${inv.totals.gain >= 0 ? 'credit' : 'debit'}">${inv.totals.gain >= 0 ? '+' : '-'}${money(Math.abs(inv.totals.gain))}${inv.totals.gainPct == null ? '' : ` (${pct(inv.totals.gainPct)})`}</span> all time</small>
+          <div class="hs-alloc" role="img" aria-label="${esc(rows.map((h) => `${h.name} ${h.share.toFixed(0)}%`).join(', '))}">
+            ${rows.map((h) => `<span style="width:${Math.max(h.share, 1.5).toFixed(2)}%;background:${L.color(h.symbol)}" title="${esc(h.name)} ${h.share.toFixed(1)}%"></span>`).join('')}
+          </div>
+          <ul class="rf-list hs-dash-holdings">${rows.map((h) => `<li>
+            ${L.logo(h.symbol, 34, h.name)}
+            <span class="n"><b>${esc(h.name)}</b><em>${esc(h.units)} ${esc(h.symbol)} &middot; ${h.share.toFixed(1)}% of portfolio</em></span>
+            <span class="v">${h.value == null ? '&mdash;' : money(h.value)}<em class="${(h.gain || 0) >= 0 ? 'up' : 'down'}">${h.gain == null ? '' : `${h.gain >= 0 ? '+' : '-'}${money(Math.abs(h.gain))}${h.gainPct == null ? '' : ` (${pct(h.gainPct)})`}`}</em>${h.dayChangePct == null ? '' : `<em class="day ${h.dayChangePct >= 0 ? 'up' : 'down'}">${pct(h.dayChangePct)} today</em>`}</span>
+          </li>`).join('')}</ul>`;
+      }).catch(() => { investBox.innerHTML = '<strong>&mdash;</strong><small>Prices could not be loaded just now.</small>'; });
+    }
 
     const heading = qs('.rf-top h1');
     if (heading && data.user) {

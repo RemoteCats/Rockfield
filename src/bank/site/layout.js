@@ -210,6 +210,14 @@ const NAV = [
     ],
   },
   {
+    // Hidden until investments are switched on at the console; core.js puts
+    // rf-invest-on on the root element and the CSS reveals this group.
+    group: 'Wealth', investOnly: true,
+    items: [
+      { href: '/invest', label: 'Invest', icon: 'chart', key: 'invest' },
+    ],
+  },
+  {
     group: 'Account',
     items: [
       { href: '/cards', label: 'Cards', icon: 'card', key: 'cards' },
@@ -223,7 +231,7 @@ const NAV = [
 
 function sidebar(active) {
   const groups = NAV.map((group) => `
-        <div class="rf-nav-group">
+        <div class="rf-nav-group${group.investOnly ? ' rf-invest-only' : ''}">
           <h6>${group.group}</h6>
           ${group.items.map((item) => `<a href="${item.href}"${item.key === active ? ' class="is-active"' : ''}>${icon(item.icon)}<span>${item.label}</span>${item.pip ? `<em class="rf-pip rf-hide" data-pip="${item.pip}"></em>` : ''}</a>`).join('\n          ')}
         </div>`).join('');
@@ -305,6 +313,7 @@ function appPage({ title, description, heading, sub, active, content, extraScrip
           <a class="rf-icon-btn" href="/profile" aria-label="Profile"><span class="rf-avatar sm" data-user-avatar>RF</span></a>
         </div>
       </header>
+${ticker()}
       <main class="rf-content${wide ? '' : ''}" id="rf-content">
         <div class="rf-notice rf-hide" data-announcement></div>
 ${content}
@@ -313,9 +322,20 @@ ${tabbar(active)}
     </div>
   </div>
   <div class="rf-toasts" id="rf-toasts"></div>`,
-    scripts(['/js/bank/core.js', ...extraScripts]),
+    scripts(['/js/bank/core.js', '/js/asset-logos.js', '/js/assets.js', '/js/ticker.js', ...extraScripts]),
   ].join('\n');
 }
+
+/**
+ * The live price strip under the header. Hidden until /js/ticker.js has
+ * prices to put in it, which it only asks for when investments are on.
+ */
+const ticker = () => `
+  <div class="hs-ticker" data-hs-ticker hidden role="region" aria-label="Live market prices">
+    <span class="hs-ticker-live"><i></i>Live</span>
+    <div class="hs-ticker-window"><div class="hs-ticker-track" data-hs-ticker-track></div></div>
+    <a class="hs-ticker-cta" href="/invest">Convert &rarr;</a>
+  </div>`;
 
 /** The sign-in shell: a panel on the right, the bank's case on the left. */
 function authPage({ title, description, content, extraScripts = [] }) {

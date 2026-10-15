@@ -49,6 +49,9 @@ process.env.BANK_COOKIE_INSECURE = '1';
 process.env.BANK_RATE_LIMIT_MAX = '5000';
 process.env.BANK_LOGIN_RATE_LIMIT = '500';
 process.env.CHAT_NOTIFY = 'off';
+// Fixed prices: the Invest screen must not need a market to be open, or this
+// machine to reach one.
+process.env.MARKET_DATA_FIXTURE = '1';
 delete process.env.RESEND_API_KEY;
 delete process.env.SUPABASE_URL;
 delete process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -213,6 +216,52 @@ const IGNORE = /fonts\.googleapis|fonts\.gstatic|ERR_CONNECTION_RESET|ERR_NAME_N
       ok(`all ${screens.length} account screens render their data`);
     }
 
+    /* ---- 4b. investments, once switched on: convert, hold, and sell back ---- */
+    {
+      await require(path.join(ROOT, 'src/bank/settings')).save({ investEnabled: true });
+
+      // The session carries the switch, so the pages need re-loading to see it.
+      await page.goto(`${base}/dashboard`, { waitUntil: 'domcontentloaded' });
+      await page.waitForSelector('html.rf-invest-on', { timeout: 20000 });
+      await page.waitForFunction(() => {
+        const box = document.querySelector('[data-dash-invest]');
+        return box && !/Loading/i.test(box.textContent);
+      }, null, { timeout: 20000 });
+      assert.ok(await page.isVisible('[data-hs-ticker]'), 'the price ticker is on the page');
+      assert.ok(await page.isVisible('[data-accounts] .hs-acct-actions a[href^="/invest"]'), 'each account offers Convert');
+
+      await page.goto(`${base}/invest`, { waitUntil: 'domcontentloaded' });
+      await page.waitForSelector('[data-inv-assets] .hs-asset', { timeout: 20000 });
+      const listed = await page.$$eval('[data-inv-assets] .hs-asset', (n) => n.length);
+      assert.ok(listed >= 6, `every listed asset is offered (${listed})`);
+      const cash = money(await page.textContent('[data-inv="cash"]'));
+      assert.ok(cash > 0, 'the cash it can convert is shown');
+
+      // Convert $250.00 of the S&P 500 through the sheet.
+      await page.click('[data-inv-quick]');
+      await page.waitForSelector('#inv-amount', { timeout: 20000 });
+      await page.fill('#inv-amount', '250.00');
+      await page.waitForFunction(() => {
+        const btn = document.querySelector('.hs-sheet [data-submit]');
+        return btn && !btn.disabled;
+      }, null, { timeout: 20000 });
+      await page.click('.hs-sheet [data-submit]');
+      await page.waitForSelector('.hs-receipt', { timeout: 20000 });
+      const receipt = await page.textContent('.hs-receipt');
+      assert.match(receipt, /250\.00/, 'the receipt names what was converted');
+      await page.click('.hs-sheet [data-close-modal]');
+
+      await page.waitForFunction(() => {
+        const rows = document.querySelectorAll('[data-inv-holdings] tr');
+        return rows.length && !/Loading/i.test(rows[0].textContent);
+      }, null, { timeout: 20000 });
+      const holdings = await page.$$eval('[data-inv-holdings] tr', (n) => n.map((r) => r.textContent));
+      assert.ok(holdings.some((t) => /SPY/.test(t)), 'the holding is listed');
+      const value = money(await page.textContent('[data-inv="value"]'));
+      assert.ok(value > 240 && value < 260, `the portfolio is worth about what it cost ($${value.toFixed(2)})`);
+      ok(`invest: $250.00 converted in the browser, ${listed} assets listed, portfolio $${value.toFixed(2)}`);
+    }
+
     /* ---- 5. the staff console registers a customer and adjusts a balance ---- */
     {
       const staffContext = await browser.newContext({ viewport: { width: 1500, height: 1000 } });
@@ -225,7 +274,7 @@ const IGNORE = /fonts\.googleapis|fonts\.gstatic|ERR_CONNECTION_RESET|ERR_NAME_N
       ok('an administrator lands on the console');
 
       // Every tab loads.
-      for (const tab of ['customers', 'queue', 'deposits', 'cards', 'messages', 'alerts', 'disputes', 'activity', 'settings']) {
+      for (const tab of ['customers', 'queue', 'deposits', 'cards', 'messages', 'alerts', 'disputes', 'activity', 'investments', 'settings']) {
         await staff.click(`[data-tab="${tab}"]`);
         await staff.waitForTimeout(700);
         const stillLoading = await staff.$$eval(`[data-panel="${tab}"] td`, (nodes) =>
@@ -233,6 +282,19 @@ const IGNORE = /fonts\.googleapis|fonts\.gstatic|ERR_CONNECTION_RESET|ERR_NAME_N
         assert.strictEqual(stillLoading, 0, `the ${tab} tab finished loading`);
       }
       ok('every console tab loads');
+
+      // What the invest test left behind, seen from the console.
+      await staff.click('[data-tab="investments"]');
+      await staff.waitForFunction(() => {
+        const rows = document.querySelectorAll('[data-inv-holdings] tr');
+        return rows.length && !/Loading/i.test(rows[0].textContent);
+      }, null, { timeout: 20000 });
+      const held = await staff.$$eval('[data-inv-holdings] tr', (n) => n.map((r) => r.textContent));
+      assert.ok(held.some((t) => /SPY/.test(t)), 'the customer\'s holding is listed with who holds it');
+      assert.ok(held.some((t) => /demo@/.test(t)), 'and names them');
+      await staff.click('[data-tab="overview"]');
+      await staff.waitForSelector('[data-stat-invested]', { timeout: 20000 });
+      ok(`console: the Investments tab lists ${held.length} holding(s) and the overview counts what is invested`);
 
       // Register a customer with an opening balance.
       await staff.click('[data-tab="register"]');

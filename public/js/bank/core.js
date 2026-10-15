@@ -500,6 +500,12 @@
     state.session = session;
     state.user = session.user || null;
 
+    // Investments are switched on at the console. Off, every Invest link, the
+    // Convert buttons and the ticker stay hidden (bank.css keys off this
+    // class), and the page itself sends people back to the dashboard.
+    const investOn = Boolean(session.investEnabled);
+    document.documentElement.classList.toggle('rf-invest-on', investOn);
+
     if (isApp) {
       if (!session.authenticated) {
         const next = encodeURIComponent(location.pathname + location.search);
@@ -514,6 +520,10 @@
       // customer who follows a link sees the dashboard rather than a wall of
       // 403s.
       if (location.pathname.startsWith('/console') && session.user.role !== 'admin') {
+        location.replace('/dashboard');
+        return new Promise(() => {});
+      }
+      if (!investOn && location.pathname.startsWith('/invest')) {
         location.replace('/dashboard');
         return new Promise(() => {});
       }

@@ -66,9 +66,38 @@ const PROBES = [
   // Probed separately so the answer names the file that actually adds these,
   // rather than sending somebody back to 0003 where they are not.
   { table: 'bank_alerts', key: 'bank_alerts.sms', columns: 'id,sms_status,sms_error', migration: '0004_bank_sms.sql' },
+  // Converting balances into listed assets. Only probed where investments
+  // are switched on: a bank that does not offer them has no reason to carry
+  // the tables, and a warning about a feature nobody uses is noise.
+  ...[
+    ['bank_holdings', 'id,user_id,symbol,units,cost_basis,updated_at'],
+    ['bank_trades', 'id,created_at,user_id,account_id,symbol,side,units,price,amount,realized_gain,reference,quote_source'],
+    ['bank_market_quotes', 'id,symbol,price,previous_close,change,change_pct,source,as_of,fetched_at'],
+  ].map(([table, columns]) => ({ table, columns, migration: '0005_bank_invest.sql', neededWhen: investOn })),
+  {
+    table: 'bank_trades', key: 'bank_trades.staff', columns: 'id,status,reversed_at,booked_by,note',
+    migration: '0006_bank_backposting.sql', neededWhen: investOn,
+  },
 ];
 
+/*
+ * Whether investments are switched on, as last read.
+ *
+ * The probe list is built once at load and `neededWhen` is called
+ * synchronously, so this cannot await the settings row. probeSchema refreshes
+ * it before each sweep, which is the only place it is read.
+ */
+let investEnabledSeen = false;
+// A declaration, not an arrow: PROBES is built at load and reads this
+// reference while doing it, which a const would still be in the dead zone of.
+function investOn() { return investEnabledSeen; }
+
 async function probeSchema() {
+  try {
+    investEnabledSeen = Boolean((await require('../bank/settings').get()).investEnabled);
+  } catch (err) {
+    investEnabledSeen = false;
+  }
   const supabase = getSupabase();
   if (!supabase) return null;
 

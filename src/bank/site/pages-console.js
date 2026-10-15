@@ -26,6 +26,7 @@ const content = `
           <button data-tab="alerts">Email alerts</button>
           <button data-tab="disputes">Claims</button>
           <button data-tab="activity">Activity log</button>
+          <button data-tab="investments" class="rf-invest-only">Investments</button>
           <button data-tab="settings">Settings</button>
         </div>
 
@@ -362,6 +363,32 @@ const content = `
         </section>
 
         <!-- ---------------------------------------------------- settings -- -->
+        <!-- ------------------------------------------------- investments -- -->
+        <section data-panel="investments" hidden>
+          <div class="rf-grid cols-4 rf-mb" data-inv-stats></div>
+          <div class="rf-grid side">
+            <section class="rf-card">
+              <div class="rf-card-head"><h3>Holdings</h3><div class="rf-card-actions rf-small rf-muted">valued at live prices</div></div>
+              <div class="rf-table-wrap">
+                <table class="rf-table">
+                  <thead><tr><th>Customer</th><th>Asset</th><th class="num">Units</th><th class="num opt">Cost</th><th class="num">Value</th><th class="num">Gain / loss</th></tr></thead>
+                  <tbody data-inv-holdings><tr><td colspan="6" class="rf-center rf-muted">Loading&hellip;</td></tr></tbody>
+                </table>
+              </div>
+            </section>
+            <div class="rf-stack">
+              <section class="rf-card">
+                <div class="rf-card-head"><h3>By asset</h3></div>
+                <ul class="rf-list" data-inv-assets><li class="rf-muted rf-small">Loading&hellip;</li></ul>
+              </section>
+              <section class="rf-card">
+                <div class="rf-card-head"><h3>Latest conversions</h3></div>
+                <ul class="rf-list" data-inv-trades><li class="rf-muted rf-small">Loading&hellip;</li></ul>
+              </section>
+            </div>
+          </div>
+        </section>
+
         <section data-panel="settings" hidden>
           <form id="rf-settings-form">
             <div class="rf-grid cols-2">
@@ -401,6 +428,18 @@ const content = `
                   <div class="rf-switch"><span class="t">Hold outside transfers for review<small>Nothing leaves until someone here releases it.</small></span><input type="checkbox" name="holdTransfersForReview" /></div>
                   <div class="rf-switch"><span class="t">Maintenance mode<small>Shows a banner across the site.</small></span><input type="checkbox" name="maintenanceMode" /></div>
                   <div class="rf-field rf-mt"><label for="st-hold">Always review above</label><input class="rf-input" id="st-hold" name="holdThresholdCents" inputmode="decimal" /></div>
+                </div>
+              </section>
+
+              <section class="rf-card">
+                <div class="rf-card-head"><h3>Investments</h3></div>
+                <div class="rf-card-body">
+                  <div class="rf-switch"><span class="t">Investments and Convert to assets<small>The Invest page, every Convert button, the price ticker and the Investments tab here. Off by default.</small></span><input type="checkbox" name="investEnabled" /></div>
+                  <div class="rf-field rf-mt" data-invest-code>
+                    <label for="st-invest-code">Unlock code</label>
+                    <input class="rf-input" id="st-invest-code" name="investUnlockCode" type="password" inputmode="numeric" autocomplete="off" placeholder="Needed to switch investments on" />
+                    <div class="hint">Switching investments off needs no code. The code is checked by the server and never stored.</div>
+                  </div>
                 </div>
               </section>
 

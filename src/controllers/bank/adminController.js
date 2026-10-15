@@ -615,6 +615,12 @@ const updateTransaction = asyncHandler(async (req, res) => {
   if (!Object.keys(patch).length) throw fail(400, 'Nothing to change.');
 
   await db.transactions.update(tx.id, patch);
+  // A conversion's entry and its trade are one event: moving the entry without
+  // the trade would leave the holding dated to a time the cash never left.
+  if (patch.date) {
+    const trade = await db.trades.findOne({ transaction_id: tx.id }).catch(() => null);
+    if (trade) await db.trades.update(trade.id, { created_at: patch.date });
+  }
   await audit.log({
     action: 'admin.transaction_updated', category: 'admin', userId: tx.user_id, req,
     actor: actorOf(req), detail: `Amended entry ${tx.reference} (${Object.keys(patch).join(', ')})`,
@@ -633,7 +639,15 @@ const settleTransaction = asyncHandler(async (req, res) => {
   if (action === 'post') result = await ledger.settle(tx.id, { status: 'posted', note: trimmed(req.body.note, 200) });
   else if (action === 'fail') result = await ledger.settle(tx.id, { status: 'failed', note: trimmed(req.body.note, 200) });
   else if (action === 'reverse') {
-    result = await ledger.reverse(tx.id, { reason: trimmed(req.body.note, 200) || 'Reversed by the bank', actor: 'admin', actorId: req.bankUser.id });
+    // Reversing a conversion's cash alone would leave the customer holding
+    // units they no longer paid for. Undo the whole trade instead.
+    const trade = await db.trades.findOne({ transaction_id: tx.id }).catch(() => null);
+    if (trade) {
+      await require('../../bank/invest').reverseTrade(trade.id, req.bankUser, trimmed(req.body.note, 200), req);
+      result = await db.transactions.findById(tx.id);
+    } else {
+      result = await ledger.reverse(tx.id, { reason: trimmed(req.body.note, 200) || 'Reversed by the bank', actor: 'admin', actorId: req.bankUser.id });
+    }
   } else throw fail(400, 'Unknown action.');
 
   await audit.log({
@@ -1086,10 +1100,44 @@ const getSettings = asyncHandler(async (req, res) => {
   });
 });
 
+/**
+ * The code that unlocks investments. BANK_INVEST_UNLOCK_CODE overrides the
+ * one the bank ships with, so a deployment can change it without a release.
+ */
+const investUnlockCode = () => String(process.env.BANK_INVEST_UNLOCK_CODE || '6596').trim();
+
+function codeMatches(given) {
+  const a = Buffer.from(String(given || '').trim());
+  const b = Buffer.from(investUnlockCode());
+  return a.length === b.length && require('crypto').timingSafeEqual(a, b);
+}
+
 const updateSettings = asyncHandler(async (req, res) => {
-  const incoming = req.body || {};
+  const incoming = { ...(req.body || {}) };
   if (incoming.routingNumber && !ids.validateRouting(incoming.routingNumber)) {
     throw fail(400, 'That routing number does not pass the ABA checksum.');
+  }
+  // Investments stay off until someone with the unlock code turns them on.
+  // Turning them off needs no code. The code itself is never saved.
+  const code = incoming.investUnlockCode;
+  delete incoming.investUnlockCode;
+  if ('investEnabled' in incoming) {
+    const want = incoming.investEnabled === true || incoming.investEnabled === 'true';
+    const current = Boolean((await settingsLib.get()).investEnabled);
+    if (want && !current && !codeMatches(code)) {
+      await audit.log({
+        action: 'admin.invest_unlock_refused', category: 'admin', req, severity: 'warning',
+        actor: actorOf(req), detail: 'Wrong or missing unlock code for investments',
+      });
+      throw fail(403, 'That unlock code is not right. Investments stay off.');
+    }
+    incoming.investEnabled = want;
+    if (want !== current) {
+      await audit.log({
+        action: want ? 'admin.invest_enabled' : 'admin.invest_disabled', category: 'admin', req, severity: 'notice',
+        actor: actorOf(req), detail: want ? 'Investments switched on' : 'Investments switched off',
+      });
+    }
   }
   const saved = await settingsLib.save(incoming);
   await audit.log({

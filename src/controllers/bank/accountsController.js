@@ -352,9 +352,11 @@ const overview = asyncHandler(async (req, res) => {
   const totalDeposits = deposits.reduce((s, a) => s + Number(a.balance || 0), 0);
   const totalOwed = credit.reduce((s, a) => s + Number(a.balance || 0), 0);
 
-  // Last 30 days, by category, for the spending ring.
+  // Last 30 days, by category, for the spending ring. Money moved between
+  // accounts was never spent, and nor was money turned into an asset: both
+  // would read as spending the customer cannot account for.
   const since = new Date(Date.now() - 30 * 86400000).toISOString();
-  const recentSpend = allTx.filter((t) => t.direction === 'debit' && t.date >= since && t.status !== 'failed' && t.category !== 'Transfers');
+  const recentSpend = allTx.filter((t) => t.direction === 'debit' && t.date >= since && t.status !== 'failed' && t.category !== 'Transfers' && t.category !== 'Investments');
   const byCategory = {};
   recentSpend.forEach((t) => { byCategory[t.category] = (byCategory[t.category] || 0) + Number(t.amount); });
   const spending = Object.entries(byCategory)
