@@ -24,7 +24,7 @@ const seed = require('../src/bank/seed');
   }
 
   console.log('');
-  console.log('  Rockfield National Bank is ready.');
+  console.log('  Rockfield Global Bank is ready.');
   console.log('');
   console.log(`  Administrator   ${result.admin.email}`);
   console.log(`                  ${result.admin.password}`);

@@ -1,7 +1,7 @@
 {
   "name": "rockfield-bank",
-  "version": "1.3.1",
-  "description": "Rockfield National Bank: online banking, staff console and public site",
+  "version": "1.3.2",
+  "description": "Rockfield Global Bank: online banking, staff console and public site",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
@@ -28,7 +28,7 @@
     "online-banking",
     "ledger"
   ],
-  "author": "Rockfield National Bank",
+  "author": "Rockfield Global Bank",
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {

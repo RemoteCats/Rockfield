@@ -963,7 +963,7 @@ module.exports = [
   {
     file: 'signin.html',
     build: authPage,
-    opts: { title: `Sign in | ${BANK.name}`, description: 'Sign in to Rockfield National Bank online banking.', content: signinContent, extraScripts: ['/js/bank/signin.js'] },
+    opts: { title: `Sign in | ${BANK.name}`, description: 'Sign in to Rockfield Global Bank online banking.', content: signinContent, extraScripts: ['/js/bank/signin.js'] },
   },
   {
     file: 'forgot.html',

@@ -13,9 +13,9 @@
 
 /** The institution. Fictional, on a routing prefix the Fed has not assigned. */
 const BANK = {
-  name: 'Rockfield National Bank',
+  name: 'Rockfield Global Bank',
   shortName: 'Rockfield',
-  legalName: 'Rockfield National Bank, N.A.',
+  legalName: 'Rockfield Global Bank, N.A.',
   tagline: 'Banking built on bedrock.',
   // ABA checksum valid: 3(8+2+4)+7(1+6+1)+(9+4+7) = 42+56+20 = 118... see
   // validateRouting() in ids.js, which is what actually enforces this.

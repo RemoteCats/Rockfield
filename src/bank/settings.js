@@ -39,14 +39,30 @@ async function get() {
   } catch (err) {
     console.warn('[rockfield] settings read failed, using defaults:', err.message);
   }
-  cached = deepMerge(DEFAULT_SETTINGS, stored ? stored.values : null);
+  cached = retire(deepMerge(DEFAULT_SETTINGS, stored ? stored.values : null));
   cachedAt = Date.now();
   return cached;
 }
 
+/**
+ * Names the bank used to ship with. The console's Settings form sends the bank
+ * name on every save, so a deployment whose settings were saved before the
+ * rename holds the old default as though someone had chosen it, and it would
+ * go on outranking the new one. A value that is exactly a retired default is
+ * read as the default; a name somebody actually typed is left alone.
+ */
+const RETIRED = { bankName: ['Rockfield National Bank'] };
+
+function retire(values) {
+  Object.entries(RETIRED).forEach(([key, olds]) => {
+    if (olds.includes(values[key])) values[key] = DEFAULT_SETTINGS[key];
+  });
+  return values;
+}
+
 async function save(patch) {
   const current = await get();
-  const values = deepMerge(current, patch);
+  const values = retire(deepMerge(current, patch));
   const existing = await db.settings.findById(ROW_ID);
   if (existing) {
     await db.settings.update(ROW_ID, { values, updated_at: new Date().toISOString() });

@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Rockfield National Bank server entry point.
+ * Rockfield Global Bank server entry point.
  * Boots the HTTP server and wires graceful shutdown.
  */
 

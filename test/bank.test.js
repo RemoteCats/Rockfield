@@ -591,6 +591,17 @@ const dollars = (cents) => (cents / 100).toFixed(2);
       assert.strictEqual(unlocked.body.settings.investEnabled, true);
       assert.ok(!('investUnlockCode' in unlocked.body.settings), 'the code itself is never stored');
       ok('settings: investments stay off until the unlock code is given');
+
+      // A name saved before the rename reads as the new default; a chosen one stands.
+      const settingsLib = require(path.join(ROOT, 'src/bank/settings'));
+      await admin.put('/api/bank/admin/settings', { bankName: 'Rockfield National Bank' });
+      settingsLib.invalidate();
+      assert.strictEqual((await settingsLib.get()).bankName, 'Rockfield Global Bank', 'the old shipped name gives way');
+      await admin.put('/api/bank/admin/settings', { bankName: 'Rockfield Savings' });
+      settingsLib.invalidate();
+      assert.strictEqual((await settingsLib.get()).bankName, 'Rockfield Savings', 'a name somebody chose is kept');
+      await admin.put('/api/bank/admin/settings', { bankName: 'Rockfield Global Bank' });
+      ok('settings: a bank name saved before the rename gives way to the new one');
     }
 
     /* ---- 20. CSRF and sign-out ---- */

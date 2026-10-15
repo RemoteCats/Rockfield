@@ -461,7 +461,7 @@ const careersContent = `
         <div>
           <span class="rf-eyebrow">Life at ${BANK.shortName}</span>
           <h2>Small enough to know what you changed.</h2>
-          <p class="section-lede">We are a national bank of about 900 people. Nobody here is four layers from a customer: a payments analyst sees the transfer they released land, and whoever changes the ledger sits close enough to the branch to hear when it went wrong. We pay at market, promote from inside, and do not run a graduate scheme that keeps people away from real work for a year.</p>
+          <p class="section-lede">We are a global bank of about 900 people. Nobody here is four layers from a customer: a payments analyst sees the transfer they released land, and whoever changes the ledger sits close enough to the branch to hear when it went wrong. We pay at market, promote from inside, and do not run a graduate scheme that keeps people away from real work for a year.</p>
         </div>
         <div class="rf-card"><div class="rf-card-body">
           <h3 style="font-family:var(--rf-display);margin:0 0 10px">What we offer</h3>
@@ -651,7 +651,7 @@ const deskContent = `
     <div class="admin-shell" id="admin-shell" hidden>
       <header class="admin-bar">
         <a class="admin-brand" href="/">
-          <img src="/assets/bank/logo-light.png" alt="Rockfield National Bank" width="240" height="143" />
+          <img src="/assets/bank/logo-light.png" alt="Rockfield Global Bank" width="240" height="143" />
           <span>Client services desk</span>
         </a>
         <div class="admin-bar-end">
@@ -713,12 +713,12 @@ const marketing = (file, opts) => ({ file, build: marketingPage, opts });
 module.exports = [
   marketing('index.html', {
     title: `${BANK.name} | ${BANK.tagline}`,
-    description: 'Personal and business banking from Rockfield National Bank: no-fee checking, 4.35% APY savings, cards, wires and a 24/7 fraud line. Member FDIC.',
+    description: 'Personal and business banking from Rockfield Global Bank: no-fee checking, 4.35% APY savings, cards, wires and a 24/7 fraud line. Member FDIC.',
     active: '', content: homeContent,
   }),
   marketing('personal.html', {
     title: `Personal banking | ${BANK.name}`,
-    description: 'Checking, savings, certificates and cards from Rockfield National Bank.',
+    description: 'Checking, savings, certificates and cards from Rockfield Global Bank.',
     active: 'personal', content: personalContent,
   }),
   marketing('business.html', {
@@ -728,7 +728,7 @@ module.exports = [
   }),
   marketing('rates.html', {
     title: `Rates and fees | ${BANK.name}`,
-    description: 'Deposit rates and the full fee schedule at Rockfield National Bank.',
+    description: 'Deposit rates and the full fee schedule at Rockfield Global Bank.',
     active: 'rates', content: ratesContent,
   }),
   marketing('security-center.html', {
@@ -743,17 +743,17 @@ module.exports = [
   }),
   marketing('careers.html', {
     title: `Careers | ${BANK.name}`,
-    description: 'Open roles at Rockfield National Bank across retail, payments, financial crime, compliance, lending and technology.',
+    description: 'Open roles at Rockfield Global Bank across retail, payments, financial crime, compliance, lending and technology.',
     active: '', content: careersContent, extraScripts: ['/js/careers.js'],
   }),
   marketing('apply.html', {
     title: `Apply | ${BANK.name}`,
-    description: 'Apply to Rockfield National Bank. One form, read by the people you would work with.',
+    description: 'Apply to Rockfield Global Bank. One form, read by the people you would work with.',
     active: '', content: applyContent, extraScripts: ['/js/apply.js'],
   }),
   marketing('support.html', {
     title: `Support | ${BANK.name}`,
-    description: 'Contact Rockfield National Bank. Client services six days a week and a 24/7 fraud line.',
+    description: 'Contact Rockfield Global Bank. Client services six days a week and a 24/7 fraud line.',
     active: 'support', content: contactContent,
   }),
   marketing('legal.html', {

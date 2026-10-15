@@ -1,4 +1,4 @@
-# Deploying Rockfield National Bank to Vercel
+# Deploying Rockfield Global Bank to Vercel
 
 A step-by-step guide for the workflow: replace the images, fork to your GitHub,
 deploy on Vercel, then switch the backend on.
@@ -262,7 +262,7 @@ While you are there, set the first administrator:
 | `BANK_ENCRYPTION_KEY` | the 64-character hex string from above |
 | `BANK_ADMIN_EMAIL` | the address you will sign in with |
 | `BANK_ADMIN_PASSWORD` | a strong password, changed after the first sign-in |
-| `BANK_ALERT_FROM` | `Rockfield National Bank <alerts@yourdomain.com>` |
+| `BANK_ALERT_FROM` | `Rockfield Global Bank <alerts@yourdomain.com>` |
 | `PUBLIC_BASE_URL` | `https://yourdomain.com`, for links inside alert emails |
 
 **`PUBLIC_BASE_URL` has to be saved as plain text, not Sensitive.** Vercel reads
@@ -299,7 +299,7 @@ for anything real** - they have balances and history that are not yours.
    | ---- | ----- |
    | `RESEND_API_KEY` | the key you copied |
    | `FORM_TO` | where enquiries land (comma-separate for several) |
-   | `FORM_FROM` | `Rockfield National Bank <onboarding@resend.dev>` to start |
+   | `FORM_FROM` | `Rockfield Global Bank <onboarding@resend.dev>` to start |
 
 4. **Redeploy.**
 
@@ -309,7 +309,7 @@ directly. Set `CHAT_NOTIFY=off` to keep enquiry emails but stop chat emails.
 
 For production, verify your domain in Resend (**Domains, Add Domain**, then add the
 DNS records) and change `FORM_FROM` to something like
-`Rockfield National Bank <support@yourdomain.com>`. Mail from a verified domain is far less
+`Rockfield Global Bank <support@yourdomain.com>`. Mail from a verified domain is far less
 likely to be treated as spam.
 
 To text customers as well as email them, add `PINGRAM_API_KEY` and
