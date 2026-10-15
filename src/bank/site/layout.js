@@ -465,7 +465,7 @@ function authPage({ title, description, content, extraScripts = [] }) {
       </ul>
       <div class="rf-auth-foot">
         ${BANK.name} will never call, text or email to ask for your password or a one-time code.<br />
-        Report anything suspicious on <span data-site="fraudPhone">our fraud line</span>.<br />
+        Report anything suspicious to <a href="mailto:${BANK.securityEmail}">${BANK.securityEmail}</a>.<br />
         &copy; ${YEAR} ${BANK.legalName}. Member FDIC. Equal Housing Lender.
       </div>
     </section>
@@ -519,7 +519,7 @@ function marketingFooter() {
       <span class="rf-eyebrow">Ready when you are</span>
       <h2>Open an account in about ten minutes.</h2>
       <span class="rf-rule" aria-hidden="true"></span>
-      <p>No monthly fee on Everyday Checking, 4.35% APY on savings, and a banker who answers when you call.</p>
+      <p>No monthly fee on Everyday Checking, 4.35% APY on savings, and a banker who answers when you write.</p>
       <div class="rf-cta-actions">
         <a class="rf-btn lg light" href="/open-account">Open an account</a>
         <a class="rf-btn lg glass" href="/support">Talk to us</a>
@@ -545,7 +545,6 @@ function marketingFooter() {
           <h5>Support</h5>
           <a href="/support">Help centre</a>
           <a href="/security-center">Security centre</a>
-          <a href="#" data-site-row="phone" data-site="phone" hidden></a>
           <a href="mailto:${BANK.email}">${BANK.email}</a>
         </div>
         <div>

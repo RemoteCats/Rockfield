@@ -291,7 +291,7 @@ const REJECTION_REASONS = [
   { code: 'compliance_review', label: 'Held by compliance review (BSA/AML)' },
   { code: 'ofac_hit', label: 'Sanctions screening requires manual clearance' },
   { code: 'kyc_incomplete', label: 'Identity verification incomplete' },
-  { code: 'fraud_suspected', label: 'Suspected fraud - contact the fraud line' },
+  { code: 'fraud_suspected', label: 'Suspected fraud - contact the bank' },
   { code: 'account_restricted', label: 'Account restricted' },
   { code: 'invalid_routing', label: 'Receiving bank routing number invalid' },
   { code: 'duplicate', label: 'Duplicate of a transfer already submitted' },

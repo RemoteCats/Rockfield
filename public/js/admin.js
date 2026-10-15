@@ -575,7 +575,6 @@
   const SETTINGS_FIELDS = [
     ['address', 'Mailing address', 'text'],
     ['email', 'Email', 'email'],
-    ['phone', 'Telephone', 'tel'],
     ['hours', 'Opening hours', 'text'],
   ];
 

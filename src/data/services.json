@@ -38,7 +38,7 @@
   {
     "id": "payments-and-transfers",
     "title": "Payments and transfers",
-    "summary": "ACH, domestic and international wires, bill pay and instant sends, each with a receipt you can quote down a phone line.",
+    "summary": "ACH, domestic and international wires, bill pay and instant sends, each with a receipt you can quote back to us.",
     "detail": "Every payment carries a confirmation number, and every ACH an actual trace number, so when something goes missing the receiving bank has something to search on. Outgoing payments to a new recipient are reviewed before they leave.",
     "points": [
       "ACH transfers at no charge",
@@ -50,7 +50,7 @@
   {
     "id": "business-banking",
     "title": "Business banking",
-    "summary": "Operating accounts, payroll files, merchant settlement and a treasury team that answers the phone.",
+    "summary": "Operating accounts, payroll files, merchant settlement and a treasury team that answers when you write.",
     "detail": "Business checking with transaction allowances that suit a real operating rhythm, dual approval on outgoing payments, and role-based access so a bookkeeper can reconcile without being able to move money.",
     "points": [
       "Dual approval on outgoing payments",

@@ -26,7 +26,7 @@ function autoReply(text) {
     return 'You can open an account online in about ten minutes. You will need a government ID and your Social Security number. Start at Open an account, or tell me whether it is personal or business and I will point you at the right product.';
   }
   if (has('lost', 'stolen', 'fraud', 'unauthorised', 'unauthorized', 'scam', 'dispute', 'suspicious')) {
-    return 'If you think a card or an account has been compromised, do not wait on chat: call our fraud line, which is listed on the Security centre page and answered around the clock. You can also freeze a card yourself under Cards in online banking.';
+    return 'If you think a card or an account has been compromised, do not wait on chat: freeze the card yourself under Cards in online banking, which takes effect at once, then send us a secure message from Messages so the payments team can look at it.';
   }
   if (has('password', 'locked', 'log in', 'login', 'sign in', 'signin', 'code', 'access')) {
     return 'You can reset a password from the sign-in page under "Forgotten your password?". We will email a one-time code. Never share that code with anyone, including anyone claiming to be from the bank.';

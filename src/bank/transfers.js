@@ -130,7 +130,7 @@ async function validate(user, input) {
   }
   if (amount > cfg.limits.singleTransactionMax) {
     throw Object.assign(
-      new Error(`The most you can send in one transfer is ${money(cfg.limits.singleTransactionMax)}. Call us to arrange a larger payment.`),
+      new Error(`The most you can send in one transfer is ${money(cfg.limits.singleTransactionMax)}. Send us a secure message to arrange a larger payment.`),
       { status: 400 }
     );
   }

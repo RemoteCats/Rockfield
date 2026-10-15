@@ -85,7 +85,7 @@ function enquiryForm(id = 'contact-form', { heading, note } = {}) {
         <div class="honeypot" aria-hidden="true" style="position:absolute;left:-9999px"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
         <div class="form-status rf-small" data-form-status role="status" aria-live="polite"></div>
         <button type="submit" class="rf-btn block" data-submit>Send message</button>
-        <p class="rf-small rf-muted" style="margin:12px 0 0">A banker replies the same business day. For anything urgent, call <strong data-site="phone">our client services desk</strong>.</p>
+        <p class="rf-small rf-muted" style="margin:12px 0 0">A banker replies the same business day. Already a customer? A secure message from online banking reaches us fastest.</p>
       </form>`;
 }
 
@@ -125,7 +125,7 @@ const homeContent = `
         <div><span class="ic">${icon('deposit', 26)}</span><div><div class="v">4.35%</div><div class="k">APY on High-Yield Savings</div></div></div>
         <div><span class="ic">${icon('card', 26)}</span><div><div class="v">$0.00</div><div class="k">Monthly fee on checking</div></div></div>
         <div><span class="ic">${icon('building', 26)}</span><div><div class="v">60,000</div><div class="k">Fee-free ATMs nationwide</div></div></div>
-        <div><span class="ic">${icon('shield', 26)}</span><div><div class="v">24 / 7</div><div class="k">Fraud line, every day</div></div></div>
+        <div><span class="ic">${icon('shield', 26)}</span><div><div class="v">24 / 7</div><div class="k">Fraud monitoring, every day</div></div></div>
       </div>
     </div>
   </section>
@@ -265,12 +265,10 @@ const homeContent = `
       <div class="rf-grid side" style="gap:44px;align-items:start">
         <div>
           <span class="rf-eyebrow">Talk to us</span>
-          <h2>A person on the phone, not a menu.</h2>
+          <h2>A person who answers, not a menu.</h2>
           <dl class="rf-dl" style="max-width:460px">
-            <dt data-site-row="phone" hidden>Phone</dt><dd data-site-row="phone" data-site="phone" hidden></dd>
             <dt>Email</dt><dd><a href="mailto:${site.email}" data-site="email">${site.email}</a></dd>
             <dt data-site-row="hours" hidden>Hours</dt><dd data-site-row="hours" data-site="hours" hidden></dd>
-            <dt data-site-row="fraudPhone" hidden>Fraud, any hour</dt><dd data-site-row="fraudPhone" data-site="fraudPhone" hidden></dd>
             <dt data-site-row="address" hidden>Post</dt><dd data-site-row="address" data-site="address" hidden></dd>
           </dl>
           <div class="rf-notice warn" style="margin-top:22px">
@@ -445,7 +443,7 @@ const securityCentreContent = `
     <div class="wrap">
       <div class="rf-notice bad">
         <div><strong>We will never ask for a one-time code.</strong>
-        Not by phone, not by text, not by email. If anyone asks for a code, a password or your full card number, hang up and call <span data-site="fraudPhone">our fraud line</span>.</div>
+        Not by phone, not by text, not by email. If anyone asks for a code, a password or your full card number, stop, freeze your card under Cards in online banking, and send us a secure message.</div>
       </div>
 
       <h2 style="margin-top:34px">What runs whether you think about it or not.</h2>
@@ -466,10 +464,10 @@ const securityCentreContent = `
         </ol>
       </div></div>
 
-      <h2 style="margin-top:48px">If something is wrong, call first.</h2>
+      <h2 style="margin-top:48px">If something is wrong, tell us first.</h2>
       <div class="rf-grid cols-3">
-        <div class="rf-card rf-stat"><div class="k">Fraud line, 24/7</div><div class="v" style="font-size:20px" data-site="fraudPhone">Open around the clock</div><div class="d">Cards, transfers, anything urgent</div></div>
-        <div class="rf-card rf-stat"><div class="k">General support</div><div class="v" style="font-size:20px" data-site="phone">Six days a week</div><div class="d" data-site="hours">${site.hours}</div></div>
+        <div class="rf-card rf-stat"><div class="k">Freeze a card, any hour</div><div class="v" style="font-size:20px">In online banking</div><div class="d">Cards, then Freeze: it declines at once</div></div>
+        <div class="rf-card rf-stat"><div class="k">Secure message</div><div class="v" style="font-size:16px"><a href="mailto:${site.email}" data-site="email">${site.email}</a></div><div class="d">Or Messages, inside online banking</div></div>
         <div class="rf-card rf-stat"><div class="k">Report a phishing email</div><div class="v" style="font-size:16px">${BANK.securityEmail}</div><div class="d">Forward it; do not click anything in it</div></div>
       </div>
     </div>
@@ -481,7 +479,7 @@ const openAccountContent = `
   ${header({
     eyebrow: 'Open an account',
     title: 'Start the application.',
-    lede: 'Tell us what you need and a banker calls you back the same business day to finish it with you.',
+    lede: 'Tell us what you need and a banker replies the same business day to finish it with you.',
     image: images.openAccountHeader,
   })}
 
@@ -502,7 +500,7 @@ const openAccountContent = `
           </div>
           <p style="margin-top:22px"><a class="rf-btn ghost" href="/rates">See rates and fees first</a></p>
         </div>
-        ${enquiryForm('open-account-form', { heading: 'Tell us what you need', note: 'A banker calls you back the same business day.' })}
+        ${enquiryForm('open-account-form', { heading: 'Tell us what you need', note: 'A banker replies the same business day.' })}
       </div>
     </div>
   </section>`;
@@ -602,7 +600,7 @@ const contactContent = `
   ${header({
     eyebrow: 'Support',
     title: 'Talk to us.',
-    lede: 'Client services six days a week, with a fraud line that never closes.',
+    lede: 'Write to us, or send a secure message from online banking. A banker replies the same business day.',
     image: images.contactHeader,
   })}
 
@@ -611,11 +609,8 @@ const contactContent = `
       <div class="rf-grid side" style="gap:44px;align-items:start">
         <div>
           <dl class="rf-dl" style="max-width:480px">
-            <dt data-site-row="phone" hidden>Phone</dt><dd data-site-row="phone" data-site="phone" hidden></dd>
             <dt>Email</dt><dd><a href="mailto:${site.email}" data-site="email">${site.email}</a></dd>
             <dt data-site-row="hours" hidden>Hours</dt><dd data-site-row="hours" data-site="hours" hidden></dd>
-            <dt data-site-row="fraudPhone" hidden>Fraud, any hour</dt><dd data-site-row="fraudPhone" data-site="fraudPhone" hidden></dd>
-            <dt data-site-row="internationalPhone" hidden>International</dt><dd data-site-row="internationalPhone" data-site="internationalPhone" hidden></dd>
             <dt data-site-row="address" hidden>Post</dt><dd data-site-row="address" data-site="address" hidden></dd>
           </dl>
 
@@ -642,7 +637,7 @@ const legalContent = `
       <article class="rf-card"><div class="rf-card-body">
         <h2 id="privacy" style="font-family:var(--rf-display);margin-top:0;font-size:21px">Privacy notice</h2>
         <p class="rf-muted">${BANK.legalName} collects the information needed to open and run your accounts: your name, address, date of birth, Social Security number, identification documents, transaction history and the devices you use to reach us. We share it only with the service providers who help us run the bank, and with regulators and law enforcement where the law requires it. We do not sell it.</p>
-        <p class="rf-muted">You may limit marketing at any time under Alerts inside online banking, or by calling <span data-site="phone">client services</span>.</p>
+        <p class="rf-muted">You may limit marketing at any time under Alerts inside online banking, or by writing to <a href="mailto:${site.email}" data-site="email">${site.email}</a>.</p>
 
         <h2 id="terms" style="font-family:var(--rf-display);font-size:21px">Online banking agreement</h2>
         <p class="rf-muted">Access to online banking is personal to you. Keep your password and one-time codes to yourself, tell us immediately if you think someone else has them, and review your statements. We may hold, delay or decline a payment where we reasonably suspect fraud, where it would breach a limit, or where sanctions screening requires a manual check. Where we decline one, the funds return to your available balance and you are told why.</p>
@@ -654,7 +649,7 @@ const legalContent = `
         <p class="rf-muted">For checks deposited through mobile deposit, the first $225 is generally available on the first business day after the day of deposit, and the remainder by the second business day. We may place a longer hold in the circumstances permitted by Regulation CC, and we will tell you when we do.</p>
 
         <h2 id="accessibility" style="font-family:var(--rf-display);font-size:21px">Accessibility</h2>
-        <p class="rf-muted">We aim to meet WCAG 2.2 AA across online banking. If any part of this site is difficult to use, tell us on <span data-site="phone">the client services line</span> or <a href="mailto:${site.email}" data-site="email">${site.email}</a> and we will help you complete what you were doing and fix the underlying problem.</p>
+        <p class="rf-muted">We aim to meet WCAG 2.2 AA across online banking. If any part of this site is difficult to use, tell us at <a href="mailto:${site.email}" data-site="email">${site.email}</a> and we will help you complete what you were doing and fix the underlying problem.</p>
 
         <h2 id="demo" style="font-family:var(--rf-display);font-size:21px">About this application</h2>
         <p class="rf-muted">${BANK.legalName} is a fictional institution. This site is a demonstration of a banking application: the routing number, account numbers, card numbers and customer records used throughout are synthetic, reach no real financial institution, and no real money can move through it.</p>
@@ -776,7 +771,7 @@ const marketing = (file, opts) => ({ file, build: marketingPage, opts });
 module.exports = [
   marketing('index.html', {
     title: `${BANK.name} | ${BANK.tagline}`,
-    description: 'Personal and business banking from Rockfield Global Bank: no-fee checking, 4.35% APY savings, cards, wires and a 24/7 fraud line. Member FDIC.',
+    description: 'Personal and business banking from Rockfield Global Bank: no-fee checking, 4.35% APY savings, cards, wires and round-the-clock fraud monitoring. Member FDIC.',
     active: '', content: homeContent,
   }),
   marketing('personal.html', {
@@ -816,7 +811,7 @@ module.exports = [
   }),
   marketing('support.html', {
     title: `Support | ${BANK.name}`,
-    description: 'Contact Rockfield Global Bank. Client services six days a week and a 24/7 fraud line.',
+    description: 'Contact Rockfield Global Bank. Email us or send a secure message; a banker replies the same business day.',
     active: 'support', content: contactContent,
   }),
   marketing('legal.html', {

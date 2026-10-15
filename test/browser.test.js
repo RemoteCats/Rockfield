@@ -282,7 +282,6 @@ async function until(check, what, timeout = 10000) {
 
     await staff.fill('#setting-address', 'Wijnhaven 3, 3011 WG Rotterdam, NL');
     await staff.fill('#setting-email', 'desk@rockfieldglobalfinance.com');
-    await staff.fill('#setting-phone', '+31 (0)20 111 2222');
     await staff.click('.admin-settings-form .btn');
     await until(
       () => sb.db.site_settings.rows[0].email === 'desk@rockfieldglobalfinance.com',
@@ -299,8 +298,7 @@ async function until(check, what, timeout = 10000) {
     );
     const href = await reader2.getAttribute('a[data-site="email"]', 'href');
     assert.strictEqual(href, 'mailto:desk@rockfieldglobalfinance.com', 'the mailto follows the address');
-    const phone = await reader2.textContent('[data-site="phone"]');
-    assert.strictEqual(phone.trim(), '+31 (0)20 111 2222');
+    assert.strictEqual(await reader2.$('[data-site="phone"]'), null, 'and no telephone number is printed');
     console.log('  ok  the change reaches the public pages with no rebuild');
     await reader2.close();
 

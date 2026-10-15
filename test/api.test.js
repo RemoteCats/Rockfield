@@ -713,9 +713,9 @@ async function withApp(env, fn) {
         sb.db.site_settings.rows[0].phone = '+31 (0)20 111 2222';
         const after = await req(base, 'GET', '/api/site');
         assert.strictEqual(after.body.email, 'desk@example.com');
-        assert.strictEqual(after.body.phone, '+31 (0)20 111 2222');
+        assert.strictEqual(after.body.phone, '', 'a telephone number is never published, even one stored at the desk');
         assert.strictEqual(after.body.address, '', 'a field left blank stays blank, so the page leaves its row out');
-        console.log('  ok  edited contact details are served, unset details stay blank');
+        console.log('  ok  edited contact details are served, unset details stay blank, no telephone number');
       }
     );
     // And with no table at all the site still knows its own address.

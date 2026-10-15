@@ -57,9 +57,6 @@ router.get('/config', asyncHandler(async (req, res) => {
       // The contact block is operator-supplied and blank until it is set, so
       // the app can tell "not configured" from "configured as this" and leave
       // the row out rather than print an empty one.
-      phone: cfg.supportPhone || '',
-      fraudPhone: cfg.fraudPhone || '',
-      internationalPhone: cfg.internationalPhone || '',
       email: cfg.supportEmail || BANK.email,
       address: cfg.mailingAddress || '',
       hours: cfg.supportHours || '',

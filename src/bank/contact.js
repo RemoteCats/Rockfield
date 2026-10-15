@@ -34,10 +34,13 @@ function current() {
   // in first.
   if (!settings.snapshot.warm()) settings.get().catch(() => {});
   const cfg = settings.snapshot();
+  // The bank publishes no telephone number: email and secure messages are the
+  // ways in. Blank here even if one is still stored from before, so neither a
+  // page nor an email can print one.
   return {
-    phone: str(cfg.supportPhone),
-    fraudPhone: str(cfg.fraudPhone),
-    internationalPhone: str(cfg.internationalPhone),
+    phone: '',
+    fraudPhone: '',
+    internationalPhone: '',
     address: str(cfg.mailingAddress),
     hours: str(cfg.supportHours),
     email: str(cfg.supportEmail),
@@ -60,16 +63,14 @@ const telHref = (value) => `tel:${str(value).replace(/[^+\d]/g, '')}`;
  * wherever it lands: "If this was not you, <callFraud()> immediately."
  */
 function callFraud() {
-  const { fraudPhone, phone } = current();
-  const number = fraudPhone || phone;
-  return number ? `call ${number}` : 'contact us';
+  const { email } = current();
+  return email ? `email us at ${email}` : 'contact us';
 }
 
 /** The same for the general support line. */
 function callSupport() {
-  const { phone, fraudPhone } = current();
-  const number = phone || fraudPhone;
-  return number ? `call ${number}` : 'contact us';
+  const { email } = current();
+  return email ? `email us at ${email}` : 'contact us';
 }
 
 /**
@@ -79,8 +80,8 @@ function callSupport() {
  * than printing a label with nothing after it.
  */
 function supportLine(label = 'Questions') {
-  const { phone } = current();
-  return phone ? `${label}: ${phone}` : '';
+  const { email } = current();
+  return email ? `${label}: ${email}` : '';
 }
 
 /**

@@ -754,6 +754,16 @@ const dollars = (cents) => (cents / 100).toFixed(2);
       assert.ok(!('investUnlockCode' in unlocked.body.settings), 'the code itself is never stored');
       ok('settings: investments stay off until the unlock code is given');
 
+      // The bank publishes no telephone number, even one stored before.
+      await require(path.join(ROOT, 'src/bank/settings')).save({ supportPhone: '1-800-555-0142', fraudPhone: '1-800-555-0199', internationalPhone: '+1 614 555 0100' });
+      const cfgNow = (await client(base).get('/api/bank/config')).body.bank;
+      assert.ok(!cfgNow.phone && !cfgNow.fraudPhone && !cfgNow.internationalPhone, 'no number reaches the pages');
+      const siteNow = (await client(base).get('/api/site')).body;
+      assert.ok(!JSON.stringify(siteNow).includes('555-01'), 'nor the public site');
+      const contact_ = require(path.join(ROOT, 'src/bank/contact'));
+      assert.ok(!/555/.test(contact_.callFraud()) && /@/.test(contact_.callFraud()), 'emails point at the support address instead');
+      ok('settings: no telephone number is published, even one stored before');
+
       // Names saved before the renames read as today's default; a chosen one stands.
       const settingsLib = require(path.join(ROOT, 'src/bank/settings'));
       for (const old of ['Rockfield National Bank', 'Rockfeild National Bank']) {

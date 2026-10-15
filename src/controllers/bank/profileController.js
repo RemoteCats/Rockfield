@@ -196,7 +196,7 @@ const deleteDocument = asyncHandler(async (req, res) => {
   const doc = await db.documents.findById(req.params.id);
   if (!doc || doc.user_id !== req.bankUser.id) throw fail(404, 'Document not found.');
   if (['id_front', 'id_back', 'ssn_card'].includes(doc.kind)) {
-    throw fail(409, 'Identity documents are kept on file. Call us if one needs replacing.');
+    throw fail(409, 'Identity documents are kept on file. Send us a secure message if one needs replacing.');
   }
   await db.documents.remove(doc.id);
   if (req.bankUser.photo_document_id === doc.id) {

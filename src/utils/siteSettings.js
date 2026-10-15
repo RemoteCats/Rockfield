@@ -69,6 +69,11 @@ function normalise(values) {
   FIELDS.forEach((key) => {
     out[key] = firstOf(values && values[key], defaults[key]);
   });
+  // No telephone number is published, whatever the console or the desk has
+  // stored: the site points at email and secure messages instead.
+  out.phone = '';
+  out.fraudPhone = '';
+  out.internationalPhone = '';
   return out;
 }
 
@@ -127,6 +132,10 @@ async function read() {
 
   const merged = {};
   FIELDS.forEach((key) => { merged[key] = firstOf(configured(key), atDesk(key), stored(key), defaults[key]); });
+  // No telephone number is published, whatever the console or the desk holds.
+  merged.phone = '';
+  merged.fraudPhone = '';
+  merged.internationalPhone = '';
   // The bank's name, as staff set it under Settings. The pages are built with
   // the default and swap this in (public/js/bankname.js).
   return { ...merged, name: name || BANK_NAME, source };

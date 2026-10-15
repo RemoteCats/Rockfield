@@ -147,7 +147,6 @@ async function storedContact() {
     return {
       bankName: settings.bankName || '',
       supportEmail: settings.supportEmail || '',
-      supportPhone: settings.supportPhone || '',
       mailingAddress: settings.mailingAddress || '',
     };
   } catch (err) {

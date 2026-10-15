@@ -644,7 +644,7 @@ const depositContent = `
 
 const cardsContent = `
         <div class="rf-grid cols-2" data-cards></div>
-        <p class="rf-small rf-muted rf-mt">Card numbers are never shown in full online. Call <span data-site="phone">us</span> if you need the full number, or report a card lost or stolen at any time - a replacement goes out the same day.</p>`;
+        <p class="rf-small rf-muted rf-mt">Card numbers are never shown in full online. Send us a secure message if you need the full number, or report a card lost or stolen at any time - a replacement goes out the same day.</p>`;
 
 /* ============================================================= statements == */
 
@@ -831,7 +831,7 @@ const securityContent = `
             <section class="rf-card">
               <div class="rf-card-head"><h3>If something looks wrong</h3></div>
               <div class="rf-card-body rf-small">
-                <p>Call the fraud line<span data-site-row="fraudPhone" hidden> on <strong data-site="fraudPhone"></strong></span>, day or night. We will never call you and ask for your password, a one-time code or your full card number.</p>
+                <p>Freeze the card straight away, then send us a secure message from Messages, day or night. We will never call you and ask for your password, a one-time code or your full card number.</p>
                 <a class="rf-btn ghost sm" href="/cards">Freeze a card</a>
               </div>
             </section>
@@ -892,7 +892,7 @@ const profileContent = `
                   <div class="rf-field"><label for="pr-occupation">Occupation</label><input class="rf-input" id="pr-occupation" name="occupation" /></div>
                   <div class="rf-notice bad rf-hide" data-form-error></div>
                   <button class="rf-btn" type="submit" data-submit>Save changes</button>
-                  <p class="rf-small rf-muted rf-mt">To change your legal name, date of birth or Social Security number, call <span data-site="phone">us</span>. We need to see a document first.</p>
+                  <p class="rf-small rf-muted rf-mt">To change your legal name, date of birth or Social Security number, send us a <a href="/messages">secure message</a>. We need to see a document first.</p>
                 </form>
               </div>
             </section>

@@ -272,7 +272,7 @@
   async function accountsPage() {
     const { accounts } = await api.get('/accounts');
     qs('[data-accounts]').innerHTML = accounts.map(accountTile).join('')
-      || '<div class="rf-card rf-empty"><strong>No accounts yet</strong>Call us and we will open one.</div>';
+      || '<div class="rf-card rf-empty"><strong>No accounts yet</strong>Send us a <a href="/messages">message</a> and we will open one.</div>';
 
     const panel = qs('[data-account-detail]');
     const closeBtn = qs('[data-close-detail]');
@@ -542,7 +542,7 @@
               <dt>International use</dt><dd>${card.internationalAllowed ? 'Allowed' : 'Blocked'}</dd>
             </dl>
           </div>
-        </section>`).join('') : '<div class="rf-card rf-empty"><strong>No cards yet</strong>Call us and we will send one out.</div>';
+        </section>`).join('') : '<div class="rf-card rf-empty"><strong>No cards yet</strong>Send us a <a href="/messages">message</a> and we will send one out.</div>';
     }
 
     host.addEventListener('click', async (event) => {

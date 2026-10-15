@@ -414,11 +414,6 @@ const content = `
                 <div class="rf-card-head"><h3>How to reach us</h3></div>
                 <div class="rf-card-body">
                   <p class="rf-small rf-muted" style="margin:0 0 16px">Printed on the public site, quoted in every alert email, and given out as the beneficiary bank on an incoming wire. Nothing here ships with a value and nothing is invented for you: anything left blank is left off the page rather than shown empty.</p>
-                  <div class="rf-row">
-                    <div class="rf-field"><label for="st-phone">Client services</label><input class="rf-input" id="st-phone" name="supportPhone" type="tel" placeholder="1-800-000-0000" /></div>
-                    <div class="rf-field"><label for="st-fraud-phone">Fraud line</label><input class="rf-input" id="st-fraud-phone" name="fraudPhone" type="tel" placeholder="Open around the clock" /></div>
-                  </div>
-                  <div class="rf-field"><label for="st-intl-phone">From outside the US</label><input class="rf-input" id="st-intl-phone" name="internationalPhone" type="tel" placeholder="+1 000 000 0000" /></div>
                   <div class="rf-field"><label for="st-hours">Opening hours</label><input class="rf-input" id="st-hours" name="supportHours" placeholder="Monday to Friday, 8:00am to 9:00pm ET" /></div>
                   <div class="rf-field"><label for="st-address">Mailing address</label><input class="rf-input" id="st-address" name="mailingAddress" placeholder="One line, as it would be written on an envelope" /><div class="hint">Also the beneficiary bank address on an incoming wire.</div></div>
                 </div>
