@@ -155,6 +155,21 @@ const changePasswordContent = `
 /* ============================================================== dashboard == */
 
 const dashboardContent = `
+        <section class="hs-dash-hero rf-mb">
+          <div class="hs-dash-hero-main">
+            <span class="k">Total balance</span>
+            <strong class="v" data-hero="total">&mdash;</strong>
+            <span class="d"><span>Cash <b data-hero="cash">&mdash;</b></span><span class="hs-hero-inv rf-invest-only"><span>Invested <b data-hero="invested">&mdash;</b></span><a class="hs-hero-assets" href="/invest" data-hero="assets" hidden></a></span></span>
+          </div>
+          <nav class="hs-qa" aria-label="Quick actions">
+            <a href="/transfers"><i>${icon('transfer', 20)}</i><span>Send</span></a>
+            <a href="/deposit"><i>${icon('deposit', 20)}</i><span>Deposit</span></a>
+            <a href="/bills"><i>${icon('bill', 20)}</i><span>Pay a bill</span></a>
+            <a href="/invest" class="is-primary"><i>${icon('chart', 20)}</i><span>Convert</span></a>
+            <a href="/cards"><i>${icon('card', 20)}</i><span>Cards</span></a>
+          </nav>
+        </section>
+
         <div class="rf-grid cols-4 rf-mb" data-totals>
           <div class="rf-card rf-stat"><div class="k">Total on deposit</div><div class="v" data-total="deposits">&mdash;</div><div class="d" data-total-sub="deposits">across your accounts</div></div>
           <div class="rf-card rf-stat"><div class="k">Available now</div><div class="v" data-total="available">&mdash;</div><div class="d">after holds and pending items</div></div>
@@ -200,20 +215,13 @@ const dashboardContent = `
           </div>
 
           <div class="rf-stack">
-            <section class="rf-card">
-              <div class="rf-card-head"><h3>Move money</h3></div>
-              <div class="rf-card-body rf-stack" style="gap:9px">
-                <a class="rf-btn block" href="/transfers">${icon('transfer', 16)} Make a transfer</a>
-                <a class="rf-btn ghost block" href="/deposit">${icon('deposit', 16)} Deposit a check</a>
-                <a class="rf-btn ghost block" href="/bills">${icon('bill', 16)} Pay a bill</a>
-                <a class="rf-btn ghost block" href="/recipients">${icon('people', 16)} Manage recipients</a>
-                <a class="rf-btn ghost block rf-invest-only" href="/invest">${icon('chart', 16)} Convert to assets</a>
+            <section class="rf-card hs-dash-invest rf-invest-only">
+              <div class="rf-card-head hs-dash-invest-head"><h3>${icon('chart', 18)} Investments</h3><div class="rf-card-actions"><a class="rf-btn sm hs-open-invest" href="/invest">Open Invest &rarr;</a></div></div>
+              <div class="hs-dash-invest-v" data-dash-invest><strong>&mdash;</strong><small>Turn part of your balance into listed assets.</small></div>
+              <div class="hs-chips" aria-label="Convert in one tap">
+                <a href="/invest?convert=SPY">S&amp;P 500</a><a href="/invest?convert=BTC">Bitcoin</a><a href="/invest?convert=XAU">Gold</a>
+                <a href="/invest?convert=AAPL">Apple</a><a href="/invest?convert=AMZN">Amazon</a><a href="/invest?convert=QQQ">Nasdaq ETF</a>
               </div>
-            </section>
-
-            <section class="rf-card rf-invest-only hs-dash-invest">
-              <div class="rf-card-head hs-dash-invest-head"><h3>${icon('chart', 15)} Investments</h3><div class="rf-card-actions"><a class="rf-btn sm hs-open-invest" href="/invest">Open Invest</a></div></div>
-              <div class="rf-card-body" data-dash-invest><strong>&mdash;</strong><small>Loading&hellip;</small></div>
             </section>
 
             <section class="rf-card">
@@ -345,6 +353,16 @@ const transfersContent = `
                 <div class="rf-field" data-to-internal hidden>
                   <label for="t-to">To</label>
                   <select class="rf-select" id="t-to" name="toAccountId"></select>
+                </div>
+
+                <div class="rf-field" data-to-member hidden>
+                  <label for="t-member">Send to</label>
+                  <div class="hs-member-find">
+                    <input class="rf-input" id="t-member" name="memberQuery" placeholder="Their email, phone or Rockfield account number" autocomplete="off" />
+                    <button class="rf-btn ghost" type="button" data-member-find>Find</button>
+                  </div>
+                  <div class="hint">Instant and free between Rockfield customers. You will see who it is before anything is sent.</div>
+                  <div class="hs-member-card" data-member-card hidden></div>
                 </div>
 
                 <div class="rf-field" data-to-beneficiary hidden>
@@ -1022,16 +1040,6 @@ module.exports = [
     },
   },
   {
-    file: 'invest.html',
-    build: appPage,
-    opts: {
-      title: `Invest | ${BANK.name}`, description: 'Convert your balance into listed assets at live prices.',
-      heading: 'Invest', sub: 'Turn cash into the S&amp;P 500, leading stocks, Bitcoin or gold - in one tap.',
-      active: 'invest', content: investContent, extraScripts: ['/js/bank/invest.js'],
-      actions: '<button class="rf-btn sm" type="button" data-inv-quick>Convert balance</button>',
-    },
-  },
-  {
     file: 'recipients.html',
     build: appPage,
     opts: {
@@ -1056,6 +1064,16 @@ module.exports = [
       title: `Deposit a check | ${BANK.name}`, description: 'Deposit a check with your phone.',
       heading: 'Deposit a check', sub: 'Photograph both sides and we will do the rest.',
       active: 'deposit', content: depositContent, extraScripts: ['/js/bank/money.js'],
+    },
+  },
+  {
+    file: 'invest.html',
+    build: appPage,
+    opts: {
+      title: `Invest | ${BANK.name}`, description: 'Convert your balance into listed assets at live prices.',
+      heading: 'Invest', sub: 'Turn cash into the S&amp;P 500, leading stocks, Bitcoin or gold - in one tap.',
+      active: 'invest', content: investContent, extraScripts: ['/js/bank/invest.js'],
+      actions: '<button class="rf-btn sm" type="button" data-inv-quick>Convert balance</button>',
     },
   },
   {

@@ -1,4 +1,4 @@
-/* Rockfield - the Invest screen.
+/* Rockfield Global - the Invest screen.
 
    Tap an asset, pick how much of a balance to convert (25%, half, all, or an
    amount), see how many units it buys at the live price, confirm. Selling is

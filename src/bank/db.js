@@ -38,11 +38,11 @@ const COLLECTIONS = {
   disputes: 'bank_disputes',
   sessions: 'bank_sessions',
   otps: 'bank_otps',
+  settings: 'bank_settings',
+  notices: 'bank_notices',
   quotes: 'bank_market_quotes',
   holdings: 'bank_holdings',
   trades: 'bank_trades',
-  settings: 'bank_settings',
-  notices: 'bank_notices',
 };
 
 const bankDir = () => path.join(dataDir(), 'bank');

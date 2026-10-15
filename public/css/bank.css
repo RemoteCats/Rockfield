@@ -17,19 +17,24 @@
   --rf-ink-2: #3d4757;
   --rf-ink-3: #6a7587;
   --rf-ink-4: #9aa4b4;
-  --rf-paper: #f4f7fb;
+  --rf-paper: #f5f9fe;
   --rf-surface: #ffffff;
   --rf-surface-2: #f8fafd;
-  --rf-surface-3: #eef2f8;
-  --rf-line: #dfe6f0;
-  --rf-line-2: #edf1f7;
+  --rf-surface-3: #e9f2fc;
+  --rf-line: #d6e4f3;
+  --rf-line-2: #e8f0f9;
 
   /* Brand */
-  --rf-navy: #11213a;
-  --rf-navy-2: #1b3457;
-  --rf-navy-3: #2d5c93;
-  --rf-brass: #b08341;
-  --rf-brass-2: #caa062;
+  --rf-navy: #0e2148;
+  --rf-navy-2: #173a72;
+  --rf-navy-3: #1f5fae;
+  /* The corporate light blues: a pale wash for alternate sections and page
+     headers, and a deeper one for its rules. */
+  --rf-sky: #eaf3fd;
+  --rf-sky-2: #d3e5f8;
+  --rf-blue: #1f5fae;
+  --rf-brass: #b89243;
+  --rf-brass-2: #d4ad5a;
   --rf-brass-soft: #f6ecda;
 
   /* Money */
@@ -57,13 +62,6 @@
   --rf-glass-bg: rgba(255, 255, 255, .62);
   --rf-glass-line: rgba(255, 255, 255, .75);
   --rf-glass-blur: saturate(180%) blur(18px);
-  /* The glass on every button: a light from above on the face, a bright rim
-     along the top edge and a faint one along the bottom, so a flat colour
-     reads as a pane. Themed here so the dark theme can soften it in one place. */
-  --rf-btn-sheen: linear-gradient(180deg, rgba(255, 255, 255, .24) 0%, rgba(255, 255, 255, .06) 52%, rgba(255, 255, 255, 0) 53%, rgba(255, 255, 255, .05) 100%);
-  --rf-btn-rim: inset 0 1px 0 rgba(255, 255, 255, .34), inset 0 -1px 0 rgba(8, 16, 30, .14);
-  --rf-btn-glint: rgba(255, 255, 255, .38);
-  --rf-btn-frost: saturate(160%) blur(12px);
   --rf-glass-shadow: 0 1px 0 rgba(255, 255, 255, .6) inset, 0 18px 40px -22px rgba(17, 33, 58, .5);
   /* The same material over a photograph or a navy panel, where white glass
      would wash the type out instead of holding it. */
@@ -81,16 +79,13 @@
   --rf-tilt: 240ms var(--rf-ease);
   /* Type.
 
-     The supplied logo is set in classic roman caps, so the page is built
-     around a serif rather than the geometric sans it had before. Libre
-     Baskerville is the workhorse - a transitional face with the weight an
-     institution wants - and Cormorant Garamond carries the large headlines,
-     where Baskerville's sturdiness turns heavy. Source Sans 3 is a humanist
-     sans with classical proportions: it sits with a serif in a way a grotesk
-     does not, and stays legible down at table and label sizes. */
-  --rf-sans: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --rf-display: "Libre Baskerville", Georgia, "Times New Roman", serif;
-  --rf-headline: "Cormorant Garamond", "Libre Baskerville", Georgia, serif;
+     One geometric sans, Plus Jakarta Sans, from the headlines down to the
+     labels - the same family the logo's wordmark is set in, so the page and
+     the mark read as one voice. Headlines take the heavy weights and a little
+     negative tracking; body copy sits at 400-500. */
+  --rf-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --rf-display: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --rf-headline: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --rf-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --rf-sidebar: 258px;
 }
@@ -160,7 +155,7 @@ body.rf-site {
 }
 .rf-mark.on-paper { height: 46px; }
 
-/* The whole lockup - mark over ROCKFIELD over BANK - where a panel is tall
+/* The whole lockup - ROCKFIELD over GLOBAL BANK over the key - where a panel is tall
    enough to give it room. */
 .rf-lockup { display: block; height: auto; max-width: 100%; }
 
@@ -348,15 +343,14 @@ body.rf-site {
   min-height: 42px; padding: 0 20px;
   border: 1px solid var(--btn-edge);
   border-radius: 6px;
-  background-color: var(--btn-face);
-  background-image: var(--rf-btn-sheen);
+  background: var(--btn-face);
   color: var(--btn-ink);
   font: 600 14px/1 var(--rf-sans);
   letter-spacing: .01em;
   cursor: pointer; text-decoration: none; white-space: nowrap;
-  box-shadow: var(--rf-btn-rim), 0 1px 1px rgba(16, 23, 37, .06);
+  box-shadow: 0 1px 1px rgba(16, 23, 37, .06);
   transition: transform var(--rf-tilt), box-shadow var(--rf-tilt),
-              background-color var(--rf-tilt), border-color var(--rf-tilt), filter var(--rf-tilt);
+              background var(--rf-tilt), border-color var(--rf-tilt), filter var(--rf-tilt);
   transform: perspective(600px);
 }
 .rf-btn svg { width: 16px; height: 16px; flex: 0 0 16px; }
@@ -364,13 +358,12 @@ body.rf-site {
 /* The lift, identical on every variant. */
 .rf-btn:hover {
   transform: perspective(600px) translateY(-2px) rotateX(6deg);
-  box-shadow: var(--rf-btn-rim), 0 10px 20px -10px rgba(16, 23, 37, .45);
+  box-shadow: 0 10px 20px -10px rgba(16, 23, 37, .45);
   filter: brightness(1.07);
 }
 .rf-btn:active {
-  transform: perspective(600px) translateY(0) rotateX(0) scale(.98);
-  /* Pressed in: the rim goes, and the light falls inside the pane instead. */
-  box-shadow: inset 0 2px 6px rgba(8, 16, 30, .22), 0 1px 1px rgba(16, 23, 37, .06);
+  transform: perspective(600px) translateY(0) rotateX(0);
+  box-shadow: 0 1px 1px rgba(16, 23, 37, .06);
   filter: brightness(.96);
 }
 .rf-btn:focus-visible { outline: 2px solid var(--rf-brass); outline-offset: 2px; }
@@ -378,7 +371,7 @@ body.rf-site {
 
 /* ---- the variants: a face, an edge, an ink, and nothing else ---- */
 
-.rf-btn.brass  { --btn-face: var(--rf-brass); --btn-edge: #9a7137; --btn-ink: #fff; }
+.rf-btn.brass  { --btn-face: var(--rf-brass); --btn-edge: #9c7a35; --btn-ink: #fff; }
 .rf-btn.danger { --btn-face: var(--rf-debit); --btn-edge: #8a2b23; }
 .rf-btn.ghost  { --btn-face: var(--rf-btn-ghost-face); --btn-edge: var(--rf-btn-ghost-edge); --btn-ink: var(--rf-ink); }
 .rf-btn.ghost:hover { --btn-edge: #b9c6d8; }
@@ -400,8 +393,7 @@ body.rf-site {
 
 /* The one member of the family that is not an object: a link is text. */
 .rf-btn.link {
-  --btn-face: transparent; --btn-edge: transparent; --btn-ink: var(--rf-navy-3);
-  background-image: none;
+  --btn-face: none; --btn-edge: transparent; --btn-ink: var(--rf-navy-3);
   min-height: 0; padding: 2px 0; box-shadow: none;
   text-decoration: underline; text-underline-offset: 3px;
 }
@@ -527,10 +519,7 @@ body.rf-site {
 /* ---------------------------------------------------------- account tile -- */
 
 .rf-acct {
-  /* A tile is a <div> with the link laid over it rather than an <a> wrapped
-     around it, so the Transfer and Convert shortcuts can be links of their
-     own: an <a> inside an <a> is invalid and the inner one is dropped. */
-  position: relative; display: block; text-decoration: none; padding: 16px 18px;
+  display: block; text-decoration: none; padding: 16px 18px;
   border: 1px solid var(--rf-line); border-radius: var(--rf-radius);
   background: var(--rf-surface); box-shadow: var(--rf-shadow);
   transition: transform .15s ease, box-shadow .15s ease;
@@ -548,7 +537,7 @@ body.rf-site {
 .rf-plastic {
   position: relative; aspect-ratio: 1.586; border-radius: 16px; padding: 20px;
   color: #fff; overflow: hidden; box-shadow: var(--rf-shadow-lg);
-  background: linear-gradient(140deg, #1b3457 0%, #11213a 55%, #0a1526 100%);
+  background: linear-gradient(140deg, #1b3457 0%, #0e2148 55%, #0a1526 100%);
   display: flex; flex-direction: column; justify-content: space-between;
   max-width: 380px;
 }
@@ -706,7 +695,7 @@ body.rf-site {
 .rf-auth-aside::after {
   content: ""; position: absolute; inset: 0; opacity: .5;
   background:
-    radial-gradient(60% 40% at 80% 15%, rgba(176, 131, 65, .28), transparent 70%),
+    radial-gradient(60% 40% at 80% 15%, rgba(184, 146, 67, .28), transparent 70%),
     radial-gradient(50% 40% at 10% 90%, rgba(41, 74, 119, .5), transparent 70%);
 }
 .rf-auth-aside > * { position: relative; z-index: 1; }
@@ -824,7 +813,7 @@ a.rf-auth-brand {
 .rf-hero::after {
   content: ""; position: absolute; inset: 0; opacity: .55; pointer-events: none; z-index: -1;
   background:
-    radial-gradient(55% 45% at 78% 12%, rgba(176, 131, 65, .3), transparent 70%),
+    radial-gradient(55% 45% at 78% 12%, rgba(184, 146, 67, .3), transparent 70%),
     radial-gradient(45% 45% at 8% 88%, rgba(41, 74, 119, .55), transparent 70%);
 }
 /* Over a photograph the brass wash is a tint, not a light source. */
@@ -853,6 +842,48 @@ a.rf-auth-brand {
 }
 .rf-hero-stats .k { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #a7b8d0; }
 .rf-hero-stats .v { font-family: var(--rf-display); font-size: clamp(20px, 2.1vw, 24px); letter-spacing: 0; color: #fff; }
+
+/* ---------------------------------------------------------- home hero -- */
+
+/* The home hero: the family photograph as an underlay, under one navy wash.
+
+   The whole frame is tinted, not just the left, so the photograph reads as the
+   ground the page stands on rather than a picture placed beside the type. On a
+   wide screen the photograph is set to the right and fades into the navy, so
+   the headline sits on navy and the faces stay clear of it. */
+.rf-hero.home { background: var(--rf-navy); min-height: min(86vh, 760px); display: flex; align-items: center; }
+.rf-hero.home > .wrap { flex: 0 0 auto; }
+.rf-hero.home .rf-hero-photo { object-position: 62% 30%; }
+.rf-hero.home.has-photo::before {
+  background:
+    linear-gradient(90deg, rgba(10, 24, 54, .92) 0%, rgba(12, 28, 62, .72) 34%, rgba(14, 33, 72, .34) 62%, rgba(14, 33, 72, .22) 100%),
+    linear-gradient(to top, rgba(8, 19, 44, .55) 0%, transparent 45%);
+}
+.rf-hero.home.has-photo::after { opacity: .16; }
+@media (min-width: 1000px) {
+  .rf-hero.home .rf-hero-photo {
+    left: auto; right: 0; width: 72%;
+    object-position: 40% 30%;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 34%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 34%);
+  }
+}
+.rf-hero.home .rf-hero-copy { max-width: 36rem; }
+.rf-hero.home h1 { font-size: clamp(44px, 6.2vw, 80px); line-height: 1.02; }
+.rf-hero.home .rf-eyebrow { color: #e3c47e; }
+.rf-hero.home p.lede { color: #e2e8f2; }
+.rf-hero.home .rf-hero-actions { align-items: center; gap: 14px 30px; }
+.rf-btn.pill { border-radius: 999px; padding: 0 26px 0 30px; }
+.rf-btn .arw { transition: transform var(--rf-tilt); }
+.rf-btn:hover .arw { transform: translateX(3px); }
+.rf-hero-link {
+  color: #fff; font: 600 15.5px/1.2 var(--rf-sans); text-decoration: none;
+  padding: 4px 0; border-bottom: 1.5px solid rgba(255, 255, 255, .7);
+  transition: border-color var(--rf-tilt), color var(--rf-tilt);
+}
+.rf-hero-link:hover { color: #e3c47e; border-bottom-color: #e3c47e; }
+.rf-hero-link:focus-visible { outline: 2px solid var(--rf-brass-2); outline-offset: 4px; }
+.rf-hero.home .rf-hero-stats { max-width: 46rem; }
 
 /* ---------------------------------------------------------------- glass -- */
 
@@ -1062,6 +1093,9 @@ a.rf-auth-brand {
   /* The watermark would otherwise push the page sideways. */
   .rf-hero-mark { right: -120px; opacity: .05; }
   .rf-hero-actions .rf-btn { flex: 1 1 auto; justify-content: center; }
+  .rf-hero.home .rf-hero-actions { flex-direction: column; align-items: stretch; }
+  .rf-hero.home .rf-hero-link { align-self: center; }
+  .rf-hero.home .rf-hero-photo { object-position: 58% 30%; }
 }
 
 /* The nav at phone width.
@@ -1225,11 +1259,6 @@ a.rf-auth-brand {
     --rf-btn-edge: #3d6494;
     --rf-btn-ghost-face: var(--rf-surface-2);
     --rf-btn-ghost-edge: var(--rf-line);
-    /* On a dark page a bright sheen reads as a reflection of a light that is
-       not there. Half the strength keeps the pane without the glare. */
-    --rf-btn-sheen: linear-gradient(180deg, rgba(255, 255, 255, .12) 0%, rgba(255, 255, 255, .03) 52%, rgba(255, 255, 255, 0) 53%, rgba(255, 255, 255, .03) 100%);
-    --rf-btn-rim: inset 0 1px 0 rgba(255, 255, 255, .14), inset 0 -1px 0 rgba(0, 0, 0, .3);
-    --rf-btn-glint: rgba(255, 255, 255, .18);
     --rf-credit-soft: #10291f;
     --rf-debit-soft: #2e1614;
     --rf-pending-soft: #2a2312;
@@ -1396,17 +1425,378 @@ a.rf-auth-brand {
   .chat-panel { height: min(70vh, 520px); }
 }
 
-/* ==========================================================================
-   Investments: the price ticker, the Invest screen and its confirm sheet.
 
-   Brought across from the sibling build that grew this feature. The `hs-`
-   prefix is that build's and is kept so the two stay diffable; everything
-   here is scoped to markup only the Invest page and the ticker render.
+/* ==========================================================================
+   The Rockfield theme.
+
+   Taken from the logo: ROCKFIELD in a roman serif, GLOBAL BANK in wide-
+   spaced capitals, a drawn key beneath, white on navy #002445. The site
+   is built from the same four things - that navy, white, the serif for what
+   is said and the spaced capitals for what labels it, and a hairline rule
+   where something needs separating. Colour is used sparingly, corners are
+   nearly square, and motion is slow and quiet: things fade and settle, they
+   do not bounce.
+
+   The logo always appears on its own navy: the nav, the footer, the sign-in
+   panel and the closing band are that colour, so the lockup is seen exactly
+   as it was drawn.
    ========================================================================== */
 
+:root {
+  --rf-navy: #002445;
+  --rf-navy-2: #0a3360;
+  --rf-navy-3: #1d4f86;
+  --rf-navy-deep: #001a33;
+  --rf-blue: #1d4f86;
+  --rf-silver: #a9b9cf;
+  --rf-mist: #f4f6f9;
+  --rf-paper: #ffffff;
+  --rf-surface: #ffffff;
+  --rf-surface-2: #f8f9fb;
+  --rf-surface-3: #eef1f5;
+  --rf-line: #dde3ec;
+  --rf-line-2: #eaeef3;
+  --rf-ink: #0d1b2e;
+  --rf-ink-2: #3b4a5e;
+  --rf-ink-3: #66768c;
+  --rf-ink-4: #98a5b7;
+  --rf-brass: #002445;
+  --rf-brass-2: #a9b9cf;
+  --rf-radius: 4px;
+  --rf-radius-sm: 3px;
+  --rf-radius-lg: 6px;
+  --rf-shadow: 0 1px 2px rgba(0, 36, 69, .04), 0 10px 26px -18px rgba(0, 36, 69, .3);
+  --rf-shadow-lg: 0 2px 4px rgba(0, 36, 69, .04), 0 30px 60px -32px rgba(0, 36, 69, .4);
+  --rf-shadow-hover: 0 2px 6px rgba(0, 36, 69, .06), 0 26px 50px -26px rgba(0, 36, 69, .42);
+  --rf-btn-face: var(--rf-navy);
+  --rf-btn-edge: var(--rf-navy);
+  --rf-ease-out: cubic-bezier(.22, 1, .36, 1);
+  --rf-sans: "Jost", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --rf-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --rf-headline: "Playfair Display", Georgia, "Times New Roman", serif;
+}
+
+.rf-site, .rf-auth { background: var(--rf-paper); color: var(--rf-ink); font-size: 16.5px; line-height: 1.65; }
+
+/* ---- type ---- */
+.rf-site h1, .rf-site h2, .rf-auth h1, .rf-auth h2, .rf-cta h2 {
+  font-family: var(--rf-headline); font-weight: 500; letter-spacing: -.005em; line-height: 1.12;
+}
+.rf-site h3 { font-family: var(--rf-headline); font-weight: 500; letter-spacing: 0; }
+.rf-eyebrow {
+  display: inline-block; margin-bottom: 18px;
+  font: 500 12px/1.4 var(--rf-sans); letter-spacing: .34em; text-transform: uppercase;
+  color: var(--rf-navy-3);
+}
+.rf-section h2 { font-size: clamp(30px, 3.6vw, 46px); color: var(--rf-navy); margin: 0 0 12px; }
+.rf-section .section-lede { color: var(--rf-ink-3); font-size: 17px; max-width: 58ch; }
+
+/* The hairline from the logo: under every section heading, in the hero and
+   the closing band. It draws outwards from the left as the heading arrives. */
+.rf-rule { display: block; width: 64px; height: 1px; background: currentColor; opacity: .55; margin: 22px 0 24px; transform-origin: left; }
+.rf-site .rf-section h2::after {
+  content: ""; display: block; width: 56px; height: 1px; margin-top: 20px;
+  background: var(--rf-navy); opacity: .35; transform-origin: left;
+}
+.rf-site .rf-section .wrap[style*="text-align:center"] h2::after { margin-inline: auto; transform-origin: center; }
+
+/* ---- buttons: nearly square, spaced capitals ---- */
+.rf-site .rf-btn, .rf-auth .rf-btn {
+  border-radius: 2px; text-transform: uppercase; letter-spacing: .18em;
+  font: 500 12.5px/1 var(--rf-sans); padding: 0 24px; min-height: 46px;
+}
+.rf-site .rf-btn.lg { min-height: 52px; padding: 0 32px; font-size: 13px; }
+.rf-site .rf-btn.sm { min-height: 38px; padding: 0 16px; font-size: 11.5px; }
+.rf-site .rf-btn:hover, .rf-auth .rf-btn:hover { transform: translateY(-1px); filter: none; box-shadow: 0 12px 24px -16px rgba(0, 36, 69, .6); }
+.rf-site .rf-btn:not(.ghost):not(.glass):not(.link):not(.light):hover { --btn-face: var(--rf-navy-2); }
+.rf-site .rf-btn.ghost { --btn-face: transparent; --btn-edge: rgba(0, 36, 69, .35); --btn-ink: var(--rf-navy); }
+.rf-site .rf-btn.ghost:hover { --btn-face: var(--rf-navy); --btn-ink: #fff; --btn-edge: var(--rf-navy); }
+.rf-btn.light { --btn-face: #fff; --btn-edge: #fff; --btn-ink: var(--rf-navy); }
+.rf-btn.light:hover { --btn-face: #eef2f7; }
+.rf-site .rf-btn.glass, .rf-auth .rf-btn.glass { --btn-face: transparent; --btn-edge: rgba(255, 255, 255, .55); --btn-ink: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.rf-site .rf-btn.glass:hover { --btn-face: rgba(255, 255, 255, .1); --btn-edge: #fff; }
+.rf-btn:focus-visible { outline: 1px solid var(--rf-navy-3); outline-offset: 3px; }
+.rf-btn.pill { border-radius: 2px; }
+
+/* ---- the nav: the logo on its own navy ---- */
+.rf-site .rf-marketing-nav {
+  background: rgba(0, 36, 69, .97); border-bottom: 1px solid rgba(255, 255, 255, .08);
+  transition: background .4s var(--rf-ease), box-shadow .4s var(--rf-ease);
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .rf-site .rf-marketing-nav { background: rgba(0, 36, 69, .9); -webkit-backdrop-filter: saturate(140%) blur(14px); backdrop-filter: saturate(140%) blur(14px); }
+}
+.rf-site .rf-marketing-nav.is-scrolled { box-shadow: 0 14px 34px -22px rgba(0, 14, 30, .8); }
+.rf-site .rf-marketing-nav .inner { padding: 16px 0; }
+.rf-nav-logo { display: block; height: 62px; width: auto; }
+.rf-site .rf-marketing-nav nav a {
+  color: rgba(255, 255, 255, .78); font: 500 12px/1 var(--rf-sans); letter-spacing: .2em; text-transform: uppercase;
+  margin: 0 13px; padding: 10px 0;
+}
+.rf-site .rf-marketing-nav nav a::after { background: #fff; height: 1px; }
+.rf-site .rf-marketing-nav nav a:hover, .rf-site .rf-marketing-nav nav a.is-active { color: #fff; font-weight: 500; }
+.rf-site .rf-marketing-nav .rf-btn.ghost { --btn-face: transparent; --btn-edge: rgba(255, 255, 255, .45); --btn-ink: #fff; }
+.rf-site .rf-marketing-nav .rf-btn.ghost:hover { --btn-face: rgba(255, 255, 255, .1); --btn-edge: #fff; }
+.rf-site .rf-marketing-nav .rf-btn:not(.ghost) { --btn-face: #fff; --btn-edge: #fff; --btn-ink: var(--rf-navy); }
+.rf-site .rf-marketing-nav .rf-btn:not(.ghost):hover { --btn-face: #eef2f7; }
+@media (max-width: 620px) { .rf-nav-logo { height: 48px; } .rf-site .rf-marketing-nav .inner { padding: 12px 0; } }
+
+/* ---- heroes: photographs under the logo's navy ---- */
+.rf-site .rf-hero { background: var(--rf-navy); color: #fff; }
+.rf-site .rf-hero::after { display: none; }
+.rf-site .rf-hero h1 { color: #fff; }
+.rf-site .rf-hero p.lede { color: rgba(255, 255, 255, .82); font-weight: 300; font-size: clamp(17px, 1.6vw, 20px); }
+.rf-site .rf-hero .rf-eyebrow { color: var(--rf-silver); }
+.rf-site .rf-hero .rf-rule { color: #fff; }
+.rf-site .rf-hero.has-photo::before {
+  background: linear-gradient(100deg, rgba(0, 36, 69, .93) 0%, rgba(0, 36, 69, .82) 38%, rgba(0, 36, 69, .45) 68%, rgba(0, 36, 69, .3) 100%);
+}
+.rf-site .rf-hero.home { background: var(--rf-navy); min-height: min(88vh, 800px); }
+.rf-site .rf-hero.home .rf-hero-photo { left: 0; width: 100%; -webkit-mask-image: none; mask-image: none; object-position: 62% 30%; }
+.rf-site .rf-hero.home.has-photo::before {
+  background:
+    linear-gradient(90deg, rgba(0, 36, 69, .95) 0%, rgba(0, 36, 69, .86) 34%, rgba(0, 36, 69, .42) 62%, rgba(0, 36, 69, .22) 100%),
+    linear-gradient(to top, rgba(0, 26, 51, .6) 0%, transparent 40%);
+}
+.rf-site .rf-hero.home h1 { font-size: clamp(44px, 6vw, 78px); line-height: 1.05; }
+.rf-site .rf-hero.home .rf-hero-copy { max-width: 40rem; }
+.rf-site .rf-hero.compact h1 { font-size: clamp(34px, 4.4vw, 54px) !important; }
+.rf-site .rf-hero-photo { object-position: center 22%; }
+.rf-site .rf-hero.has-mark { background: radial-gradient(70% 90% at 85% 50%, #0a3360 0%, var(--rf-navy) 70%); }
+.rf-site .rf-hero-mark { opacity: .08; height: 86%; right: 6%; }
+.rf-hero-link {
+  color: #fff; font: 500 12.5px/1 var(--rf-sans); letter-spacing: .18em; text-transform: uppercase; text-decoration: none;
+  padding: 6px 0; border-bottom: 1px solid rgba(255, 255, 255, .55); transition: border-color .3s var(--rf-ease);
+}
+.rf-hero-link:hover { color: #fff; border-bottom-color: #fff; }
+.rf-site .rf-hero .rf-hero-actions { gap: 16px 34px; align-items: center; }
+@media (max-width: 999px) {
+  .rf-site .rf-hero.has-photo::before, .rf-site .rf-hero.home.has-photo::before {
+    background: linear-gradient(180deg, rgba(0, 36, 69, .84) 0%, rgba(0, 36, 69, .9) 100%);
+  }
+  .rf-site .rf-hero.home .rf-hero-actions { flex-direction: column; align-items: stretch; }
+  .rf-site .rf-hero.home .rf-hero-link { align-self: center; }
+}
+
+/* The four features, set like the logo's second line. */
+.rf-hero-features {
+  list-style: none; padding: 34px 0 0; margin: clamp(34px, 5vh, 52px) 0 0;
+  border-top: 1px solid rgba(255, 255, 255, .16);
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px 26px; max-width: 48rem;
+}
+.rf-hero-features li { display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; font-weight: 300; line-height: 1.5; color: rgba(255, 255, 255, .7); }
+.rf-hero-features strong { color: #fff; font: 500 11.5px/1.4 var(--rf-sans); letter-spacing: .2em; text-transform: uppercase; margin-top: 10px; }
+.rf-hero-features .ic { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; color: #fff; border: 1px solid rgba(255, 255, 255, .35); }
+.rf-hero-features .ic svg { width: 18px; height: 18px; }
+@media (max-width: 999px) { .rf-hero-features { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---- the trust strip ---- */
+.rf-trust { padding: 40px 0 44px; background: #fff; border-bottom: 1px solid var(--rf-line); }
+.rf-trust-title { display: block; text-align: center; font: 500 11.5px/1.4 var(--rf-sans); letter-spacing: .34em; text-transform: uppercase; color: var(--rf-ink-3); margin-bottom: 28px; }
+.rf-trust-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.rf-trust-row > div { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 4px 18px; position: relative; }
+.rf-trust-row > div + div::before { content: ""; position: absolute; left: 0; top: 10%; bottom: 10%; width: 1px; background: var(--rf-line); }
+.rf-trust .ic { color: var(--rf-navy-3); display: grid; place-items: center; }
+.rf-trust .ic svg { width: 26px; height: 26px; }
+.rf-trust .v { font: 500 32px/1.1 var(--rf-headline); color: var(--rf-navy); font-variant-numeric: lining-nums tabular-nums; }
+.rf-trust .k { font-size: 13px; color: var(--rf-ink-3); }
+@media (max-width: 900px) {
+  .rf-trust-row { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 26px; }
+  .rf-trust-row > div { justify-content: flex-start; padding: 4px 6px; }
+  .rf-trust-row > div + div::before { display: none; }
+}
+
+/* ---- sections, cards ---- */
+.rf-site .rf-section { position: relative; padding: clamp(64px, 8vw, 112px) 0; }
+.rf-site .rf-section.alt { background: var(--rf-mist); border-block: 1px solid var(--rf-line-2); }
+.rf-site .rf-card, .rf-site .rf-product {
+  background: #fff; border: 1px solid var(--rf-line); border-radius: var(--rf-radius); box-shadow: none;
+  transition: transform .5s var(--rf-ease-out), box-shadow .5s var(--rf-ease-out), border-color .5s var(--rf-ease-out);
+}
+.rf-site a.rf-card:hover, .rf-site .rf-product:hover, .rf-site .rf-card.interactive:hover {
+  transform: translateY(-4px); box-shadow: var(--rf-shadow-hover); border-color: #c9d3e1;
+}
+.rf-site .rf-product { padding: 32px 28px; border-top: 2px solid var(--rf-navy); }
+.rf-site .rf-product .rate { font: 500 44px/1 var(--rf-headline); color: var(--rf-navy); letter-spacing: -.01em; font-variant-numeric: lining-nums; }
+.rf-site .rf-product .rate small { font: 400 13px var(--rf-sans); letter-spacing: .12em; text-transform: uppercase; color: var(--rf-ink-3); }
+.rf-site .rf-product h3 { font-size: 22px; margin: 18px 0 8px; color: var(--rf-navy); }
+.rf-site .rf-product li svg { color: var(--rf-navy-3); }
+.rf-site .rf-stat .k { font: 500 11px/1.4 var(--rf-sans); letter-spacing: .24em; color: var(--rf-ink-3); }
+.rf-site .rf-stat .v { font: 500 32px/1.1 var(--rf-headline); color: var(--rf-navy); font-variant-numeric: lining-nums; margin: 10px 0 4px; }
+.rf-site .rf-feature .ic { background: transparent; color: var(--rf-navy); border: 1px solid var(--rf-line); border-radius: 50%; }
+.rf-site .rf-feature h3 { font-size: 18px; }
+.rf-site .rf-badge { border-radius: 2px; letter-spacing: .06em; }
+.rf-site .rf-section .rf-eyebrow { color: var(--rf-navy-3); }
+
+/* ---- deep sections: the logo's navy ---- */
+.rf-section.deep, .rf-cta, .rf-footer {
+  --rf-ink: #ffffff;
+  --rf-ink-2: rgba(255, 255, 255, .82);
+  --rf-ink-3: rgba(255, 255, 255, .62);
+  --rf-line: rgba(255, 255, 255, .16);
+  --rf-line-2: rgba(255, 255, 255, .1);
+  --rf-surface: transparent;
+  --rf-surface-2: rgba(255, 255, 255, .03);
+  color: var(--rf-ink);
+}
+.rf-site .rf-section.deep { background: var(--rf-navy); border: 0; }
+.rf-site .rf-section.deep h2, .rf-section.deep h3, .rf-section.deep blockquote { color: #fff !important; }
+.rf-site .rf-section.deep h2::after { background: #fff; }
+.rf-site .rf-section.deep .rf-eyebrow { color: var(--rf-silver); }
+.rf-section.deep .section-lede, .rf-section.deep .rf-muted, .rf-section.deep p { color: var(--rf-ink-2); }
+.rf-site .rf-section.deep .rf-card, .rf-site .rf-section.deep .rf-product { background: rgba(255, 255, 255, .03); border-color: rgba(255, 255, 255, .16); }
+.rf-site .rf-section.deep a.rf-card:hover { border-color: rgba(255, 255, 255, .4); box-shadow: none; }
+.rf-site .rf-section.deep .rf-stat .v { color: #fff; }
+.rf-site .rf-section.deep .rf-feature .ic { color: #fff; border-color: rgba(255, 255, 255, .3); }
+.rf-site .rf-section.deep .rf-btn.ghost { --btn-edge: rgba(255, 255, 255, .45); --btn-ink: #fff; }
+.rf-site .rf-section.deep .rf-btn.ghost:hover { --btn-face: #fff; --btn-ink: var(--rf-navy); --btn-edge: #fff; }
+.rf-site .rf-section.deep blockquote { font-family: var(--rf-headline) !important; font-style: italic !important; font-weight: 500 !important; }
+
+/* ---- checks ---- */
+.rf-checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+.rf-checks li { display: flex; gap: 14px; align-items: center; color: var(--rf-ink-2); }
+.rf-checks svg { width: 24px; height: 24px; padding: 5px; border-radius: 50%; flex: 0 0 24px; box-sizing: border-box; color: var(--rf-navy); border: 1px solid rgba(0, 36, 69, .3); }
+
+/* ---- the device showcase ---- */
+.rf-device-stage { position: relative; min-height: 600px; display: grid; place-items: center; }
+.rf-device-stage::before {
+  content: ""; position: absolute; inset: 8% 10% 6% 18%; z-index: 0; border-radius: 2px;
+  background: var(--rf-mist); border: 1px solid var(--rf-line-2);
+}
+.rf-phone {
+  position: relative; z-index: 2; width: 286px; height: 580px; padding: 11px; border-radius: 46px; margin-right: 90px;
+  background: linear-gradient(145deg, #2b3446 0%, #0b1220 45%, #1d2433 100%);
+  box-shadow: 0 0 0 1px #3a4458 inset, 0 50px 90px -46px rgba(0, 36, 69, .8);
+}
+.rf-phone::before { content: ""; position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 90px; height: 25px; border-radius: 20px; background: #05070d; z-index: 3; }
+.rf-phone-screen { height: 100%; border-radius: 36px; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
+.rf-phone-top { padding: 54px 22px 28px; color: #fff; background: var(--rf-navy); position: relative; }
+.rf-phone-status { position: absolute; top: 18px; left: 26px; right: 26px; display: flex; justify-content: space-between; font: 600 12px/1 var(--rf-sans); }
+.rf-phone-status .dots { width: 36px; height: 10px; border-radius: 3px; background: linear-gradient(90deg, #fff 60%, rgba(255,255,255,.35) 60%); }
+.rf-phone-logo { width: 112px; height: auto; display: block; margin: 0 0 16px; }
+.rf-phone-balance { font: 500 32px/1.1 var(--rf-headline); font-variant-numeric: lining-nums tabular-nums; }
+.rf-phone-delta { display: inline-flex; gap: 6px; margin-top: 8px; font-size: 11.5px; color: #9fe0c0; }
+.rf-phone-delta span { color: var(--rf-silver); }
+.rf-phone-body { flex: 1; padding: 18px 16px; }
+.rf-phone-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; text-align: center; padding-bottom: 14px; border-bottom: 1px solid var(--rf-line-2); }
+.rf-phone-actions span { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.rf-phone-actions svg { width: 38px; height: 38px; padding: 10px; border-radius: 50%; box-sizing: border-box; color: var(--rf-navy); border: 1px solid var(--rf-line); }
+.rf-phone-actions em { font-style: normal; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--rf-ink-3); }
+.rf-phone-head { display: flex; justify-content: space-between; align-items: baseline; margin: 14px 2px 8px; font-size: 12.5px; color: var(--rf-navy); }
+.rf-phone-head span { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--rf-navy-3); }
+.rf-phone-tx { list-style: none; margin: 0; padding: 0; }
+.rf-phone-tx li { display: grid; grid-template-columns: 30px 1fr auto; gap: 10px; align-items: center; padding: 8px 2px; border-bottom: 1px solid var(--rf-line-2); }
+.rf-phone-tx .ic { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; color: var(--rf-navy); background: var(--rf-mist); }
+.rf-phone-tx b { display: block; font-size: 12px; font-weight: 500; color: var(--rf-navy); }
+.rf-phone-tx i { display: block; font-size: 10.5px; color: var(--rf-ink-4); font-style: normal; }
+.rf-phone-tx .amt { font-size: 12px; font-weight: 500; color: var(--rf-navy); font-variant-numeric: tabular-nums; }
+.rf-phone-tx .amt.in { color: #1b7a53; }
+.rf-plastic-card {
+  position: absolute; z-index: 3; right: -2%; bottom: 6%; width: 280px; height: 176px; border-radius: 12px; padding: 22px 24px;
+  background: linear-gradient(135deg, #0a3360 0%, var(--rf-navy) 55%, var(--rf-navy-deep) 100%);
+  box-shadow: 0 1px 0 rgba(255,255,255,.12) inset, 0 40px 70px -34px rgba(0, 20, 40, .85);
+  transform: rotate(-7deg); overflow: hidden; color: #fff;
+}
+.rf-plastic-card::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, transparent 38%, rgba(255,255,255,.14) 50%, transparent 62%); transform: translateX(-100%); }
+.rf-plastic-card img { width: 112px; height: auto; display: block; }
+.rf-plastic-card .chip { position: absolute; left: 24px; top: 78px; width: 40px; height: 30px; border-radius: 6px; background: linear-gradient(135deg, #e3e8ef, #9aa9bd); }
+.rf-plastic-card .num { position: absolute; left: 24px; bottom: 20px; font-family: var(--rf-mono); font-size: 14px; letter-spacing: .14em; color: #dbe4f0; }
+.rf-plastic-card .kind { position: absolute; right: 24px; bottom: 19px; font: 500 11px/1 var(--rf-sans); letter-spacing: .3em; color: var(--rf-silver); }
+@media (max-width: 900px) {
+  .rf-device-stage { min-height: 560px; }
+  .rf-phone { margin-right: 0; }
+  .rf-plastic-card { right: -2%; bottom: -2%; width: 220px; height: 138px; }
+  .rf-plastic-card img { width: 92px; }
+  .rf-plastic-card .chip { top: 58px; width: 32px; height: 24px; }
+  .rf-device-stage::before { inset: 6% 0 4% 8%; }
+}
+@media (max-width: 420px) { .rf-phone { transform: scale(.9); } }
+
+/* ---- the closing band and the footer ---- */
+.rf-cta { padding: clamp(72px, 9vw, 120px) 0; background: var(--rf-navy); text-align: center; border-top: 1px solid rgba(255, 255, 255, .06); }
+.rf-cta .rf-eyebrow { color: var(--rf-silver); }
+.rf-cta h2 { font-size: clamp(30px, 3.8vw, 48px); margin: 0 auto; max-width: 20ch; color: #fff; }
+.rf-cta .rf-rule { margin: 26px auto; color: #fff; transform-origin: center; }
+.rf-cta p { margin: 0 auto; color: var(--rf-ink-2); max-width: 52ch; font-weight: 300; font-size: 17px; }
+.rf-cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 34px; }
+@media (max-width: 620px) { .rf-cta-actions .rf-btn { flex: 1 1 100%; } }
+.rf-footer { background: var(--rf-navy-deep); color: var(--rf-ink-3); border-top: 1px solid rgba(255, 255, 255, .06); }
+.rf-footer h5 { font: 500 11px/1.4 var(--rf-sans); letter-spacing: .3em; color: #fff; }
+.rf-footer a { color: var(--rf-ink-2); }
+.rf-footer a:hover { color: #fff; text-decoration: none; }
+.rf-footer .legal { color: rgba(255, 255, 255, .45); }
+.rf-footer .legal strong { color: rgba(255, 255, 255, .7); }
+
+/* ---- sign-in: the logo on its navy ---- */
+.rf-auth-aside { background: var(--rf-navy); color: #fff; }
+.rf-auth-aside::after { background: radial-gradient(60% 50% at 85% 10%, rgba(255, 255, 255, .06), transparent 70%); opacity: 1; }
+.rf-auth-aside h2 { color: #fff; font-weight: 500; }
+.rf-auth-aside p { color: rgba(255, 255, 255, .78); font-weight: 300; }
+.rf-auth-points li { color: rgba(255, 255, 255, .78); }
+.rf-auth-points svg { color: var(--rf-silver); }
+.rf-auth-foot { color: rgba(255, 255, 255, .5); border-top-color: rgba(255, 255, 255, .12); }
+.rf-auth-box h1 { color: var(--rf-navy); font-weight: 500; }
+.rf-auth .rf-card { border-radius: var(--rf-radius); box-shadow: var(--rf-shadow); }
+a.rf-auth-brand { background: var(--rf-navy); border-radius: var(--rf-radius); }
+a.rf-auth-brand strong { font-family: var(--rf-headline); font-weight: 500; letter-spacing: .04em; }
+
+/* ---- motion: slow fades, a settling rise, the rule drawing out ---- */
+@keyframes rf-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes rf-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes rf-drift { from { scale: 1.03; } to { scale: 1.09; } }
+@keyframes rf-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+@keyframes rf-card-float { 0%, 100% { translate: 0 0; rotate: 0deg; } 50% { translate: -4px -9px; rotate: 1.2deg; } }
+@keyframes rf-sheen { 0%, 70% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+.rf-motion .rf-hero-photo { animation: rf-drift 26s ease-in-out infinite alternate; }
+.rf-motion .rf-hero .rf-hero-copy > *, .rf-motion .rf-hero .wrap > :not(.rf-hero-copy) { animation: rf-rise 1.2s var(--rf-ease-out) both; }
+.rf-motion .rf-hero .rf-hero-copy > :nth-child(1), .rf-motion .rf-hero .wrap > :nth-child(1):not(.rf-hero-copy) { animation-delay: .1s; }
+.rf-motion .rf-hero .rf-hero-copy > :nth-child(2), .rf-motion .rf-hero .wrap > :nth-child(2):not(.rf-hero-copy) { animation-delay: .25s; }
+.rf-motion .rf-hero .rf-hero-copy > .rf-rule { animation: rf-draw 1.4s var(--rf-ease-out) .5s both; }
+.rf-motion .rf-hero .rf-hero-copy > :nth-child(4), .rf-motion .rf-hero .wrap > :nth-child(3):not(.rf-hero-copy) { animation-delay: .55s; }
+.rf-motion .rf-hero .rf-hero-copy > :nth-child(5) { animation-delay: .7s; }
+.rf-motion .rf-hero .rf-hero-copy > :nth-child(6) { animation-delay: .9s; }
+
+.rf-site [data-reveal] {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 1s var(--rf-ease-out), transform 1.1s var(--rf-ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.rf-site [data-reveal].in { opacity: 1; transform: none; }
+.rf-motion .rf-site .rf-section h2[data-reveal]::after,
+.rf-motion .rf-cta [data-reveal] .rf-rule { transform: scaleX(0); transition: transform 1.4s var(--rf-ease-out) .35s; }
+.rf-motion .rf-site .rf-section h2[data-reveal].in::after,
+.rf-motion .rf-cta [data-reveal].in .rf-rule { transform: scaleX(1); }
+.rf-site a.rf-card[data-reveal].in:hover, .rf-site .rf-product[data-reveal].in:hover { transform: translateY(-4px); transition: transform .5s var(--rf-ease-out), box-shadow .5s var(--rf-ease-out), border-color .5s var(--rf-ease-out); }
+
+.rf-motion .rf-phone { animation: rf-float 9s ease-in-out infinite; }
+.rf-motion .rf-plastic-card { animation: rf-card-float 10s ease-in-out .8s infinite; }
+.rf-motion .rf-plastic-card::after { animation: rf-sheen 7s ease-in-out 1.5s infinite; }
+.rf-motion .rf-device-stage:not(.in) .rf-phone-tx li { opacity: 0; }
+.rf-motion .rf-device-stage.in .rf-phone-tx li { animation: rf-rise .8s var(--rf-ease-out) both; }
+.rf-motion .rf-device-stage.in .rf-phone-tx li:nth-child(1) { animation-delay: .5s; }
+.rf-motion .rf-device-stage.in .rf-phone-tx li:nth-child(2) { animation-delay: .7s; }
+.rf-motion .rf-device-stage.in .rf-phone-tx li:nth-child(3) { animation-delay: .9s; }
+.rf-motion .rf-device-stage.in .rf-phone-tx li:nth-child(4) { animation-delay: 1.1s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rf-hero-photo, .rf-phone, .rf-plastic-card, .rf-plastic-card::after { animation: none !important; }
+  .rf-site [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .rf-site .rf-section h2::after, .rf-rule { transform: none !important; animation: none !important; }
+}
+
+/* ==========================================================================
+   Online banking and staff console additions: the sign-in gate, the staff
+   console's own menu, the dashboard hero and quick actions, paying another
+   customer, Invest (assets, holdings, the conversion sheet), the market
+   ticker and the setup checklist. Ported with the backend they belong to and
+   recoloured to the bank's navy; gains, losses and confirmations keep green
+   and red.
+   ========================================================================== */
+.hs-sheet { flex: 1; background: #fff; margin-top: -24px; border-radius: 20px 20px 0 0; padding: 14px 14px 0; display: flex; flex-direction: column; }
 .hs-ticker {
   position: relative; display: flex; align-items: center; gap: 0;
-  height: 40px; background: var(--rf-surface); border-bottom: 1px solid var(--rf-line);
+  height: 40px; background: #ffffff; border-bottom: 1px solid var(--rf-line);
   font-size: 13px; color: var(--rf-ink); overflow: hidden;
 }
 .hs-ticker[hidden] { display: none; }
@@ -1414,7 +1804,7 @@ a.rf-auth-brand {
   flex: none; display: inline-flex; align-items: center; gap: 7px; height: 100%;
   padding: 0 14px 0 max(16px, calc((100vw - 1240px) / 2 + 20px));
   font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--rf-navy);
-  background: linear-gradient(90deg, var(--rf-surface) 80%, transparent); position: relative; z-index: 2;
+  background: linear-gradient(90deg, #fff 80%, rgba(255, 255, 255, 0)); position: relative; z-index: 2;
 }
 .hs-ticker-live i { width: 8px; height: 8px; border-radius: 50%; background: #12a36f; box-shadow: 0 0 0 0 rgba(18, 163, 111, .5); animation: hs-pulse 2s ease-out infinite; }
 .hs-ticker-window { flex: 1; min-width: 0; overflow: hidden; height: 100%;
@@ -1440,7 +1830,7 @@ a.rf-auth-brand {
 .hs-ticker-cta {
   flex: none; height: 100%; display: inline-flex; align-items: center; padding: 0 max(16px, calc((100vw - 1240px) / 2 + 20px)) 0 16px;
   font-weight: 700; font-size: 13px; color: var(--rf-navy); text-decoration: none;
-  background: linear-gradient(270deg, var(--rf-surface) 80%, transparent); position: relative; z-index: 2;
+  background: linear-gradient(270deg, #fff 80%, rgba(255, 255, 255, 0)); position: relative; z-index: 2;
 }
 .hs-ticker-cta:hover { text-decoration: underline; }
 .rf-app .hs-ticker { border-radius: 0; }
@@ -1506,7 +1896,7 @@ a.rf-auth-brand {
 }
 .hs-chips button:hover { border-color: #a9b9cf; }
 .hs-chips button.is-active { background: var(--rf-navy); border-color: var(--rf-navy); color: #fff; }
-.hs-preview { display: grid; gap: 8px; padding: 14px; margin: 4px 0 14px; border: 1px dashed var(--rf-line); border-radius: 12px; background: var(--rf-surface-2); }
+.hs-preview { display: grid; gap: 8px; padding: 14px; margin: 4px 0 14px; border: 1px dashed #cdd6e2; border-radius: 12px; background: #fbfcfd; }
 .hs-preview > div { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
 .hs-preview span { color: var(--rf-ink-3); }
 .hs-preview strong { font-variant-numeric: tabular-nums; }
@@ -1518,41 +1908,129 @@ a.rf-auth-brand {
 .hs-receipt h3 { margin: 10px 0 6px; font-size: 22px; font-weight: 800; }
 .hs-receipt .rf-dl { text-align: left; margin: 16px 0 18px; }
 .hs-receipt-ok { width: 56px; height: 56px; margin: 0 auto; border-radius: 50%; display: grid; place-items: center; font-size: 26px; color: #fff; background: #1b7a53; animation: hs-pop .5s var(--rf-ease) both; }
-.hs-tick .hs-logo { margin-right: 2px; }
-.hs-cell-asset { display: flex; align-items: center; gap: 10px; }
-.hs-sheet-asset .hs-logo { margin-right: 2px; }
-.hs-chips button.is-active { background-image: linear-gradient(180deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0)); }
-.hs-asset-foot { gap: 6px; flex-wrap: wrap; }
-.hs-asset-foot .held { white-space: nowrap; }
-@keyframes hs-pop { from { opacity: 0; transform: scale(.85) translateY(10px); } to { opacity: 1; transform: none; } }
-@keyframes hs-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-@keyframes hs-pulse { 0% { box-shadow: 0 0 0 0 rgba(18, 163, 111, .55); } 80%, 100% { box-shadow: 0 0 0 8px rgba(18, 163, 111, 0); } }
-
-/* Off until someone with the unlock code switches investments on at the
-   console. core.js puts rf-invest-on on <html> from the session, so the link,
-   the ticker, the console tab and the staff figures are all hidden by the one
-   class rather than by each page checking for itself. */
-html:not(.rf-invest-on) a[href^="/invest"],
-html:not(.rf-invest-on) .hs-ticker,
-html:not(.rf-invest-on) [data-tab="investments"],
-html:not(.rf-invest-on) [data-panel="investments"],
-html:not(.rf-invest-on) [data-stat-invested],
-html:not(.rf-invest-on) .rf-invest-only { display: none !important; }
-
-/* A stat tile that is also a link into its tab, and the stacked sheet the
-   console books a conversion in. */
+.hs-dash-invest .hs-chips { grid-template-columns: repeat(3, 1fr); padding: 0 20px 18px; margin: 0; }
+.hs-dash-invest .hs-chips a { font: 700 12.5px/1 var(--rf-sans); padding: 10px 0; border-radius: 999px; text-align: center; text-decoration: none; background: #e9eef5; color: #002445; }
+.hs-dash-invest .hs-chips a:hover { background: #d9e2ed; }
+.hs-dash-invest-v { padding: 4px 20px 12px; }
+.hs-dash-invest-v strong { display: block; font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
+.hs-dash-invest-v small { color: var(--rf-ink-3); }
+html.rf-gone body { visibility: hidden; }
+html.rf-booting .rf-shell { visibility: hidden; animation: rf-reveal 0s linear 8s forwards; }
+html.rf-booting body::after {
+  content: ""; position: fixed; left: 50%; top: 50%; width: 34px; height: 34px; margin: -17px 0 0 -17px;
+  border-radius: 50%; border: 3px solid #dde3ec; border-top-color: var(--rf-navy);
+  animation: rf-spin .8s linear infinite, rf-reveal-hide 0s linear 8s forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.rf-booting body::after { animation: rf-reveal-hide 0s linear 8s forwards; border-top-color: #dde3ec; }
+}
+.hs-section-title { margin: 4px 0 12px; font-size: 13px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--rf-ink-3); }
+.hs-attn { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+.hs-attn-tile {
+  display: flex; align-items: center; gap: 14px; padding: 16px 16px 16px 18px; text-decoration: none; color: var(--rf-ink);
+  background: var(--rf-surface); border: 1px solid var(--rf-line); border-radius: 16px;
+  transition: transform .2s var(--rf-ease), box-shadow .2s var(--rf-ease), border-color .2s;
+}
+.hs-attn-tile:hover { transform: translateY(-2px); box-shadow: var(--rf-shadow-hover); border-color: #c3cfdf; }
+.hs-attn-tile:focus-visible { outline: 2px solid var(--rf-navy); outline-offset: 2px; }
+.hs-attn-tile .n { min-width: 46px; height: 46px; padding: 0 8px; display: grid; place-items: center; border-radius: 14px; font-size: 22px; font-weight: 800; background: var(--rf-surface-3); color: var(--rf-ink-3); font-variant-numeric: tabular-nums; }
+.hs-attn-tile.is-hot .n { background: #0a3360; color: #fff; }
+.hs-attn-tile .l { flex: 1; min-width: 0; }
+.hs-attn-tile .l strong { display: block; font-size: 14.5px; }
+.hs-attn-tile .l small { display: block; font-size: 12.5px; color: var(--rf-ink-3); }
+.hs-attn-tile .go { color: var(--rf-ink-3); font-weight: 700; }
+.hs-attn-tile.is-hot .go { color: var(--rf-navy); }
 .hs-stat-link { text-decoration: none; color: inherit; transition: transform .2s var(--rf-ease), box-shadow .2s var(--rf-ease); }
 .hs-stat-link:hover { transform: translateY(-2px); box-shadow: var(--rf-shadow-hover); }
-.rf-modal-backdrop.hs-stacked { z-index: 120; }
-.hs-sheet-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 0 !important; }
-.rf-list > li.is-reversed { opacity: .6; }
-.rf-list > li.is-reversed .t strong { text-decoration: line-through; }
-
-/* ------------------------------------------------- investments, cont. --- */
-
-/* The tile's own link, under its shortcuts. */
+.hs-setup-banner { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  padding: 14px 18px; margin-bottom: 18px; border-radius: 14px; background: #fff7e6; border: 1px solid #f1d9a6; color: #5c4209; }
+.hs-setup-banner.rf-hide { display: none; }
+.hs-setup-progress { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.hs-setup-progress strong { font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
+.hs-setup-progress span { color: var(--rf-ink-3); }
+.hs-setup-bar { height: 10px; margin-top: 12px; border-radius: 999px; background: var(--rf-surface-3); overflow: hidden; }
+.hs-setup-bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #0a3360, #1d4f86); transition: width .8s var(--rf-ease); }
+.hs-setup-items { list-style: none; margin: 0; padding: 4px 20px 10px; }
+.hs-setup-items li { display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid var(--rf-line-2); }
+.hs-setup-items li:last-child { border-bottom: 0; }
+.hs-setup-dot { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 14px; }
+.is-done .hs-setup-dot { background: #e1e8f1; color: #0a3360; }
+.is-todo .hs-setup-dot { background: #fde4e1; color: #b42318; }
+.is-blocked .hs-setup-dot, .is-optional .hs-setup-dot { background: var(--rf-surface-3); color: var(--rf-ink-3); }
+.hs-setup-text { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.hs-setup-text > span { color: var(--rf-ink-2); font-size: 14px; }
+.hs-setup-fix { margin-top: 6px; padding: 10px 12px; border-radius: 10px; background: var(--rf-surface-2); border: 1px solid var(--rf-line-2); font-size: 13.5px; }
+.hs-setup-tag { flex: none; font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
+.is-done .hs-setup-tag { background: #e1e8f1; color: #0a3360; }
+.is-todo .hs-setup-tag { background: #fde4e1; color: #b42318; }
+.is-blocked .hs-setup-tag, .is-optional .hs-setup-tag { background: var(--rf-surface-3); color: var(--rf-ink-3); }
+.hs-staff-search { position: relative; width: min(420px, 42vw); }
+.hs-staff-search .rf-input { border-radius: 999px; padding-left: 16px; }
+.hs-search-results {
+  position: absolute; z-index: 60; top: calc(100% + 6px); left: 0; right: 0; max-height: 360px; overflow: auto;
+  background: #fff; border: 1px solid var(--rf-line); border-radius: 14px; box-shadow: var(--rf-shadow-lg); padding: 6px;
+}
+.hs-search-results button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border: 0; background: none; text-align: left; border-radius: 10px; cursor: pointer; font: inherit; color: inherit; }
+.hs-search-results button:hover, .hs-search-results button:focus-visible { background: var(--rf-surface-3); }
+.hs-search-results strong { display: block; font-size: 14px; }
+.hs-search-results small { display: block; font-size: 12px; color: var(--rf-ink-3); }
+.hs-search-results p { margin: 8px 10px; }
+@media (max-width: 900px) {
+  .rf-shell.is-staff .rf-top { flex-wrap: wrap; }
+  .rf-shell.is-staff .rf-top-actions { order: 3; width: 100%; }
+  .hs-staff-search { width: 100%; }
+}
+.hs-dash-hero {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  padding: 24px 26px; border-radius: 22px; color: #fff; position: relative; overflow: hidden;
+  background: radial-gradient(120% 160% at 100% 0%, #1d4f86 0%, #0a3360 45%, #002445 100%);
+  box-shadow: 0 24px 50px -30px rgba(0, 36, 69, .65);
+}
+.hs-dash-hero::after {
+  content: ""; position: absolute; right: -60px; top: -60px; width: 240px; height: 240px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(169, 185, 207, .28), transparent 65%); pointer-events: none;
+}
+.hs-dash-hero-main { display: grid; gap: 4px; position: relative; z-index: 1; flex: 1 1 380px; min-width: 0; }
+.hs-dash-hero .k { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #dde5ef; }
+.hs-dash-hero .v { font-size: clamp(32px, 4vw, 44px); font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.hs-dash-hero .d { display: flex; align-items: center; gap: 6px 18px; flex-wrap: wrap; font-size: 14px; color: #dde5ef; }
+.hs-dash-hero .d b { color: #fff; font-weight: 700; font-variant-numeric: tabular-nums; }
+.hs-hero-inv { display: inline-flex; align-items: center; gap: 6px 10px; flex-wrap: wrap; }
+.hs-hero-assets { display: inline-flex; flex-wrap: wrap; gap: 6px; text-decoration: none; border-radius: 999px; }
+.hs-hero-assets[hidden] { display: none; }
+.hs-hero-assets:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.hs-hero-asset {
+  display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 3px; border-radius: 999px;
+  background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .26);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22);
+  color: #fff; font-size: 12.5px; font-weight: 600; line-height: 1; white-space: nowrap;
+  transition: background .2s, transform .2s var(--rf-ease);
+}
+.hs-hero-asset b { font-weight: 800; font-variant-numeric: tabular-nums; }
+.hs-hero-asset .hs-logo { box-shadow: 0 0 0 1.5px rgba(255, 255, 255, .55); }
+.hs-hero-asset.more { padding: 6px 11px; }
+.hs-hero-assets:hover .hs-hero-asset { background: rgba(255, 255, 255, .22); }
+@media (prefers-reduced-motion: no-preference) {
+  .hs-hero-assets:hover .hs-hero-asset { transform: translateY(-1px); }
+}
+.hs-qa { display: flex; gap: 10px; flex-wrap: wrap; position: relative; z-index: 1; flex: 0 0 auto; }
+.hs-qa a {
+  display: flex; flex-direction: column; align-items: center; gap: 7px; width: 78px; text-decoration: none;
+  color: #fff; font-size: 12.5px; font-weight: 700; text-align: center;
+}
+.hs-qa i {
+  display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%;
+  background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .28);
+  transition: transform .2s var(--rf-ease), background .2s;
+}
+.hs-qa a:hover i { transform: translateY(-3px); background: rgba(255, 255, 255, .24); }
+.hs-qa a:focus-visible { outline: none; }
+.hs-qa a:focus-visible i { outline: 2px solid #fff; outline-offset: 3px; }
+.hs-qa a.is-primary i { background: #fff; color: #002445; border-color: #fff; }
 .hs-acct-link { position: absolute; inset: 0; border-radius: inherit; z-index: 1; }
 .hs-acct-link:focus-visible { outline: 2px solid var(--rf-navy); outline-offset: 2px; }
+.hs-acct-type { font-size: 11.5px; font-weight: 700; color: var(--rf-ink-3); background: var(--rf-surface-3); padding: 3px 9px; border-radius: 999px; }
 .hs-acct-actions { position: relative; z-index: 2; display: flex; gap: 8px; margin-top: 14px; }
 .hs-acct-actions a {
   flex: 1; text-align: center; padding: 8px 0; border-radius: 999px; font-size: 13px; font-weight: 700; text-decoration: none;
@@ -1561,8 +2039,35 @@ html:not(.rf-invest-on) .rf-invest-only { display: none !important; }
 .hs-acct-actions a:hover { border-color: #a9b9cf; }
 .hs-acct-actions a.is-primary { background: #e9eef5; border-color: #e9eef5; color: #002445; }
 .hs-acct-actions a.is-primary:hover { background: #d9e2ed; }
-
-/* One round mark per asset: the asset's own colours, or a supplied logo file. */
+.hs-dash-holdings { list-style: none; margin: 12px 0 0; padding: 0; }
+.hs-dash-holdings li { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; border-top: 1px solid var(--rf-line-2); }
+.hs-dash-holdings b { display: block; font-size: 13.5px; }
+.hs-dash-holdings em { display: block; font-style: normal; font-size: 12px; color: var(--rf-ink-3); }
+.hs-dash-holdings .v { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.hs-dash-holdings .v em.up { color: #1b7a53; }
+.hs-dash-holdings .v em.down { color: #b42318; }
+@media (max-width: 720px) {
+  .hs-dash-hero { padding: 20px; border-radius: 18px; }
+  .hs-qa { width: 100%; justify-content: space-between; gap: 4px; }
+  .hs-qa a { width: auto; flex: 1; font-size: 11.5px; }
+  .hs-qa i { width: 46px; height: 46px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hs-qa a:hover i, .rf-acct:hover { transform: none; }
+}
+.hs-dash-hero .hs-qa a, .hs-dash-hero .hs-qa a:visited, .hs-dash-hero .hs-qa a:hover { color: #fff; }
+.hs-dash-hero .hs-qa a i { color: #fff; }
+.hs-dash-hero .hs-qa a.is-primary i { color: #002445; }
+.hs-member-find { display: flex; gap: 8px; }
+.hs-member-find .rf-input { flex: 1; }
+.hs-member-card { display: flex; align-items: center; gap: 12px; margin-top: 10px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--rf-line); background: var(--rf-surface-2); font-size: 14px; color: var(--rf-ink-2); }
+.hs-member-card.is-found { border-color: #c3cfdf; background: #f2f5f9; color: var(--rf-ink); }
+.hs-member-card.is-error { border-color: #f3c7c1; background: #fdf3f1; color: #9b2c22; }
+.hs-member-card strong { display: block; }
+.hs-member-card small { display: block; color: var(--rf-ink-3); }
+.hs-member-ok { margin-left: auto; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: #1b7a53; color: #fff; font-weight: 800; }
+.rf-modal-backdrop.hs-stacked { z-index: 120; }
+.hs-sheet-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 0 !important; }
 .hs-logo {
   flex: none; display: inline-grid; place-items: center; width: var(--s, 32px); height: var(--s, 32px);
   border-radius: 50%; font-weight: 800; letter-spacing: -.02em; line-height: 1; overflow: hidden;
@@ -1570,128 +2075,326 @@ html:not(.rf-invest-on) .rf-invest-only { display: none !important; }
   font-family: var(--rf-sans);
 }
 img.hs-logo { object-fit: contain; background: #fff; padding: 2px; }
+.hs-tick .hs-logo { margin-right: 2px; }
 .hs-cell-asset { display: flex; align-items: center; gap: 10px; }
-
-/* The dashboard's investments card. */
-.hs-dash-invest-head h3 { display: flex; align-items: center; gap: 8px; }
-.hs-dash-invest [data-dash-invest] > strong,
-.hs-dash-invest > .rf-card-body > strong { display: block; font-family: var(--rf-display); font-size: 26px; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
-.hs-dash-invest > .rf-card-body > small { display: block; margin-top: 4px; font-size: 12px; color: var(--rf-ink-3); }
+.hs-sheet-asset .hs-logo { margin-right: 2px; }
+.hs-dash-invest { border: 1px solid #c3cfdf; box-shadow: 0 18px 40px -26px rgba(0, 36, 69, .55); }
+.hs-dash-invest-head { background: linear-gradient(135deg, #e9eef5 0%, #f4f6f9 100%); border-bottom-color: #d5deea; }
+.hs-dash-invest-head h3 { display: flex; align-items: center; gap: 8px; color: #002445; }
+.hs-open-invest { box-shadow: 0 8px 18px -8px rgba(0, 36, 69, .7) !important; }
 .hs-alloc { display: flex; height: 10px; border-radius: 999px; overflow: hidden; margin: 14px 0 6px; background: var(--rf-surface-3); gap: 2px; }
 .hs-alloc span { display: block; height: 100%; border-radius: 2px; transition: width .8s var(--rf-ease); }
-.hs-dash-holdings { list-style: none; margin: 12px 0 0; padding: 0; }
-.hs-dash-holdings li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid var(--rf-line-2); }
-.hs-dash-holdings b { display: block; font-size: 13.5px; }
-.hs-dash-holdings em { display: block; font-style: normal; font-size: 12px; color: var(--rf-ink-3); }
+.hs-dash-holdings li { display: flex; align-items: center; gap: 12px; }
 .hs-dash-holdings .n { flex: 1; min-width: 0; }
 .hs-dash-holdings .n em { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.hs-dash-holdings .v { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.hs-dash-holdings .v em.up { color: var(--rf-credit); }
-.hs-dash-holdings .v em.down { color: var(--rf-debit); }
 .hs-dash-holdings .v em.day { font-size: 11.5px; }
+.rf-icon-btn, .hs-chips button, .hs-acct-actions a, .hs-dash-invest .hs-chips a {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .75), rgba(255, 255, 255, .3));
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), 0 6px 14px -10px rgba(12, 29, 74, .4);
+}
+.hs-chips button.is-active { background-image: linear-gradient(180deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0)); }
+.hs-acct-actions a.is-primary, .hs-dash-invest .hs-chips a { background-color: rgba(233, 238, 245, .85); }
+.hs-asset-foot { gap: 6px; flex-wrap: wrap; }
+.hs-asset-foot .held { white-space: nowrap; }
+@keyframes hs-pop { from { opacity: 0; transform: scale(.85) translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes hs-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes hs-pulse { 0% { box-shadow: 0 0 0 0 rgba(18, 163, 111, .55); } 80%, 100% { box-shadow: 0 0 0 8px rgba(18, 163, 111, 0); } }
+@keyframes rf-reveal { to { visibility: visible; } }
+@keyframes rf-reveal-hide { to { visibility: hidden; opacity: 0; } }
+@keyframes rf-spin { to { transform: rotate(360deg); } }
+
+
 
 /* ==========================================================================
-   Glass and motion.
+   Online banking and the staff console: white and blue.
 
-   Every button already carries the sheen and rim from its own rule. What is
-   here makes the lighter controls see-through as well (they let the card or
-   photograph behind them show, frosted), adds the one light sweep a button
-   gives under the cursor, and the small entrances. Nothing here changes a
-   colour a state depends on, and all of the movement stops under
-   prefers-reduced-motion.
+   The signed-in screens take a lighter, rounder look than the public site: a
+   white sidebar with soft blue highlights, rounded cards, pill buttons, a
+   blue banner on the dashboard, and one bold sans (Plus Jakarta Sans) for
+   everything. Tokens are redefined on .rf-app, so every component the
+   screens already use turns over; nothing here changes what they do.
    ========================================================================== */
 
-/* The ghost button, the chips, the account shortcuts and the round icon
-   buttons become frosted panes rather than white blocks. Solid where the
-   browser cannot blur, so the label never sits on an unreadable mix. */
-@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .rf-btn.ghost {
-    --btn-face: color-mix(in srgb, var(--rf-btn-ghost-face) 70%, transparent);
-    -webkit-backdrop-filter: var(--rf-btn-frost);
-    backdrop-filter: var(--rf-btn-frost);
-  }
-  .hs-chips button, .hs-acct-actions a, .rf-icon-btn, .rf-segment button.is-active {
-    background-color: color-mix(in srgb, var(--rf-surface) 68%, transparent);
-    -webkit-backdrop-filter: var(--rf-btn-frost);
-    backdrop-filter: var(--rf-btn-frost);
-  }
-  .hs-acct-actions a.is-primary { background-color: color-mix(in srgb, #e9eef5 78%, transparent); }
-}
-.hs-chips button, .hs-acct-actions a, .rf-icon-btn, .rf-segment button.is-active {
-  background-image: var(--rf-btn-sheen);
-  box-shadow: var(--rf-btn-rim), 0 6px 14px -10px rgba(12, 29, 74, .4);
-  transition: transform var(--rf-tilt), box-shadow var(--rf-tilt), background-color var(--rf-tilt), border-color var(--rf-tilt), color var(--rf-tilt);
-}
-.hs-chips button.is-active { background-color: var(--rf-navy); background-image: var(--rf-btn-sheen); }
-.hs-chips button:active, .hs-acct-actions a:active, .rf-icon-btn:active { transform: scale(.96); }
-
-/* The glint: one pass of light across the pane as the cursor arrives. It sits
-   above the label, but it is a faint white wash and takes no clicks. */
-.rf-btn:not(.link) { overflow: hidden; isolation: isolate; }
-.rf-btn:not(.link)::after {
-  content: ''; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none;
-  background: linear-gradient(105deg, transparent 22%, var(--rf-btn-glint) 48%, transparent 74%);
-  transform: translateX(-140%); opacity: 0;
-}
-
-/* A busy button keeps its place and shimmers rather than only fading. */
-.rf-btn.is-busy {
-  opacity: .78;
-  background-image: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, .28) 50%, transparent 70%), var(--rf-btn-sheen);
-  background-size: 220% 100%, 100% 100%;
+.rf-app {
+  --rf-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --rf-display: var(--rf-sans);
+  --rf-headline: var(--rf-sans);
+  --rf-blue: #1d5bbf;
+  --rf-blue-2: #174a9c;
+  --rf-blue-soft: #e9f1fd;
+  --rf-navy: #0c2550;
+  --rf-ink: #0f1d36;
+  --rf-ink-2: #3a4a63;
+  --rf-ink-3: #6b7a91;
+  --rf-paper: #f4f7fc;
+  --rf-surface: #ffffff;
+  --rf-surface-2: #f8fafd;
+  --rf-surface-3: #eef3fa;
+  --rf-line: #e1e8f2;
+  --rf-line-2: #edf2f8;
+  --rf-radius: 16px;
+  --rf-radius-sm: 10px;
+  --rf-radius-lg: 22px;
+  --rf-shadow: 0 1px 2px rgba(15, 29, 54, .04), 0 12px 28px -18px rgba(15, 29, 54, .22);
+  --rf-shadow-lg: 0 2px 4px rgba(15, 29, 54, .04), 0 30px 60px -30px rgba(15, 29, 54, .35);
+  --rf-shadow-hover: 0 2px 6px rgba(15, 29, 54, .06), 0 24px 46px -24px rgba(29, 91, 191, .35);
+  --rf-btn-face: var(--rf-blue);
+  --rf-btn-edge: var(--rf-blue);
+  --rf-btn-ghost-face: #ffffff;
+  --rf-btn-ghost-edge: var(--rf-line);
+  font-family: var(--rf-sans);
+  background: var(--rf-paper);
+  color: var(--rf-ink);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .rf-btn:not(.link):hover::after { animation: rf-glint .7s var(--rf-ease) 1; }
-  .rf-btn.is-busy { animation: rf-busy 1.1s linear infinite; }
-  .hs-chips button:hover, .hs-acct-actions a:hover, .rf-icon-btn:hover { transform: translateY(-1px); }
+/* ---- sidebar: white, with blue highlights ---- */
+.rf-app .rf-side { background: var(--rf-surface); color: var(--rf-ink-2); border-right: 1px solid var(--rf-line); }
+.rf-app .rf-side-brand { border-bottom: 1px solid var(--rf-line); }
+.rf-app .rf-side-brand strong { color: var(--rf-ink); font-family: var(--rf-sans); font-weight: 700; font-size: 15px; }
+.rf-app .rf-side-brand small { color: var(--rf-ink-3); }
+.rf-app .rf-nav-group h6 { color: var(--rf-ink-3); font-weight: 700; }
+.rf-app .rf-nav a { color: var(--rf-ink-2); border-radius: 12px; font-weight: 500; }
+.rf-app .rf-nav a:hover { background: var(--rf-surface-3); color: var(--rf-ink); }
+.rf-app .rf-nav a.is-active { background: var(--rf-blue-soft); color: var(--rf-blue-2); font-weight: 700; }
+.rf-app .rf-nav a.is-active svg { opacity: 1; }
+.rf-app .rf-nav a .rf-pip { background: var(--rf-blue); color: #fff; }
+.rf-app .rf-side-foot { border-top: 1px solid var(--rf-line); color: var(--rf-ink-3); }
+.rf-app .rf-side-foot .rf-side-user strong { color: var(--rf-ink); }
+.rf-app .rf-avatar { background: linear-gradient(150deg, #3b78d8, #173f86); }
 
-  /* The figures arrive in a short cascade rather than all at once. */
-  .rf-grid > .rf-stat, [data-accounts] > .rf-acct {
-    animation: rf-rise .42s var(--rf-ease) both;
-  }
-  .rf-grid > .rf-stat:nth-child(2), [data-accounts] > .rf-acct:nth-child(2) { animation-delay: .05s; }
-  .rf-grid > .rf-stat:nth-child(3), [data-accounts] > .rf-acct:nth-child(3) { animation-delay: .1s; }
-  .rf-grid > .rf-stat:nth-child(4), [data-accounts] > .rf-acct:nth-child(4) { animation-delay: .15s; }
-  .rf-grid > .rf-stat:nth-child(n+5), [data-accounts] > .rf-acct:nth-child(n+5) { animation-delay: .2s; }
+/* ---- header ---- */
+.rf-app .rf-top { background: rgba(255, 255, 255, .86); border-bottom: 1px solid var(--rf-line); }
+.rf-app .rf-top h1 { font-weight: 700; letter-spacing: -.02em; }
 
-  /* The active tab's rule draws in from the middle. */
-  .rf-tabs button { background-image: linear-gradient(var(--rf-brass), var(--rf-brass)); background-repeat: no-repeat;
-    background-position: 50% 100%; background-size: 0 2px; transition: background-size .28s var(--rf-ease), color .2s; }
-  .rf-tabs button.is-active { background-size: 100% 2px; border-bottom-color: transparent; }
+/* ---- type ---- */
+.rf-app h1, .rf-app h2, .rf-app h3, .rf-app h4 { font-family: var(--rf-sans); letter-spacing: -.015em; }
+.rf-app .rf-card-head h2, .rf-app .rf-card-head h3 { font-weight: 700; }
+.rf-app .rf-stat .k { font-weight: 700; letter-spacing: .12em; }
+.rf-app .rf-stat .v { font-family: var(--rf-sans); font-weight: 800; letter-spacing: -.02em; }
 
-  /* A stacked sheet arrives the way the main ones do. */
-  .rf-modal-backdrop.hs-stacked .rf-modal { animation: hs-pop .26s var(--rf-ease); }
+/* ---- cards ---- */
+.rf-app .rf-card, .rf-app .rf-acct, .rf-app .rf-product {
+  background: var(--rf-surface); border: 1px solid var(--rf-line); border-radius: var(--rf-radius); box-shadow: var(--rf-shadow);
+}
+.rf-app a.rf-card:hover, .rf-app .rf-acct:hover { box-shadow: var(--rf-shadow-hover); border-color: #cfdcef; }
+
+/* ---- buttons: pills ---- */
+.rf-app .rf-btn { border-radius: 999px; font-family: var(--rf-sans); font-weight: 700; letter-spacing: 0; text-transform: none; }
+.rf-app .rf-btn:not(.ghost):not(.glass):not(.link):not(.light) { --btn-face: var(--rf-blue); --btn-edge: var(--rf-blue); }
+.rf-app .rf-btn:not(.ghost):not(.glass):not(.link):not(.light):hover { --btn-face: var(--rf-blue-2); --btn-edge: var(--rf-blue-2); }
+.rf-app .rf-btn.ghost { --btn-face: #ffffff; --btn-edge: var(--rf-line); --btn-ink: var(--rf-ink); }
+.rf-app .rf-btn.ghost:hover { --btn-face: var(--rf-surface-3); --btn-edge: #cfdcef; }
+.rf-app .rf-btn:focus-visible { outline: 2px solid var(--rf-blue); outline-offset: 2px; }
+
+/* ---- form fields ---- */
+.rf-app .rf-input, .rf-app .rf-select, .rf-app .rf-textarea { border-radius: 12px; }
+.rf-app .rf-input:focus, .rf-app .rf-select:focus, .rf-app .rf-textarea:focus { border-color: var(--rf-blue); box-shadow: 0 0 0 3px rgba(29, 91, 191, .14); }
+
+/* ---- tabs, badges, links ---- */
+.rf-app .rf-tabs button.is-active { color: var(--rf-blue-2); border-bottom-color: var(--rf-blue); }
+.rf-app .rf-badge { border-radius: 999px; }
+.rf-app .rf-btn.link { --btn-ink: var(--rf-blue); }
+
+/* ---- the dashboard banner: blue ---- */
+.rf-app .hs-dash-hero {
+  background: radial-gradient(120% 160% at 100% 0%, #3b82f6 0%, #1d5bbf 42%, #0c2f75 100%);
+  box-shadow: 0 24px 50px -30px rgba(29, 91, 191, .7);
+}
+.rf-app .hs-dash-hero::after { background: radial-gradient(circle, rgba(147, 197, 253, .3), transparent 65%); }
+.rf-app .hs-dash-hero .k, .rf-app .hs-dash-hero .d { color: #dbe8fd; }
+.rf-app .hs-qa a i { background: rgba(255, 255, 255, .14); border-color: rgba(255, 255, 255, .28); }
+
+/* ---- phone tab bar ---- */
+.rf-app .rf-tabbar { background: rgba(255, 255, 255, .94); border-top: 1px solid var(--rf-line); }
+.rf-app .rf-tabbar a.is-active { color: var(--rf-blue); }
+
+/* ---- status colours that sit with the blue ---- */
+.rf-app {
+  --rf-credit: #15803d;
+  --rf-credit-soft: #e6f6ec;
+  --rf-debit: #c0362c;
+  --rf-debit-soft: #fdecea;
+  --rf-pending: #a15c07;
+  --rf-pending-soft: #fdf3e1;
+  --rf-info: #1d5bbf;
+  --rf-info-soft: #e9f1fd;
+}
+.rf-app .rf-badge { font-weight: 700; padding: 3px 10px; border: 1px solid transparent; }
+.rf-app .rf-badge.ok, .rf-app .rf-badge.completed, .rf-app .rf-badge.active, .rf-app .rf-badge.posted,
+.rf-app .rf-badge.verified, .rf-app .rf-badge.sent, .rf-app .rf-badge.accepted { border-color: #c9ebd5; }
+.rf-app .rf-badge.pending, .rf-app .rf-badge.pending_review, .rf-app .rf-badge.pending_verification, .rf-app .rf-badge.review,
+.rf-app .rf-badge.scheduled, .rf-app .rf-badge.processing, .rf-app .rf-badge.queued { border-color: #f6dfb4; }
+.rf-app .rf-badge.bad, .rf-app .rf-badge.rejected, .rf-app .rf-badge.failed, .rf-app .rf-badge.suspended, .rf-app .rf-badge.closed,
+.rf-app .rf-badge.blocked, .rf-app .rf-badge.frozen, .rf-app .rf-badge.lost, .rf-app .rf-badge.stolen { border-color: #f6cbc6; }
+.rf-app .rf-badge.info, .rf-app .rf-badge.not_configured { border-color: #cfe0fa; }
+/* Tables: a light header band and a soft blue hover. */
+.rf-app .rf-table thead th { background: var(--rf-surface-2); color: var(--rf-ink-3); }
+.rf-app .rf-table tbody tr:hover td { background: #f6f9fe; }
+
+/* ==========================================================================
+   Rockfield: the price ticker on the public site, and the motion layer.
+   ========================================================================== */
+
+/* ---- the live price strip, dark under the navy nav ---- */
+.rf-site .hs-ticker { background: var(--rf-navy-deep); color: #e6ecf5; border-bottom: 1px solid rgba(169, 185, 207, .14); font-family: var(--rf-sans); }
+.rf-site .hs-ticker-live { color: var(--rf-silver); background: linear-gradient(90deg, var(--rf-navy-deep) 80%, rgba(0, 26, 51, 0)); letter-spacing: .24em; font-weight: 500; }
+.rf-site .hs-ticker-live i { background: var(--rf-silver); }
+.rf-site .hs-ticker-cta { color: #fff; background: linear-gradient(270deg, var(--rf-navy-deep) 80%, rgba(0, 26, 51, 0)); font-weight: 500; letter-spacing: .12em; text-transform: uppercase; font-size: 11.5px; }
+.rf-site .hs-tick { border-right-color: rgba(255, 255, 255, .08); }
+.rf-site .hs-tick:hover { background: rgba(255, 255, 255, .06); }
+.rf-site .hs-tick b { font-weight: 500; }
+.rf-site .hs-tick .sym { color: rgba(255, 255, 255, .5); font-weight: 400; letter-spacing: .06em; }
+.rf-site .hs-tick .px { font-weight: 500; }
+.rf-site .hs-tick.up .chg { color: #7fe3b1; }
+.rf-site .hs-tick.down .chg { color: #ff9a90; }
+.rf-site .hs-tick.flat .chg { color: rgba(255, 255, 255, .5); }
+.rf-site .hs-tick.flash-up { background: rgba(127, 227, 177, .16); }
+.rf-site .hs-tick.flash-down { background: rgba(255, 154, 144, .16); }
+.rf-app .hs-ticker-live i { background: var(--rf-blue); }
+
+/* ==========================================================================
+   Motion. Everything here is decoration on top of pages that already work:
+   with JavaScript off or reduced motion asked for, it all stands still and
+   every figure reads its real value.
+   ========================================================================== */
+
+/* A thin bar along the top of the page that fills as you read it. */
+.rf-progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 120; pointer-events: none;
+  background: linear-gradient(90deg, var(--rf-navy-3), var(--rf-silver));
+  transform-origin: left; transform: scaleX(var(--rf-progress, 0));
 }
 
-@keyframes rf-glint {
-  0% { transform: translateX(-140%); opacity: 0; }
-  25% { opacity: 1; }
-  100% { transform: translateX(140%); opacity: 0; }
+/* The nav settles into a slimmer bar once the page moves under it. */
+.rf-site .rf-marketing-nav .inner { transition: padding .45s var(--rf-ease-out); }
+.rf-site .rf-marketing-nav.is-scrolled .inner { padding: 10px 0; }
+.rf-nav-logo { transition: height .45s var(--rf-ease-out); }
+.rf-site .rf-marketing-nav.is-scrolled .rf-nav-logo { height: 36px; }
+
+/* Buttons: a soft band of light crosses the face on hover. */
+.rf-site .rf-btn, .rf-auth .rf-btn { overflow: hidden; }
+.rf-site .rf-btn:not(.link)::after, .rf-auth .rf-btn:not(.link)::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -75%; width: 50%; pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .28), transparent);
+  transform: skewX(-20deg);
 }
-@keyframes rf-busy { from { background-position: 120% 0, 0 0; } to { background-position: -120% 0, 0 0; } }
+.rf-motion .rf-site .rf-btn:not(.link):hover::after, .rf-motion .rf-auth .rf-btn:not(.link):hover::after { animation: rf-shine .9s var(--rf-ease-out); }
+@keyframes rf-shine { to { left: 130%; } }
+
+/* The hero: its four features arrive one after another. */
+.rf-motion .rf-hero-features li { animation: rf-rise 1s var(--rf-ease-out) both; }
+.rf-motion .rf-hero-features li:nth-child(1) { animation-delay: 1.05s; }
+.rf-motion .rf-hero-features li:nth-child(2) { animation-delay: 1.17s; }
+.rf-motion .rf-hero-features li:nth-child(3) { animation-delay: 1.29s; }
+.rf-motion .rf-hero-features li:nth-child(4) { animation-delay: 1.41s; }
+.rf-hero-features .ic { transition: background .4s var(--rf-ease-out), color .4s var(--rf-ease-out), transform .5s var(--rf-ease-out); }
+.rf-hero-features li:hover .ic { background: var(--rf-silver); color: var(--rf-navy); transform: translateY(-3px); }
+
+/* Feature icons fill with emerald under the pointer. */
+.rf-site .rf-feature .ic { transition: background .4s var(--rf-ease-out), color .4s var(--rf-ease-out), border-color .4s var(--rf-ease-out), transform .5s var(--rf-ease-out); }
+.rf-site .rf-feature:hover .ic { background: var(--rf-navy-3); color: #fff; border-color: var(--rf-navy-3); transform: rotate(-8deg) scale(1.06); }
+.rf-site .rf-section.deep .rf-feature:hover .ic { background: var(--rf-silver); color: var(--rf-navy); border-color: var(--rf-silver); }
+
+/* The trust strip: icons rise on a soft ring as the figures count up. */
+.rf-trust .ic { transition: transform .6s var(--rf-ease-out); }
+.rf-trust-row > div:hover .ic { transform: translateY(-3px) scale(1.08); }
+.rf-motion .rf-trust-row > [data-reveal] .ic { opacity: 0; transform: scale(.6); transition: opacity .8s var(--rf-ease-out) .25s, transform .9s var(--rf-ease-out) .25s; }
+.rf-motion .rf-trust-row > [data-reveal].in .ic { opacity: 1; transform: none; }
+
+/* Product cards: the emerald rule draws across the top as each one arrives. */
+.rf-site .rf-product { position: relative; }
+.rf-motion .rf-site .rf-product[data-reveal] { border-top-color: var(--rf-line); }
+.rf-motion .rf-site .rf-product[data-reveal]::before {
+  content: ""; position: absolute; left: -1px; right: -1px; top: -3px; height: 3px; background: var(--rf-navy-3);
+  transform: scaleX(0); transform-origin: left; transition: transform 1.1s var(--rf-ease-out) .35s;
+}
+.rf-motion .rf-site .rf-product[data-reveal].in::before { transform: scaleX(1); }
+
+/* Story photographs ease in closer under the pointer. */
+.rf-site .rf-card > img { transition: transform 1.2s var(--rf-ease-out); }
+.rf-site .rf-card { overflow: hidden; }
+.rf-site .rf-card:hover > img { transform: scale(1.04); }
+
+/* The phone stage leans towards the pointer (motion.js sets the angles). */
+/* --tx and --ty run from -1 to 1 across the stage. */
+.rf-device-stage { perspective: 1200px; }
+.rf-motion .rf-device-stage .rf-phone, .rf-motion .rf-device-stage .rf-plastic-card {
+  transition: transform .9s var(--rf-ease-out);
+}
+.rf-motion .rf-device-stage.is-tilting .rf-phone { transform: rotateY(calc(var(--tx, 0) * 7deg)) rotateX(calc(var(--ty, 0) * -6deg)); }
+.rf-motion .rf-device-stage.is-tilting .rf-plastic-card { transform: rotate(-7deg) translate(calc(var(--tx, 0) * -12px), calc(var(--ty, 0) * -10px)); }
+
+/* Footer links: an underline slides in from the left. */
+.rf-footer .cols a { position: relative; width: max-content; }
+.rf-footer .cols a::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1px; background: var(--rf-silver);
+  transform: scaleX(0); transform-origin: left; transition: transform .45s var(--rf-ease-out);
+}
+.rf-footer .cols a:hover::after { transform: scaleX(1); }
+
+/* The chat button breathes now and then, until it has been noticed. */
+.rf-motion .chat-toggle:not([aria-expanded="true"]) { animation: rf-breathe 4.8s ease-in-out 3s infinite; }
+.chat-toggle:hover { animation: none !important; }
+@keyframes rf-breathe {
+  0%, 70%, 100% { box-shadow: var(--rf-shadow-lg), 0 0 0 0 rgba(169, 185, 207, .55); }
+  85% { box-shadow: var(--rf-shadow-lg), 0 0 0 12px rgba(169, 185, 207, 0); }
+}
+
+/* Sign-in: the panel's words and the form rise in. */
+.rf-motion-auth .rf-auth-aside > * { animation: rf-rise 1.1s var(--rf-ease-out) both; }
+.rf-motion-auth .rf-auth-aside > :nth-child(2) { animation-delay: .15s; }
+.rf-motion-auth .rf-auth-aside > :nth-child(3) { animation-delay: .27s; }
+.rf-motion-auth .rf-auth-aside > :nth-child(4) { animation-delay: .39s; }
+.rf-motion-auth .rf-auth-aside > :nth-child(5) { animation-delay: .51s; }
+.rf-motion-auth .rf-auth-box > * { animation: rf-rise 1s var(--rf-ease-out) both; animation-delay: .2s; }
+.rf-motion-auth .rf-auth-box > :nth-child(2) { animation-delay: .3s; }
+.rf-motion-auth .rf-auth-box > :nth-child(3) { animation-delay: .4s; }
+.rf-motion-auth .rf-auth-box > :nth-child(n+4) { animation-delay: .5s; }
+
+/* Online banking: the page's blocks rise in once, in reading order, the
+   dashboard banner's light drifts slowly, and the sidebar answers the
+   pointer. */
+@keyframes rf-app-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.rf-app-motion:not(.rf-booting) .rf-content > * { animation: rf-app-rise .7s var(--rf-ease-out) both; }
+.rf-app-motion:not(.rf-booting) .rf-content > :nth-child(2) { animation-delay: .06s; }
+.rf-app-motion:not(.rf-booting) .rf-content > :nth-child(3) { animation-delay: .12s; }
+.rf-app-motion:not(.rf-booting) .rf-content > :nth-child(4) { animation-delay: .18s; }
+.rf-app-motion:not(.rf-booting) .rf-content > :nth-child(5) { animation-delay: .24s; }
+.rf-app-motion:not(.rf-booting) .rf-content > :nth-child(n+6) { animation-delay: .3s; }
+.rf-app-motion:not(.rf-booting) .rf-grid > .rf-card, .rf-app-motion:not(.rf-booting) .rf-grid > .rf-acct { animation: rf-app-rise .7s var(--rf-ease-out) both; }
+.rf-app-motion:not(.rf-booting) .rf-grid > :nth-child(2) { animation-delay: .07s; }
+.rf-app-motion:not(.rf-booting) .rf-grid > :nth-child(3) { animation-delay: .14s; }
+.rf-app-motion:not(.rf-booting) .rf-grid > :nth-child(4) { animation-delay: .21s; }
+.rf-app .hs-dash-hero { background-size: 160% 160%; }
+.rf-app-motion:not(.rf-booting) .hs-dash-hero { animation: rf-app-rise .7s var(--rf-ease-out) both, rf-glow 14s ease-in-out 1s infinite alternate; }
+@keyframes rf-glow { from { background-position: 100% 0; } to { background-position: 40% 60%; } }
+.rf-app .hs-qa a i { transition: transform .35s var(--rf-ease-out), background .35s var(--rf-ease-out); }
+.rf-app .hs-qa a:hover i { transform: translateY(-3px) scale(1.06); background: rgba(255, 255, 255, .26); }
+.rf-app .rf-nav a { transition: background .2s ease, color .2s ease, padding-left .3s var(--rf-ease-out); }
+.rf-app .rf-nav a:hover { padding-left: 15px; }
+.rf-app .rf-nav a.is-active { box-shadow: inset 3px 0 0 var(--rf-blue); }
 
 @media (prefers-reduced-motion: reduce) {
-  .rf-btn:not(.link)::after { display: none; }
-  .hs-chips button, .hs-acct-actions a, .rf-icon-btn { transform: none !important; }
+  .rf-progress { display: none; }
+  .rf-site .rf-btn::after, .rf-auth .rf-btn::after { display: none; }
+  .rf-hero-features li, .rf-auth-aside > *, .rf-auth-box > *, .chat-toggle,
+  .rf-content > *, .rf-grid > .rf-card, .rf-grid > .rf-acct, .hs-dash-hero { animation: none !important; }
+  .rf-site .rf-feature:hover .ic, .rf-trust-row > div:hover .ic, .rf-site .rf-card:hover > img,
+  .rf-hero-features li:hover .ic, .rf-app .hs-qa a:hover i { transform: none; }
+  .rf-app .rf-nav a:hover { padding-left: 11px; }
 }
 
-/* The investment pieces in the dark theme. They came across with light-only
-   colours; these are the ones that would otherwise be pale slabs on a dark
-   page, or pale text on a pale slab. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-rf-theme="light"]) .hs-acct-actions a.is-primary { background-color: color-mix(in srgb, var(--rf-navy-3) 80%, transparent); border-color: #3d6494; color: #fff; }
-  :root:not([data-rf-theme="light"]) .hs-acct-actions a.is-primary:hover { background-color: var(--rf-navy-3); }
-  :root:not([data-rf-theme="light"]) .hs-acct-actions a:hover { border-color: #3b4759; }
-  :root:not([data-rf-theme="light"]) .hs-chips button:hover { border-color: #3b4759; }
-  :root:not([data-rf-theme="light"]) .hs-chips button.is-active { background-color: var(--rf-navy-3); border-color: #3d6494; }
-  :root:not([data-rf-theme="light"]) .hs-tick.flash-up { background: #13283f; }
-  :root:not([data-rf-theme="light"]) .hs-tick.flash-down { background: #34191a; }
-  :root:not([data-rf-theme="light"]) .hs-trade-side.buy { background: #13283f; color: #a9c6ea; }
-  :root:not([data-rf-theme="light"]) .hs-trade-side.sell { background: var(--rf-surface-3); }
-  :root:not([data-rf-theme="light"]) .hs-sheet-px.up small { color: #5fcf9c; }
-  :root:not([data-rf-theme="light"]) .hs-sheet-px.down small { color: #f19a8f; }
-  :root:not([data-rf-theme="light"]) .hs-ticker-live, :root:not([data-rf-theme="light"]) .hs-ticker-cta { color: #a9c6ea; }
-  :root:not([data-rf-theme="light"]) .hs-tick.up .chg { color: #5fcf9c; }
-  :root:not([data-rf-theme="light"]) .hs-tick.down .chg { color: #f19a8f; }
-}
+/* Investments are off until someone with the unlock code switches them on at
+   the console. core.js puts rf-invest-on on <html> from the session, so the
+   links, the ticker, the console tab and the staff figures are all hidden by
+   the one class rather than each page checking for itself. Signed-in pages
+   only: the public site has no session, and its ticker stays hidden on its
+   own because the price feed answers 404 while investments are off. */
+html:not(.rf-invest-on) .rf-app a[href^="/invest"],
+html:not(.rf-invest-on) .rf-app .hs-ticker,
+html:not(.rf-invest-on) .rf-app [data-tab="investments"],
+html:not(.rf-invest-on) .rf-app [data-panel="investments"],
+html:not(.rf-invest-on) .rf-app [data-stat-invested],
+html:not(.rf-invest-on) .rf-app .rf-invest-only { display: none !important; }

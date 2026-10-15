@@ -41,13 +41,14 @@ typing.
 | `/accounts` | Every account, with routing and wire details to hand to an employer |
 | `/transactions` | Search and filter by account, category, method, direction, amount and date; CSV export |
 | `/statements` | Twelve monthly statements per account, printable, with opening and closing balances |
-| `/transfers` | Between own accounts, ACH, domestic and international wire, instant send and bill pay; scheduled and recurring; one-time code and transfer PIN; receipts with confirmation, ACH trace and IMAD |
+| `/transfers` | Between own accounts, ACH, domestic and international wire, instant send and bill pay; scheduled and recurring; one-time code and transfer PIN; receipts with confirmation, ACH trace and IMAD; pay another Rockfield customer instantly by email, phone or account number |
 | `/recipients` | Saved beneficiaries with ABA checksum validation and SWIFT for international |
 | `/bills` | Payees, due days and autopay |
 | `/deposit` | Mobile check deposit: photograph both sides, Regulation CC hold applied |
 | `/cards` | Freeze, unfreeze, set daily limits, report lost or stolen with same-day replacement |
 | `/alerts` | Every notification raised, and fine-grained control over which ones send |
 | `/messages` | Secure messages with the bank, inside the session |
+| `/invest` | Convert part or all of a balance into the S&P 500, Nasdaq-100, Apple, Amazon, Microsoft, NVIDIA, Alphabet, Tesla, Bitcoin or gold at live prices, in one tap; sell back to cash any time |
 | `/security` | Password, two-step verification, transfer PIN, security question, signed-in devices |
 | `/activity` | The customer's own audit trail, with device and IP against each entry |
 | `/profile` | Contact details, photo upload, documents on file |
@@ -124,9 +125,6 @@ public/
   assets/bank/              generated placeholder artwork
 
 supabase/migrations/0003_bank.sql    the banking schema
-supabase/migrations/0004_bank_sms.sql       text delivery, beside the email
-supabase/migrations/0005_bank_invest.sql    holdings, trades, cached prices
-supabase/migrations/0006_bank_backposting.sql   a trade booked, re-timed or reversed by staff
 scripts/seed-bank.js                 npm run seed
 test/bank.test.js                    end-to-end API tests
 test/bank-browser.test.js            the same flows through a real browser
@@ -234,10 +232,8 @@ directory to start over.
 
 ### With Supabase
 
-1. Apply `supabase/migrations/0001_init.sql`, `0002_email.sql`,
-   `0003_bank.sql` and `0004_bank_sms.sql` in the SQL editor. Add
-   `0005_bank_invest.sql` and `0006_bank_backposting.sql` if you are going to
-   switch investments on.
+1. Apply `supabase/migrations/0001_init.sql`, `0002_email.sql` and
+   `0003_bank.sql` in the SQL editor.
 2. Set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` (and `SUPABASE_ANON_KEY`
    for the chat widget and the desk).
 3. Start the server. The first request seeds the bank if it is empty.
@@ -288,7 +284,6 @@ public demonstration.
 | `BANK_COOKIE_INSECURE` | `1` when serving over plain HTTP locally |
 | `BANK_SHOW_DEV_CODES` | `1` exposes one-time codes and the demo logins on a deployment |
 | `BANK_INVEST_UNLOCK_CODE` | The code the console asks for before investments can be switched on (`6596`) |
-| `MARKET_DATA_FIXTURE` | `1` serves fixed prices instead of calling a provider. For tests |
 | `SUPABASE_*`, `RESEND_*`, `FORM_*` | As in `.env.example` |
 
 Anything an operator should be able to change without a deploy — limits, fees,
@@ -297,29 +292,82 @@ timeout — lives in the console under Settings instead.
 
 ---
 
-## Images and the mark
+## The brand
 
-Page artwork resolves at build time from `public/assets/bank/`. Drop in
-`rockfield1` … `rockfield6` in any common format and the next build picks them
-up in place of the generated placeholders; the build log says which were found.
-Per-story images are named in `src/data/projects.json`.
+**Rockfield Global Bank.** The site follows the Standard design: navy
+`#002445` and white, Playfair Display for what is said and wide-spaced Jost
+capitals for what labels it, a hairline rule under each heading, nearly square
+corners, and slow, quiet motion. Online banking and the staff console keep
+their lighter, rounder look in white and blue (Plus Jakarta Sans). Tokens live
+in `public/css/bank.css`.
 
-The logo lives once, as geometry, in `src/bank/site/logo.js` — a boulder with a
-banking hall in front of it, stroked in `currentColor` so the same shapes serve
-a navy sidebar and a white nav without a second file. `npm run build:brand`
-writes everything derived from it:
+### The logo
 
-| Output | Built from |
+ROCKFIELD in a roman serif, GLOBAL BANK spaced wide beneath it, and a drawn
+key under both, always on its own navy (or in navy on paper). The monogram is
+the R from the wordmark. Everything is set in `src/bank/site/logo.js` with the
+site's own Playfair Display and Jost, and `npm run build:brand` renders:
+
+| Output | What it is |
 |---|---|
-| `assets/bank/mark-{dark,light}.svg` | the line work alone |
-| `assets/bank/wordmark-{dark,light}.svg` | mark over ROCKFIELD / BANK |
-| `favicon.ico` (16, 32, 48) | a filled reduction — at 16px, the hall alone |
-| `favicon.png`, `apple-touch-icon.png` | the line work on a navy tile |
-| `assets/bank/og-image.png` | the link card, 1200×630 |
+| `assets/bank/logo-light.png` | the lockup in white, for navy grounds (nav, footer, sign-in, closing band) |
+| `assets/bank/logo-dark.png` | the same in navy, for paper |
+| `assets/bank/logomark-{light,dark}.png` | the R alone |
+| `favicon.ico`, `favicon.png`, `icon-512.png`, `apple-touch-icon.png` | a white R on the navy |
+| `assets/bank/og-image.png` | the link card: the lockup on its navy, 1200×630 |
 
-It needs `playwright-core` to rasterise, and it is not part of `npm run build` —
-the outputs are committed, because they change about as often as the bank
-changes its name. Edit the geometry, run it again, and every size follows.
+It needs `playwright-core` to rasterise and is not part of `npm run build`: the
+outputs are committed.
+
+### Motion
+
+`public/js/motion.js` (public pages) and `public/js/bank/app-motion.js`
+(online banking and sign-in) add: a reading bar along the top of the page; a
+nav that slims and takes a shadow once the page scrolls; a hero that drifts
+behind the copy and rises in line by line, its features one after another;
+section content that rises into view, headings drawing their rule as they
+arrive; figures that count up; product cards whose top rule draws across; a
+phone and card that float and lean towards the pointer; a light band across
+buttons on hover; icons that fill under the pointer; footer links that
+underline; a chat button that breathes until noticed; the live price strip
+under the nav, with prices that flash when they move; and, in online banking,
+blocks that rise in once the session is confirmed and a dashboard total that
+counts up. All of it stops for visitors who ask for reduced motion.
+
+### Photographs
+
+The site's photographs are the same files as the Hedgestone build, renamed
+`rockfield*`. The two lobby shots (`rockfield.png`, `rockfieldhero.png`, and
+`rockfield0.png`, which is the same picture) had the old bank's name on the
+wall behind the desk; only that sign has been repainted, with the Rockfield
+key logo. `/digital` now redirects to the home page, which carries that
+section. `public/assets/img/README.md` says which file goes where.
+
+---
+
+## Moving over from the Hedgestone deployment
+
+The backend, the live chat and the email settings are unchanged, so the same
+environment variables work as they are. Things to know:
+
+- **Same database? Same `BANK_ENCRYPTION_KEY`.** SSNs, ID numbers and card
+  numbers are encrypted under it. Point this site at the Hedgestone Supabase
+  project with a different key and those fields stop decrypting.
+- **The old name and address give way by themselves.** A settings row saved
+  under the earlier build holds "Hedgestone Global Bank" and
+  `support@hedgestonesfinance.com`; both are listed in `RETIRED_DEFAULTS`
+  (`src/bank/constants.js`) and read as today's defaults. A name or address an
+  operator actually typed is left alone.
+- **Email.** Addresses default to `@rockfieldglobalfinance.com`. Verify that domain
+  in Resend, then set `FORM_FROM`, `BANK_ALERT_FROM`, `FORM_TO` and
+  `MAILBOX_ADDRESS` to it - or leave them on the domain you already verified,
+  which works just as well.
+- **Logins.** `BANK_ADMIN_EMAIL` / `BANK_ADMIN_PASSWORD` from the environment
+  still win. Without them the built-in administrator is now
+  `admin@rockfieldglobalfinance.com`.
+- **Live chat** keeps working against the same `chat_sessions` /
+  `chat_messages` tables. Browsers start a fresh chat, because the widget's
+  local storage keys carry the new name.
 
 ---
 

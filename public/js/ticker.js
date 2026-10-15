@@ -1,4 +1,4 @@
-/* Rockfield - the live price strip under the nav.
+/* Rockfield Global - the live price strip under the nav.
 
    Reads /api/bank/markets every 30 seconds while the tab is visible, scrolls
    the prices past (or lets them be swiped, for visitors who ask for reduced
@@ -75,12 +75,7 @@
     host.hidden = false;
   }
 
-  // Investments are switched on at the console; until they are, there are no
-  // prices to ask for. core.js marks <html> once the session has said so.
-  var investOn = function () { return document.documentElement.classList.contains('rf-invest-on'); };
-
   function load() {
-    if (!investOn()) return Promise.resolve();
     return fetch('/api/bank/markets', { credentials: 'same-origin', headers: { Accept: 'application/json' } })
       .then(function (res) { return res.ok ? res.json() : null; })
       .then(function (data) { if (data && data.assets) render(data.assets); })
@@ -93,7 +88,6 @@
   }
 
   document.addEventListener('visibilitychange', function () { if (!document.hidden) load(); });
-  // Start once the session is known, so the switch has been read.
-  if (window.RF && window.RF.ready) window.RF.ready(function () { load(); schedule(); });
-  else { load(); schedule(); }
+  load();
+  schedule();
 }());

@@ -89,6 +89,8 @@ app.get('/', sendPage('index.html'));
 // /support off the deployment while they worked perfectly well locally.
 app.get('/personal', sendPage('personal.html'));
 app.get('/business', sendPage('business.html'));
+// Online banking now has its section on the home page; old links land there.
+app.get('/digital', (req, res) => res.redirect(301, '/'));
 // The names these pages had before the site became a bank. Kept so existing
 // links and bookmarks still land.
 app.get('/services', sendPage('personal.html'));

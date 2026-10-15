@@ -42,7 +42,7 @@ function header({ eyebrow, title, lede, image }) {
   <header class="rf-hero compact ${image ? 'has-photo' : 'has-mark'}">
     ${image
       ? `<img class="rf-hero-photo" src="${image}" alt="" aria-hidden="true" />`
-      : `<img class="rf-hero-mark" src="/assets/bank/logomark-light.png" alt="" aria-hidden="true" width="940" height="499" />`}
+      : `<img class="rf-hero-mark" src="/assets/bank/logomark-light.png" alt="" aria-hidden="true" width="66" height="86" />`}
     <div class="wrap">
       <span class="rf-eyebrow">${eyebrow}</span>
       <h1 style="font-size:clamp(32px,4.6vw,52px)">${title}</h1>
@@ -96,23 +96,85 @@ const tick = icon('check', 15);
 const ceo = leadership[0];
 
 const homeContent = `
-  <section class="rf-hero tall has-photo">
+  <section class="rf-hero tall has-photo home">
     <img class="rf-hero-photo" src="${images.hero}" alt="" aria-hidden="true" fetchpriority="high" />
     <div class="wrap">
       <div class="rf-hero-copy">
-        <span class="rf-eyebrow">Established ${BANK.established}</span>
-        <h1>Banking built<br />on bedrock.</h1>
-        <p class="lede">Checking with no monthly fee. Savings at 4.35% APY. And a payments team that reads every outgoing wire before it leaves.</p>
+        <span class="rf-eyebrow">Solid ground for everything you grow</span>
+        <h1>Banking that<br />feels like home.</h1>
+        <span class="rf-rule" aria-hidden="true"></span>
+        <p class="lede">No monthly fee on checking, 4.35% APY on savings, and a real banker on the line whenever anyone in the household needs one &mdash; wherever in the world they happen to be.</p>
         <div class="rf-hero-actions">
-          <a class="rf-btn brass lg" href="/open-account">Open an account</a>
-          <a class="rf-btn glass lg" href="/signin">Sign in to online banking</a>
+          <a class="rf-btn lg light" href="/open-account">Open an account</a>
+          <a class="rf-hero-link" href="/security-center">How we keep you safe</a>
         </div>
+        <ul class="rf-hero-features">
+          <li><span class="ic">${icon('transfer', 20)}</span><strong>Easy payments</strong><span>Send and receive in seconds, at home or abroad.</span></li>
+          <li><span class="ic">${icon('deposit', 20)}</span><strong>Smart savings</strong><span>Round-ups and goal buckets that grow on their own.</span></li>
+          <li><span class="ic">${icon('chart', 20)}</span><strong>Spending insights</strong><span>See where the money goes, by category.</span></li>
+          <li><span class="ic">${icon('shield', 20)}</span><strong>Bank-grade security</strong><span>Two-step sign-in and alerts in seconds.</span></li>
+        </ul>
       </div>
-      <div class="rf-hero-stats rf-glass">
-        <div><div class="k">Savings APY</div><div class="v">4.35%</div></div>
-        <div><div class="k">Monthly fee</div><div class="v">$0.00</div></div>
-        <div><div class="k">Fee-free ATMs</div><div class="v">60,000</div></div>
-        <div><div class="k">Fraud line</div><div class="v">24 / 7</div></div>
+    </div>
+  </section>
+
+  <section class="rf-trust" aria-label="At a glance">
+    <div class="wrap">
+      <span class="rf-trust-title">Trusted by families and businesses since ${BANK.established}</span>
+      <div class="rf-trust-row">
+        <div><span class="ic">${icon('deposit', 26)}</span><div><div class="v">4.35%</div><div class="k">APY on High-Yield Savings</div></div></div>
+        <div><span class="ic">${icon('card', 26)}</span><div><div class="v">$0.00</div><div class="k">Monthly fee on checking</div></div></div>
+        <div><span class="ic">${icon('building', 26)}</span><div><div class="v">60,000</div><div class="k">Fee-free ATMs nationwide</div></div></div>
+        <div><span class="ic">${icon('shield', 26)}</span><div><div class="v">24 / 7</div><div class="k">Fraud line, every day</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rf-section rf-app-show">
+    <div class="wrap rf-grid side" style="gap:56px;align-items:center">
+      <div>
+        <span class="rf-eyebrow">Your bank, in your pocket</span>
+        <h2>More control. More possibilities.</h2>
+        <p class="section-lede">Every account, card and payment in one place. Freeze a card in a tap, move money between the family&rsquo;s accounts instantly, and see every transfer with a reference you can quote.</p>
+        <ul class="rf-checks">
+          <li>${icon('check', 16)}<span>Instant transfers between ${BANK.shortName} accounts</span></li>
+          <li>${icon('check', 16)}<span>Card controls: freeze, limits, travel on or off</span></li>
+          <li>${icon('check', 16)}<span>Alerts within seconds, wherever the money went</span></li>
+        </ul>
+        <p style="margin-top:28px"><a class="rf-btn lg" href="/open-account">Get started</a></p>
+      </div>
+      <div class="rf-device-stage" aria-hidden="true">
+        <div class="rf-phone">
+          <div class="rf-phone-screen">
+            <div class="rf-phone-top">
+              <div class="rf-phone-status"><span>9:41</span><span class="dots"></span></div>
+              <img src="/assets/bank/logo-light.png" alt="" width="754" height="279" class="rf-phone-logo" />
+              <div class="rf-phone-balance">$4,250.00</div>
+              <div class="rf-phone-delta">&uarr; 12% <span>vs. last month</span></div>
+            </div>
+            <div class="rf-phone-body">
+              <div class="rf-phone-actions">
+                <span>${icon('transfer', 16)}<em>Send</em></span>
+                <span>${icon('deposit', 16)}<em>Request</em></span>
+                <span>${icon('plus', 16)}<em>Top up</em></span>
+                <span>${icon('menu', 16)}<em>More</em></span>
+              </div>
+              <div class="rf-phone-head"><strong>Recent activity</strong><span>See all</span></div>
+              <ul class="rf-phone-tx">
+                <li><span class="ic">${icon('card', 14)}</span><span><b>Corner Coffee</b><i>Today</i></span><span class="amt">&minus;$4.50</span></li>
+                <li><span class="ic">${icon('building', 14)}</span><span><b>Salary deposit</b><i>Yesterday</i></span><span class="amt in">+$2,800.00</span></li>
+                <li><span class="ic">${icon('bill', 14)}</span><span><b>Online shopping</b><i>Mon</i></span><span class="amt">&minus;$89.99</span></li>
+                <li><span class="ic">${icon('people', 14)}</span><span><b>Sent to Maya</b><i>Sun</i></span><span class="amt">&minus;$120.00</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="rf-plastic-card">
+          <img src="/assets/bank/logo-light.png" alt="" width="754" height="279" />
+          <span class="chip"></span>
+          <span class="num">&bull;&bull;&bull;&bull; 4821</span>
+          <span class="kind">DEBIT</span>
+        </div>
       </div>
     </div>
   </section>
@@ -129,7 +191,7 @@ const homeContent = `
     </div>
   </section>
 
-  <section class="rf-section">
+  <section class="rf-section deep">
     <div class="wrap">
       <span class="rf-eyebrow">Moving money</span>
       <h2>Every payment leaves a receipt you can quote.</h2>
@@ -189,7 +251,7 @@ const homeContent = `
     </div>
   </section>
 
-  <section class="rf-section alt">
+  <section class="rf-section deep">
     <div class="wrap" style="max-width:820px;text-align:center">
       <blockquote style="font-family:var(--rf-headline);font-weight:500;font-style:italic;font-size:clamp(24px,3vw,36px);line-height:1.32;letter-spacing:0;margin:0 0 18px">
         &ldquo;${ceo.quote}&rdquo;
@@ -238,7 +300,7 @@ const personalContent = `
     </div>
   </section>
 
-  <section class="rf-section alt">
+  <section class="rf-section deep">
     <div class="wrap">
       <span class="rf-eyebrow">What comes with all of it</span>
       <h2>The parts that are not on the rate sheet.</h2>
@@ -267,7 +329,7 @@ const businessContent = `
     image: images.businessHeader,
   })}
 
-  <section class="rf-section">
+  <section class="rf-section deep">
     <div class="wrap">
       <span class="rf-eyebrow">How it works</span>
       <h2>Controls first, then convenience.</h2>
@@ -604,13 +666,13 @@ const legalContent = `
 
 const notFoundContent = `
   <section class="rf-hero has-mark" style="min-height:60vh;display:flex;align-items:center">
-    <img class="rf-hero-mark" src="/assets/bank/logomark-light.png" alt="" aria-hidden="true" width="940" height="499" />
+    <img class="rf-hero-mark" src="/assets/bank/logomark-light.png" alt="" aria-hidden="true" width="66" height="86" />
     <div class="wrap">
       <span class="rf-eyebrow">Error 404</span>
       <h1>Not on the books.</h1>
       <p class="lede">This page has moved or never existed. The links below will get you back.</p>
       <div class="rf-hero-actions">
-        <a class="rf-btn brass" href="/">Back to home</a>
+        <a class="rf-btn" href="/">Back to home</a>
         <a class="rf-btn ghost" href="/signin">Sign in</a>
       </div>
     </div>
@@ -644,6 +706,7 @@ const deskContent = `
         <div class="field"><label for="login-password">Password</label><input type="password" id="login-password" name="password" autocomplete="current-password" required /></div>
         <div class="err" id="login-error" role="alert"></div>
         <button type="submit" class="btn" id="login-btn">Sign in <span class="arw">&rsaquo;</span></button>
+        <a class="btn ghost" href="/signin?next=/admin" style="margin-top:10px;display:flex;justify-content:center;text-decoration:none">Use your banking console login</a>
         <a class="admin-back" href="/">Back to site</a>
       </form>
     </section>
@@ -651,7 +714,7 @@ const deskContent = `
     <div class="admin-shell" id="admin-shell" hidden>
       <header class="admin-bar">
         <a class="admin-brand" href="/">
-          <img src="/assets/bank/logo-light.png" alt="Rockfield Global Bank" width="240" height="143" />
+          <img src="/assets/bank/logo-light.png" alt="Rockfield Global Bank" width="754" height="279" style="width:240px" />
           <span>Client services desk</span>
         </a>
         <div class="admin-bar-end">

@@ -32,10 +32,10 @@ const UA = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Geck
 // Only the weights the stylesheet actually sets. Every extra one is a file
 // somebody downloads to render nothing.
 const FAMILIES = [
-  'Cormorant+Garamond:ital,wght@0,600;1,500',  // headlines, and the pull quote
-  'Libre+Baskerville:wght@400;700',            // sub-headings and figures
-  'Source+Sans+3:wght@400;500;600;700',        // body, labels, buttons, tables
-  'IBM+Plex+Mono:wght@400;500',                // account numbers and amounts
+  'Playfair+Display:ital,wght@0,500;0,600;1,500', // headlines and figures on the public site
+  'Jost:wght@300;400;500;600',                    // body, labels and the wide-spaced capitals
+  'Plus+Jakarta+Sans:wght@400;500;600;700;800',   // online banking and the staff console
+  'IBM+Plex+Mono:wght@400;500',                   // account numbers and amounts
 ];
 
 const KEEP_SUBSETS = new Set(['latin', 'latin-ext']);
@@ -81,6 +81,9 @@ const fileNameFor = (family, weight, style, subset) =>
   ];
   let downloaded = 0;
   let skipped = 0;
+  // A variable font answers for several weights from one file. Fetch it once
+  // and point every weight at it, rather than storing the same bytes twice.
+  const seen = new Map();
 
   for (const [, subset, face] of blocks) {
     if (!KEEP_SUBSETS.has(subset)) { skipped += 1; continue; }
@@ -91,7 +94,8 @@ const fileNameFor = (family, weight, style, subset) =>
     const src = /url\((https:\/\/[^)]+)\)/.exec(face)[1];
     const range = (/unicode-range:\s*([^;]+);/.exec(face) || [, ''])[1].trim();
 
-    const name = fileNameFor(family, weight, style, subset);
+    const name = seen.get(src) || fileNameFor(family, weight, style, subset);
+    seen.set(src, name);
     const dest = path.join(OUT_DIR, name);
     if (!fs.existsSync(dest)) {
       fs.writeFileSync(dest, await get(src));

@@ -1,9 +1,9 @@
 /* =========================================================================
-   Merkel Constructions
-   Light and precise. Off-white ground, ink type, one signal blue, monospace
-   readouts, and site photography carried at full strength: where words have
-   to sit over a picture the ground fades in behind them rather than a dark
-   sheet being laid over the picture.
+   Rockfield Global Bank - the site template's base layer.
+   Now only the client services desk at /admin is built on it (with
+   admin.css on top); the bank's own pages use bank.css. Its tokens follow
+   the bank's palette so the desk reads as the same institution: white
+   ground, navy ink, Playfair Display for headings and Jost for the rest.
    ========================================================================= */
 
 :root {
@@ -11,20 +11,20 @@
      off-whites rather than pure white, so a bright page still has structure. */
   /* One triple, used by every wash over a photograph, so the whole site's
      brightness is a single edit rather than thirty gradients. */
-  --bg-rgb:    246 243 237;
+  --bg-rgb:    244 246 248;
 
   --bg:        rgb(var(--bg-rgb));
-  --bg-2:      #fffaf2;
-  --panel:     #fffdf8;
-  --panel-2:   #f2e8d7;
-  --ink:       #181a1d;
-  --ink-soft:  #3f454d;
-  --muted:     #686b70;
-  --faint:     #96928a;
-  --line:      rgba(24, 26, 29, 0.14);
-  --line-2:    rgba(24, 26, 29, 0.08);
-  --accent:    #e75b25;
-  --accent-2:  #f49a24;
+  --bg-2:      #f9fafb;
+  --panel:     #ffffff;
+  --panel-2:   #eef1f5;
+  --ink:       #0d1b2e;
+  --ink-soft:  #3b4a5e;
+  --muted:     #66768c;
+  --faint:     #98a5b7;
+  --line:      rgba(0, 36, 69, 0.14);
+  --line-2:    rgba(0, 36, 69, 0.08);
+  --accent:    #002445;
+  --accent-2:  #1d4f86;
   --accent-ink:#ffffff;
 
   /* The glass pane. Used by the ghost button and the nav control, so the two
@@ -40,8 +40,8 @@
   --on-image:  #ffffff;
   --shade:     rgba(10, 12, 16, 0.55);
 
-  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: "Jost", system-ui, -apple-system, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 
   --maxw: 1280px;
@@ -1694,11 +1694,11 @@ main { background: #102534 !important; }
 /* Reference-led editorial construction system. Keep images contained and copy on
    surfaces with known contrast instead of placing black text over photography. */
 :root {
-  --editorial-ink: #07111b;
-  --editorial-paper: #f1f3f2;
-  --editorial-muted: #536273;
-  --editorial-orange: #ff5a0a;
-  --editorial-yellow: #ffc400;
+  --editorial-ink: #0d1b2e;
+  --editorial-paper: #f4f6f9;
+  --editorial-muted: #66768c;
+  --editorial-orange: #1d4f86;
+  --editorial-yellow: #a9b9cf;
 }
 body, main { background: var(--editorial-paper) !important; color: var(--editorial-ink); }
 .hero { color: #f7f4ec !important; }

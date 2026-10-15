@@ -430,7 +430,8 @@
     </svg>`;
   }
 
-  const CHART_COLORS = ['#1b3457', '#b08341', '#1b7a53', '#a3352b', '#4a6fa5', '#8a6a1f', '#2f8f8f', '#6b4c9a', '#9aa1ab'];
+  // Led by the bank's blues, then distinct hues that stay apart from them.
+  const CHART_COLORS = ['#1d5bbf', '#0c2550', '#5b9bf0', '#14a38b', '#f0a43a', '#e05d5d', '#8b6fd6', '#2bb3d6', '#a3afc2'];
 
   /* ------------------------------------------------------------ session -- */
 
@@ -473,13 +474,15 @@
   async function hydrateContact() {
     const fields = qsa('[data-site]');
     const rows = qsa('[data-site-row]');
-    if (!fields.length && !rows.length) return;
+    // Signed in, the session has already said what the bank is called.
+    if (!fields.length && !rows.length && state.session && state.session.bankName) return;
     let bank;
     try {
       bank = (await api.get('/config')).bank || {};
     } catch (err) {
       return; // The standing phrases are correct on their own.
     }
+    if (window.HSName && bank.name) window.HSName.apply(bank.name);
     fields.forEach((el) => {
       const value = bank[el.getAttribute('data-site')];
       if (!value) return;
@@ -499,7 +502,8 @@
     }
     state.session = session;
     state.user = session.user || null;
-
+    // The name staff have given the bank, over the one the page was built with.
+    if (window.HSName && session.bankName) window.HSName.apply(session.bankName);
     // Investments are switched on at the console. Off, every Invest link, the
     // Convert buttons and the ticker stay hidden (bank.css keys off this
     // class), and the page itself sends people back to the dashboard.
@@ -528,6 +532,8 @@
         return new Promise(() => {});
       }
       paintUser(session);
+      // Confirmed: lift the loader the head script put up.
+      document.documentElement.classList.remove('rf-booting');
     }
     // Not awaited: nothing on the page is blocked on a telephone number, and a
     // slow /config should not hold up the dashboard behind it.

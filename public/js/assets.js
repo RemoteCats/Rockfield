@@ -1,9 +1,9 @@
-/* Rockfield - asset badges.
+/* Rockfield Global - asset badges.
 
    One small round mark per listed asset, in the asset's own colours, for the
    ticker, the dashboard and the Invest screen. A real logo file dropped into
    public/assets/img/logos/ (SPY.svg, AAPL.png, BTC.webp ...) is picked up by
-   the build and used instead - see window.RF_LOGOS, written by
+   the build and used instead - see window.HS_LOGOS, written by
    scripts/build-pages.js into /js/asset-logos.js. */
 (function () {
   'use strict';
@@ -31,12 +31,12 @@
   function logo(symbol, size, label) {
     var sym = String(symbol || '').toUpperCase();
     var px = size || 32;
-    var file = window.RF_LOGOS && window.RF_LOGOS[sym];
+    var file = window.HS_LOGOS && window.HS_LOGOS[sym];
     var title = label ? ' title="' + esc(label) + '"' : '';
     if (file) {
       return '<img class="hs-logo is-file" src="' + esc(file) + '" alt="" width="' + px + '" height="' + px + '" style="--s:' + px + 'px"' + title + ' />';
     }
-    var b = BRAND[sym] || { bg: '#e6f4ee', fg: '#0a5a44', text: sym.slice(0, 2), color: '#0b6b50' };
+    var b = BRAND[sym] || { bg: '#e9f1fd', fg: '#174a9c', text: sym.slice(0, 2), color: '#1d5bbf' };
     var len = String(b.text).length;
     var fs = Math.round(px * (len >= 3 ? 0.34 : len === 2 ? 0.4 : 0.5));
     return '<span class="hs-logo" aria-hidden="true"' + title + ' style="--s:' + px + 'px;background:' + b.bg + ';color:' + b.fg + ';font-size:' + fs + 'px' + (b.ring ? ';box-shadow:inset 0 0 0 1px ' + b.ring : '') + '">' + esc(b.text) + '</span>';
@@ -45,7 +45,7 @@
   /** The asset's own colour, for allocation bars and legends. */
   function color(symbol) {
     var b = BRAND[String(symbol || '').toUpperCase()];
-    return b ? b.color : '#0b6b50';
+    return b ? b.color : '#1d5bbf';
   }
 
   window.HSAssets = { logo: logo, color: color };

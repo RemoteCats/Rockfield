@@ -10,7 +10,7 @@
  */
 
 const { db } = require('./db');
-const { DEFAULT_SETTINGS } = require('./constants');
+const { DEFAULT_SETTINGS, RETIRED_DEFAULTS } = require('./constants');
 
 const ROW_ID = 'global';
 const TTL_MS = 5000;
@@ -31,6 +31,21 @@ function deepMerge(base, override) {
   return out;
 }
 
+/** True when a stored value is one we used to ship by default. */
+function isRetired(key, value) {
+  const v = String(value == null ? '' : value).trim().toLowerCase();
+  return Boolean(v) && (RETIRED_DEFAULTS[key] || []).some((old) => old.toLowerCase() === v);
+}
+
+/** Today's default in place of any value only inherited from an earlier name. */
+function retire(values) {
+  const out = { ...values };
+  Object.keys(RETIRED_DEFAULTS).forEach((key) => {
+    if (isRetired(key, out[key])) out[key] = DEFAULT_SETTINGS[key];
+  });
+  return out;
+}
+
 async function get() {
   if (cached && Date.now() - cachedAt < TTL_MS) return cached;
   let stored = null;
@@ -44,34 +59,18 @@ async function get() {
   return cached;
 }
 
-/**
- * Names the bank used to ship with. The console's Settings form sends the bank
- * name on every save, so a deployment whose settings were saved before the
- * rename holds the old default as though someone had chosen it, and it would
- * go on outranking the new one. A value that is exactly a retired default is
- * read as the default; a name somebody actually typed is left alone.
- */
-const RETIRED = { bankName: ['Rockfield National Bank'] };
-
-function retire(values) {
-  Object.entries(RETIRED).forEach(([key, olds]) => {
-    if (olds.includes(values[key])) values[key] = DEFAULT_SETTINGS[key];
-  });
-  return values;
-}
-
 async function save(patch) {
   const current = await get();
-  const values = retire(deepMerge(current, patch));
+  const values = deepMerge(current, patch);
   const existing = await db.settings.findById(ROW_ID);
   if (existing) {
     await db.settings.update(ROW_ID, { values, updated_at: new Date().toISOString() });
   } else {
     await db.settings.insert({ id: ROW_ID, values, updated_at: new Date().toISOString() });
   }
-  cached = values;
+  cached = retire(values);
   cachedAt = Date.now();
-  return values;
+  return cached;
 }
 
 function invalidate() {
@@ -95,4 +94,4 @@ function snapshot() {
 /** Whether snapshot() is reporting a real read rather than the defaults. */
 snapshot.warm = () => cached !== null;
 
-module.exports = { get, save, invalidate, deepMerge, snapshot };
+module.exports = { get, save, invalidate, deepMerge, snapshot, isRetired };

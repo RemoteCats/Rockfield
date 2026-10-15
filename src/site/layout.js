@@ -55,7 +55,7 @@ function head({ title, description, noindex = false, styles = [] }) {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>${title}</title>
   <meta name="description" content="${description}" />${noindex ? '\n  <meta name="robots" content="noindex, nofollow" />' : ''}
-  <meta name="theme-color" content="#11213a" />
+  <meta name="theme-color" content="#002445" />
   <link rel="icon" href="/favicon.ico" sizes="32x32" />
   <link rel="icon" href="/favicon.png" type="image/png" sizes="512x512" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -72,7 +72,7 @@ function nav(active = '') {
   return `
   <header class="nav" id="nav">
     <a class="brand" href="/" aria-label="Rockfield Global Bank home">
-      <img class="brand-logo" src="/assets/bank/logo-dark.png" alt="Rockfield Global Bank" width="240" height="143" />
+      <img class="brand-logo" src="/assets/bank/logo-dark.png" alt="Rockfield Global Bank" width="754" height="279" />
     </a>
     <nav class="nav-links" id="navlinks">
       ${link('/personal', 'Personal', 'services')}
@@ -93,7 +93,7 @@ function footer() {
   <footer class="footer">
     <div class="wrap footer-top">
       <div class="footer-brand">
-        <img class="brand-logo footer-logo" src="/assets/bank/logo-light.png" alt="Rockfield Global Bank" width="240" height="143" />
+        <img class="brand-logo footer-logo" src="/assets/bank/logo-light.png" alt="Rockfield Global Bank" width="754" height="279" style="width:240px" />
         <p>Personal and business banking since 1924. Member FDIC.</p>
       </div>
       <div class="col">
@@ -118,7 +118,7 @@ function footer() {
       </div>
     </div>
     <div class="wrap footer-bottom">
-      <span>&copy; ${YEAR} Rockfield Global Bank, N.A. &middot; Member FDIC &middot; Equal Housing Lender &middot; NMLS ID 409127</span>
+      <span>&copy; ${YEAR} Rockfield Global Bank &middot; Member FDIC &middot; Equal Housing Lender &middot; NMLS ID 409127</span>
     </div>
     <div class="wrap footer-bottom" style="opacity:.62;font-size:11.5px;line-height:1.7;display:block;padding-top:0">
       Deposits are insured by the Federal Deposit Insurance Corporation up to $250,000 per depositor, per insured bank, for each account ownership category.
@@ -191,7 +191,7 @@ function page(opts) {
     content,
     footer(),
     chatWidget(),
-    scripts(['/js/main.js', '/js/supabase-lite.js', '/js/chat.js', ...extraScripts]),
+    scripts(['/js/bankname.js', '/js/main.js', '/js/supabase-lite.js', '/js/chat.js', ...extraScripts]),
   ].join('\n');
 }
 

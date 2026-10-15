@@ -35,7 +35,7 @@ const PROVIDER_TIMEOUT_MS = 3000;
 // The ticker answers within this, from the cache if the providers are slow;
 // the refresh carries on and the next request gets its result.
 const LIST_BUDGET_MS = 3500;
-const UA = 'Mozilla/5.0 (compatible; RockfieldNationalBank/1.0)';
+const UA = 'Mozilla/5.0 (compatible; RockfieldGlobalBank/1.0)';
 
 /**
  * What can be held. `decimals` is how finely a holding is divided: shares to

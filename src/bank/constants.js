@@ -15,8 +15,8 @@
 const BANK = {
   name: 'Rockfield Global Bank',
   shortName: 'Rockfield',
-  legalName: 'Rockfield Global Bank, N.A.',
-  tagline: 'Banking built on bedrock.',
+  legalName: 'Rockfield Global Bank',
+  tagline: 'Solid ground for everything you grow.',
   // ABA checksum valid: 3(8+2+4)+7(1+6+1)+(9+4+7) = 42+56+20 = 118... see
   // validateRouting() in ids.js, which is what actually enforces this.
   routingNumber: '819264176',
@@ -27,6 +27,27 @@ const BANK = {
   email: 'support@rockfieldglobalfinance.com',
   securityEmail: 'security@rockfieldglobalfinance.com',
   established: 1924,
+};
+
+/**
+ * Defaults this bank shipped under earlier names, since retired.
+ *
+ * The console saves its whole settings object, so a deployment that ran under
+ * an earlier name still holds that name and that support address in its
+ * settings row - not because anybody chose them, but because they were the
+ * defaults on the day somebody saved a fee. Read back as they are, they would
+ * outrank today's defaults for good and repaint every page with the old name.
+ * settings.get() reads a stored value on this list as inherited and serves
+ * the current default in its place. Compared without regard to case.
+ */
+const RETIRED_DEFAULTS = {
+  bankName: ['Hedgestone Global Bank', 'Rockfield National Bank', 'Rockfeild National Bank'],
+  supportEmail: [
+    'support@hedgestonesfinance.com',
+    'support@rockfieldbank.com',
+    'support@rockfeildnational.com',
+    'support@rockfieldnational.com',
+  ],
 };
 
 /*
@@ -135,6 +156,7 @@ const TRANSACTION_METHODS = {
   adjustment: { label: 'Adjustment', clearing: 0 },
   refund: { label: 'Refund', clearing: 1 },
   investment: { label: 'Investment', clearing: 0 },
+  member: { label: 'Rockfield transfer', clearing: 0 },
 };
 
 /** Spending categories. The dashboard groups the last 30 days by these. */
@@ -194,6 +216,7 @@ const DEFAULT_SETTINGS = {
     achDaily: 2500000,
     wireDaily: 10000000,
     instantDaily: 200000,
+    memberDaily: 1000000,
     billPayDaily: 1000000,
     mobileDepositDaily: 500000,
     atmDaily: 100000,
@@ -297,6 +320,7 @@ module.exports = {
   CATEGORIES,
   US_STATES,
   DEFAULT_SETTINGS,
+  RETIRED_DEFAULTS,
   SECURITY_QUESTIONS,
   ALERT_TYPES,
   REJECTION_REASONS,

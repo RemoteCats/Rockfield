@@ -24,9 +24,10 @@ const authController = require('../controllers/bank/authController');
 const accounts = require('../controllers/bank/accountsController');
 const profile = require('../controllers/bank/profileController');
 const money = require('../controllers/bank/moneyController');
-const invest = require('../controllers/bank/investController');
 const messaging = require('../controllers/bank/messagingController');
 const admin = require('../controllers/bank/adminController');
+const invest = require('../controllers/bank/investController');
+const setupController = require('../controllers/bank/setupController');
 
 const router = express.Router();
 
@@ -93,7 +94,15 @@ const requireInvest = asyncHandler(async (req, res, next) => {
 });
 
 /** Live prices for the ticker under the nav. Public, and cached at the edge. */
-router.get('/markets', requireInvest, invest.quotes);
+// The ticker asks on every page, the public site included, so while
+// investments are off it is told there is nothing to show rather than a 404
+// that every browser would log as an error.
+router.get('/markets', asyncHandler(async (req, res, next) => {
+  const cfg = await settings.get();
+  // Not cached: switching investments on should show prices on the next page.
+  if (!cfg.investEnabled) return res.set('Cache-Control', 'no-store').json({ investEnabled: false, assets: [] });
+  return invest.quotes(req, res, next);
+}));
 
 /* ------------------------------------------------------------------ auth --- */
 
@@ -153,6 +162,9 @@ router.get('/cards', accounts.cards);
 router.post('/cards/:id', accounts.updateCard);
 
 router.get('/transfers/options', money.transferOptions);
+// Finding another customer to pay: a tight bucket, so the lookup cannot be
+// used to walk the customer list.
+router.post('/transfers/member-lookup', limiter.create({ windowMs: 10 * 60_000, max: 40, name: 'bank-member-lookup' }), money.memberLookup);
 router.get('/transfers', money.listTransfers);
 router.post('/transfers', money.createTransfer);
 router.get('/transfers/:id', money.getTransfer);
@@ -194,6 +206,11 @@ const staff = express.Router();
 staff.use(auth.requireAdmin);
 
 staff.get('/overview', admin.overview);
+staff.get('/setup', setupController.setup);
+staff.get('/investments', requireInvest, invest.staffOverview);
+staff.post('/trades', requireInvest, invest.staffBook);
+staff.patch('/trades/:id', requireInvest, invest.staffRetime);
+staff.post('/trades/:id/reverse', requireInvest, invest.staffReverse);
 staff.get('/settings', admin.getSettings);
 staff.put('/settings', admin.updateSettings);
 staff.post('/scheduled/run', admin.runScheduled);
@@ -201,6 +218,7 @@ staff.post('/scheduled/run', admin.runScheduled);
 staff.get('/customers', admin.listCustomers);
 staff.post('/customers', admin.createCustomer);
 staff.get('/customers/:id', admin.customerDetail);
+staff.get('/customers/:id/investments', requireInvest, invest.staffCustomerHoldings);
 staff.patch('/customers/:id', admin.updateCustomer);
 staff.post('/customers/:id/status', admin.setCustomerStatus);
 staff.post('/customers/:id/kyc', admin.setKyc);
@@ -237,12 +255,6 @@ staff.post('/alerts', admin.sendAlert);
 
 staff.get('/messages', admin.listMessages);
 staff.post('/messages/:id/reply', admin.replyToMessage);
-
-staff.get('/investments', requireInvest, invest.staffOverview);
-staff.post('/trades', requireInvest, invest.staffBook);
-staff.patch('/trades/:id', requireInvest, invest.staffRetime);
-staff.post('/trades/:id/reverse', requireInvest, invest.staffReverse);
-staff.get('/customers/:id/investments', requireInvest, invest.staffCustomerHoldings);
 
 staff.get('/disputes', admin.listDisputes);
 staff.post('/disputes/:id/resolve', admin.resolveDispute);

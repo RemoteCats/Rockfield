@@ -10,9 +10,9 @@
 
 (function () {
   const RF = window.RF;
-  const { api, qs, qsa, esc, money, date, datetime, ago, toast, badge, onSubmit } = RF;
   // Whether investments are switched on (set from the session by core.js).
   const investOn = () => document.documentElement.classList.contains('rf-invest-on');
+  const { api, qs, qsa, esc, money, date, datetime, ago, toast, badge, onSubmit } = RF;
 
   const state = { settings: null, meta: null, customers: [], activityOffset: 0 };
   const loaded = new Set();
@@ -30,10 +30,39 @@
 
   /* ---------------------------------------------------------------- tabs -- */
 
+  const TITLES = {
+    overview: ['Today', 'What needs a decision, and how the bank stands.'],
+    queue: ['Transfer queue', 'Outgoing transfers held for review.'],
+    deposits: ['Check deposits', 'Mobile deposits waiting on a decision.'],
+    messages: ['Messages', 'Secure messages from customers.'],
+    disputes: ['Claims', 'Disputed transactions.'],
+    customers: ['Customers', 'Search, open and act on any customer.'],
+    register: ['Register a customer', 'Open a customer and their first accounts.'],
+    cards: ['Cards', 'Every card the bank has issued.'],
+    investments: ['Investments', 'What customers hold, valued at live prices.'],
+    alerts: ['Email alerts', 'Everything the bank has sent, and to whom.'],
+    activity: ['Activity log', 'Every action, by customers and staff.'],
+    settings: ['Settings', 'Limits, fees, contact details and switches.'],
+    setup: ['Setup checklist', 'What the backend needs, checked live.'],
+  };
+
   function showTab(name) {
-    qsa('[data-tab]').forEach((b) => b.classList.toggle('is-active', b.getAttribute('data-tab') === name));
+    qsa('[data-tab]').forEach((b) => {
+      const on = b.getAttribute('data-tab') === name;
+      b.classList.toggle('is-active', on);
+      if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+    });
     qsa('[data-panel]').forEach((p) => { p.hidden = p.getAttribute('data-panel') !== name; });
     history.replaceState(null, '', `#${name}`);
+    const [title, sub] = TITLES[name] || ['Staff console', ''];
+    const h1 = qs('.rf-top h1');
+    if (h1) h1.textContent = title;
+    const subEl = qs('.rf-top-sub');
+    if (subEl) subEl.textContent = sub;
+    // On a phone the menu is a drawer: close it once a section is chosen.
+    const scrim = qs('.rf-scrim');
+    if (scrim) scrim.click();
+    window.scrollTo(0, 0);
     if (!loaded.has(name) && TABS[name]) {
       loaded.add(name);
       Promise.resolve(TABS[name]()).catch((err) => {
@@ -50,25 +79,48 @@
     const s = data.stats;
 
     qs('[data-stats]').innerHTML = [
-      ['Customers', String(s.customers), `${s.newCustomers30d} joined in 30 days`],
-      ['On deposit', money(s.deposits), `${s.accounts} accounts`],
-      ['Waiting for review', String(s.pendingTransfers), money(s.pendingTransferValue)],
-      ['Credit outstanding', money(s.creditOutstanding), 'across card accounts'],
-      ['Identity checks open', String(s.pendingKyc), `${s.suspended} suspended`],
-      ['Check deposits', String(s.pendingDeposits), 'waiting on a decision'],
-      ['Claims open', String(s.openDisputes), `${s.unansweredMessages} messages in`],
-      ['Alerts, 30 days', String(s.alertsSent30d), s.alertsFailed ? `${s.alertsFailed} failed to send` : 'all delivered or queued'],
-    ].map(([k, v, d]) => `<div class="rf-card rf-stat"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div><div class="d">${esc(d)}</div></div>`).join('');
+      ['Customers', String(s.customers), `${esc(String(s.newCustomers30d))} joined in 30 days`],
+      ['On deposit', money(s.deposits), `${esc(String(s.accounts))} accounts`],
+      ['Credit outstanding', money(s.creditOutstanding), `across card accounts &middot; ${s.suspended} suspended`],
+    ].map(([k, v, d]) => `<div class="rf-card rf-stat"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div><div class="d">${d}</div></div>`).join('');
 
-    const pip = qs('[data-queue-pip]');
-    pip.textContent = String(s.pendingTransfers || '');
-    pip.classList.toggle('rf-hide', !s.pendingTransfers);
+    // What needs a person, first and largest. Each tile opens its section.
+    const attention = [
+      ['queue', 'Transfers to review', s.pendingTransfers, s.pendingTransferValue ? `${money(s.pendingTransferValue)} held` : 'nothing held'],
+      ['deposits', 'Check deposits', s.pendingDeposits, 'waiting on a decision'],
+      ['customers?kyc=pending', 'Identity checks', s.pendingKyc, 'customers to verify'],
+      ['messages', 'Unanswered messages', s.unansweredMessages, 'from customers'],
+      ['disputes', 'Open claims', s.openDisputes, 'disputed transactions'],
+    ];
+    qs('[data-attention]').innerHTML = attention.map(([tab, label, n, d]) => `
+      <a class="hs-attn-tile${n ? ' is-hot' : ''}" href="#${tab.split('?')[0]}" data-goto-tab="${tab}">
+        <span class="n">${esc(String(n || 0))}</span>
+        <span class="l"><strong>${esc(label)}</strong><small>${n ? esc(d) : 'All clear'}</small></span>
+        <span class="go" aria-hidden="true">&rarr;</span>
+      </a>`).join('');
 
-    // Invested loads beside the rest rather than holding the tab back.
+    const pips = { queue: s.pendingTransfers, deposits: s.pendingDeposits, messages: s.unansweredMessages, disputes: s.openDisputes };
+    Object.entries(pips).forEach(([key, n]) => {
+      qsa(`[data-staff-pip="${key}"]`).forEach((pip) => {
+        pip.textContent = String(n || '');
+        pip.classList.toggle('rf-hide', !n);
+      });
+    });
+
+    // Invested, and whether setup is finished, load beside the rest.
     if (investOn()) api.get('/admin/investments').then((inv) => {
       const host = qs('[data-stats]');
       if (!host || qs('[data-stat-invested]', host)) return;
       host.insertAdjacentHTML('beforeend', `<a class="rf-card rf-stat hs-stat-link" href="#investments" data-goto-tab="investments" data-stat-invested><div class="k">Invested by customers</div><div class="v">${money(inv.totals.value)}</div><div class="d">${inv.totals.investors} investor${inv.totals.investors === 1 ? '' : 's'} &middot; ${inv.totals.trades24h} trade${inv.totals.trades24h === 1 ? '' : 's'} today</div></a>`);
+    }).catch(() => {});
+    api.get('/admin/setup').then((setupData) => {
+      const left = setupData.counts.todo || 0;
+      qsa('[data-staff-pip="setup"]').forEach((pip) => { pip.textContent = String(left || ''); pip.classList.toggle('rf-hide', !left); });
+      const banner = qs('[data-setup-banner]');
+      if (banner && left) {
+        banner.innerHTML = `<span><strong>${left} setup item${left === 1 ? '' : 's'} left</strong> before this bank is ready for real customers.</span><a class="rf-btn sm" href="#setup" data-goto-tab="setup">Open the checklist</a>`;
+        banner.classList.remove('rf-hide');
+      }
     }).catch(() => {});
 
     qs('[data-queue-preview]').innerHTML = data.queue.length ? data.queue.map((t) => `
@@ -133,6 +185,7 @@
   RF.modal.wire(customerModal);
 
   async function openCustomer(id) {
+    acting.customerId = id;
     RF.modal.open(customerModal);
     qs('[data-modal-body]', customerModal).innerHTML = '<p class="rf-muted">Loading&hellip;</p>';
     const data = await api.get(`/admin/customers/${id}`);
@@ -188,7 +241,6 @@
               ${badge(card.status)}
             </li>`).join('') || '<li class="rf-muted rf-small">No cards.</li>'}
           </ul>
-
           <h4 class="rf-label rf-mt rf-invest-only">Investments</h4>
           <ul class="rf-list rf-invest-only" data-sheet-investments><li class="rf-muted rf-small">Loading&hellip;</li></ul>
         </div>
@@ -200,13 +252,14 @@
           <thead><tr><th>Date</th><th>Description</th><th>Status</th><th class="num">Amount</th><th class="num">Balance</th><th></th></tr></thead>
           <tbody>
             ${data.transactions.slice(0, 14).map((tx) => `<tr>
-              <td class="rf-nowrap rf-small">${date(tx.date)}</td>
+              <td class="rf-nowrap rf-small">${date(tx.date)}<span class="sub">${new Date(tx.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></td>
               <td>${esc(tx.description)}<span class="sub">${esc(tx.accountName)} &middot; ${esc(tx.methodLabel)}</span></td>
               <td>${badge(tx.status)}</td>
               <td class="num rf-amt ${tx.direction}">${RF.signedMoney(tx.amount, tx.direction)}</td>
               <td class="num rf-muted">${tx.balanceAfter == null ? '—' : money(tx.balanceAfter)}</td>
               <td class="rf-right rf-nowrap">
                 ${tx.status === 'pending' ? `<button class="rf-btn ghost sm" data-settle="${esc(tx.id)}" data-settle-action="post">Post</button>` : ''}
+                <button class="rf-btn link sm" data-edit-tx="${esc(tx.id)}">Edit</button>
                 ${tx.status === 'posted' ? `<button class="rf-btn link sm" data-settle="${esc(tx.id)}" data-settle-action="reverse">Reverse</button>` : ''}
               </td>
             </tr>`).join('') || '<tr><td colspan="6" class="rf-muted rf-small">Nothing yet.</td></tr>'}
@@ -256,9 +309,7 @@
     : `<button class="rf-btn sm" data-customer-action="activate" data-id="${esc(c.id)}">Reactivate</button>`}
       </div>`;
 
-
-    acting.customerData = data;
-    acting.paintInvestments = () => (!investOn() ? Promise.resolve(null) : api.get(`/admin/customers/${id}/investments`)).then((inv) => {
+    const paintInvestments = () => (!investOn() ? Promise.resolve(null) : api.get(`/admin/customers/${id}/investments`)).then((inv) => {
       if (!inv) return;
       const list = qs('[data-sheet-investments]', customerModal);
       if (!list) return;
@@ -277,7 +328,9 @@
       const list = qs('[data-sheet-investments]', customerModal);
       if (list) list.innerHTML = '<li class="rf-muted rf-small">Could not load investments.</li>';
     });
-    acting.paintInvestments();
+    paintInvestments();
+    acting.paintInvestments = paintInvestments;
+    acting.customerData = data;
 
     wireCustomerSheet(c, data);
   }
@@ -409,6 +462,186 @@
     });
   }
 
+  /* --------------------------------------------- back-posting and edits -- */
+
+  /** A one-off modal on top of the customer sheet. */
+  function staffSheet(title, body, submitLabel) {
+    const el = document.createElement('div');
+    el.className = 'rf-modal-backdrop hs-stacked';
+    el.innerHTML = `<div class="rf-modal">
+      <div class="rf-modal-head"><h3>${esc(title)}</h3><button type="button" data-close-sheet aria-label="Close">&times;</button></div>
+      <form novalidate>
+        <div class="rf-modal-body">${body}<div class="rf-notice bad rf-hide" data-form-error></div></div>
+        <div class="rf-modal-foot"><button class="rf-btn ghost" type="button" data-close-sheet>Cancel</button><button class="rf-btn" type="submit" data-submit>${esc(submitLabel)}</button></div>
+      </form>
+    </div>`;
+    document.body.appendChild(el);
+    // The date scrollers are filled in the browser, so they are wired once
+    // the sheet is in the document.
+    RF.wireDateParts(el);
+    const close = () => el.remove();
+    qsa('[data-close-sheet]', el).forEach((b) => b.addEventListener('click', close));
+    el.addEventListener('click', (e) => { if (e.target === el) close(); });
+    return { el, form: qs('form', el), close };
+  }
+
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const pad2 = (n) => String(n).padStart(2, '0');
+  const localDate = (iso) => { const d = new Date(iso); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
+  const localTime = (iso) => { const d = new Date(iso); return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`; };
+
+  /**
+   * When something happened: the same month / day / year scrollers the rest of
+   * the console uses rather than a calendar, plus a time. Written here rather
+   * than at build time because these sheets are built in the browser, and
+   * wired by staffSheet() once they are in the document.
+   */
+  function whenFields(iso, hint) {
+    const id = `sh-when-${Math.random().toString(36).slice(2, 8)}`;
+    return `<div class="rf-row">
+      <div class="rf-field rf-field-date">
+        <span class="rf-label" id="${id}-label">Date</span>
+        <div class="rf-dateparts" role="group" aria-labelledby="${id}-label" data-dateparts data-from="-10" data-to="0" data-order="desc">
+          <select class="rf-select" data-part="month" aria-label="Date: month"><option value="">Month</option>${MONTHS.map((m, i) => `<option value="${pad2(i + 1)}">${m}</option>`).join('')}</select>
+          <select class="rf-select" data-part="day" aria-label="Date: day"><option value="">Day</option>${Array.from({ length: 31 }, (_, i) => `<option value="${pad2(i + 1)}">${i + 1}</option>`).join('')}</select>
+          <select class="rf-select" data-part="year" aria-label="Date: year"><option value="">Year</option></select>
+          <input type="hidden" id="${id}" name="date" data-part="value" value="${iso ? localDate(iso) : ''}" />
+        </div>
+      </div>
+      <div class="rf-field"><label for="${id}-time">Time</label><input class="rf-input" id="${id}-time" type="time" name="time" value="${iso ? localTime(iso) : ''}" step="60" /></div>
+    </div>${hint ? `<p class="rf-small rf-muted" style="margin-top:-6px">${hint}</p>` : ''}`;
+  }
+
+  document.addEventListener('click', async (event) => {
+    /* Edit an entry: when, how much, what it says. */
+    const editBtn = event.target.closest('[data-edit-tx]');
+    if (editBtn) {
+      event.preventDefault();
+      const data = acting.customerData;
+      const tx = data && data.transactions.find((t) => t.id === editBtn.getAttribute('data-edit-tx'));
+      if (!tx) return;
+      const isTrade = tx.method === 'investment';
+      const { form, close } = staffSheet('Edit entry', `
+        <p class="rf-small rf-muted">${esc(tx.reference || '')} &middot; ${esc(tx.accountName || '')} &middot; ${badge(tx.status)}</p>
+        <div class="rf-field"><label>Description on the statement</label><input class="rf-input" name="description" value="${esc(tx.description)}" maxlength="140" /></div>
+        ${whenFields(tx.date, 'Moving an entry restates the running balances after it. The account balance itself does not change.')}
+        <div class="rf-row">
+          <div class="rf-field"><label>Amount</label><input class="rf-input money" name="amount" value="${(tx.amount / 100).toFixed(2)}" inputmode="decimal" ${tx.status !== 'posted' || isTrade ? 'disabled' : ''} />
+            <div class="hint">${isTrade ? 'A conversion is corrected by reversing it and booking it again.' : tx.status !== 'posted' ? 'Post it first to change the amount.' : 'The balance moves by the difference.'}</div></div>
+          <div class="rf-field"><label>Category</label><input class="rf-input" name="category" value="${esc(tx.category || '')}" /></div>
+        </div>
+        <div class="rf-field"><label>Memo shown to the customer</label><input class="rf-input" name="memo" value="${esc(tx.memo || '')}" /></div>
+        <div class="rf-field"><label>Internal note (why)</label><input class="rf-input" name="note" placeholder="Walk-in at branch 2; slip #4471" /></div>`, 'Save changes');
+      onSubmit(form, async (values) => {
+        const body = { description: values.description, category: values.category, memo: values.memo, note: values.note };
+        const when = whenOf(values.date, values.time);
+        if (when && when !== new Date(tx.date).toISOString() && localDate(when) + localTime(when) !== localDate(tx.date) + localTime(tx.date)) body.date = when;
+        if (values.amount !== undefined && Math.round(Number(String(values.amount).replace(/[^0-9.]/g, '')) * 100) !== tx.amount) body.amount = values.amount;
+        await api.patch(`/admin/transactions/${tx.id}`, body);
+        close();
+        toast('Entry updated.', 'ok');
+        openCustomer(acting.customerId);
+      });
+      return;
+    }
+
+    /* Book a conversion or sale for the customer, at a price and time. */
+    if (event.target.closest('[data-book-trade]')) {
+      event.preventDefault();
+      const data = acting.customerData;
+      const accounts = data.accounts.filter((a) => !a.isCredit && a.status === 'active');
+      if (!accounts.length) { toast('This customer has no active checking or savings account.', 'bad'); return; }
+      let assets = [];
+      try { assets = (await api.get('/markets')).assets; } catch (err) { assets = []; }
+      const { el, form, close } = staffSheet('Book a conversion', `
+        <div class="rf-segment rf-mb" data-side><button type="button" class="is-active" data-side-value="buy">Convert cash to an asset</button><button type="button" data-side-value="sell">Sell an asset to cash</button></div>
+        <input type="hidden" name="side" value="buy" />
+        <div class="rf-row">
+          <div class="rf-field"><label>Account</label><select class="rf-select" name="accountId">${accounts.map((a) => `<option value="${esc(a.id)}">${esc(a.nickname || a.name)} ${esc(a.accountMask)} - ${money(a.availableBalance)}</option>`).join('')}</select></div>
+          <div class="rf-field"><label>Asset</label><select class="rf-select" name="symbol">${assets.map((a) => `<option value="${esc(a.symbol)}" data-price="${a.quote ? a.quote.price : ''}" data-decimals="${a.decimals}">${esc(a.name)} (${esc(a.symbol)})</option>`).join('')}</select></div>
+        </div>
+        <div class="rf-row">
+          <div class="rf-field" data-buy-only><label>Cash amount</label><input class="rf-input money" name="amount" inputmode="decimal" placeholder="0.00" /></div>
+          <div class="rf-field" data-sell-only hidden><label>Units to sell</label><input class="rf-input money" name="units" inputmode="decimal" placeholder="0" /></div>
+          <div class="rf-field"><label>Price per unit</label><input class="rf-input money" name="price" inputmode="decimal" /><div class="hint" data-live-hint></div></div>
+        </div>
+        ${whenFields('', 'Leave blank for now. Set it to the time the customer gave the instruction.')}
+        <div class="rf-field"><label>Note (why it was booked by staff)</label><input class="rf-input" name="note" placeholder="Walk-in at branch 2" /></div>
+        <div class="hs-preview" data-book-preview></div>`, 'Book it');
+      const sideInput = qs('[name="side"]', form);
+      const symbol = qs('[name="symbol"]', form);
+      const price = qs('[name="price"]', form);
+      const fillPrice = () => {
+        const live = symbol.selectedOptions[0] && symbol.selectedOptions[0].getAttribute('data-price');
+        price.value = live || '';
+        qs('[data-live-hint]', form).textContent = live ? `Live price $${Number(live).toFixed(2)}. Change it to the agreed price.` : 'No live price: enter the agreed price.';
+        preview();
+      };
+      const preview = () => {
+        const p = Number(String(price.value).replace(/[^0-9.]/g, ''));
+        const out = qs('[data-book-preview]', form);
+        if (sideInput.value === 'buy') {
+          const amt = Number(String(qs('[name="amount"]', form).value).replace(/[^0-9.]/g, ''));
+          const dp = Number(symbol.selectedOptions[0] && symbol.selectedOptions[0].getAttribute('data-decimals')) || 6;
+          out.innerHTML = p > 0 && amt > 0 ? `<div><span>Units</span><strong>${(Math.floor((amt / p) * 10 ** dp) / 10 ** dp).toLocaleString('en-US', { maximumFractionDigits: dp })} ${esc(symbol.value)}</strong></div>` : '';
+        } else {
+          const u = Number(String(qs('[name="units"]', form).value).replace(/[^0-9.]/g, ''));
+          out.innerHTML = p > 0 && u > 0 ? `<div><span>Proceeds</span><strong>${money(Math.floor(u * p * 100))}</strong></div>` : '';
+        }
+      };
+      qsa('[data-side-value]', el).forEach((b) => b.addEventListener('click', () => {
+        qsa('[data-side-value]', el).forEach((x) => x.classList.toggle('is-active', x === b));
+        sideInput.value = b.getAttribute('data-side-value');
+        qs('[data-buy-only]', form).hidden = sideInput.value !== 'buy';
+        qs('[data-sell-only]', form).hidden = sideInput.value !== 'sell';
+        preview();
+      }));
+      symbol.addEventListener('change', fillPrice);
+      ['amount', 'units', 'price'].forEach((n) => qs(`[name="${n}"]`, form).addEventListener('input', preview));
+      fillPrice();
+      onSubmit(form, async (values) => {
+        const body = { customerId: acting.customerId, side: values.side, accountId: values.accountId, symbol: values.symbol, price: values.price, note: values.note, date: whenOf(values.date, values.time) || undefined };
+        if (values.side === 'sell') body.units = values.units; else body.amount = values.amount;
+        const res = await api.post('/admin/trades', body);
+        close();
+        toast(`${res.trade.side === 'buy' ? 'Booked' : 'Sold'} ${res.trade.units} ${res.trade.symbol} at ${money(res.trade.price)}.`, 'ok');
+        openCustomer(acting.customerId);
+      });
+      return;
+    }
+
+    /* Move a conversion to when it really happened. */
+    const timeBtn = event.target.closest('[data-trade-time]');
+    if (timeBtn) {
+      event.preventDefault();
+      const { form, close } = staffSheet('Change the time of this conversion', `
+        ${whenFields(timeBtn.getAttribute('data-trade-at'), 'Its ledger entry moves with it, and the running balances are restated.')}
+        <div class="rf-field"><label>Reason</label><input class="rf-input" name="note" placeholder="Instruction taken by phone during the outage" /></div>`, 'Save time');
+      onSubmit(form, async (values) => {
+        const when = whenOf(values.date, values.time);
+        if (!when) throw new Error('Enter a date and time.');
+        await api.patch(`/admin/trades/${timeBtn.getAttribute('data-trade-time')}`, { date: when, note: values.note });
+        close();
+        toast('Conversion re-timed.', 'ok');
+        openCustomer(acting.customerId);
+      });
+      return;
+    }
+
+    /* Undo a conversion completely. */
+    const revBtn = event.target.closest('[data-trade-reverse]');
+    if (revBtn) {
+      event.preventDefault();
+      const note = prompt(`Reverse this conversion?\n\n${revBtn.getAttribute('data-trade-label')}\n\nThe units come off the holding and the cash goes back. Why? (the customer sees this)`);
+      if (note == null) return;
+      try {
+        await api.post(`/admin/trades/${revBtn.getAttribute('data-trade-reverse')}/reverse`, { note });
+        toast('Conversion reversed.', 'ok');
+        openCustomer(acting.customerId);
+      } catch (err) { toast(err.message, 'bad'); }
+    }
+  });
+
   /* -------------------------------------------------------- adjust modal -- */
 
   const adjustModal = qs('[data-adjust-modal]');
@@ -423,7 +656,16 @@
     qs('#ad-amount').focus();
   }
 
+  /** A value date and an optional time, read in the operator's own time zone. */
+  function whenOf(dateValue, timeValue) {
+    if (!dateValue) return '';
+    const d = new Date(`${dateValue}T${timeValue || '12:00'}`);
+    return Number.isNaN(d.getTime()) ? '' : d.toISOString();
+  }
+
   onSubmit(qs('#rf-adjust-form'), async (values) => {
+    values.date = whenOf(values.date, values.time);
+    delete values.time;
     const res = await api.post(`/admin/accounts/${acting.accountId}/adjust`, values);
     RF.modal.close(adjustModal);
     toast(`${res.transaction.direction === 'credit' ? 'Credited' : 'Debited'} ${money(res.transaction.amount)}. New balance ${money(res.account.balance)}.`, 'ok');
@@ -929,7 +1171,7 @@
 
     const LIMIT_LABELS = {
       internalDaily: 'Between own accounts', achDaily: 'ACH', wireDaily: 'Wires',
-      instantDaily: 'Instant sends', billPayDaily: 'Bill pay', mobileDepositDaily: 'Mobile deposits',
+      instantDaily: 'Instant sends', memberDaily: 'To other Rockfield customers', billPayDaily: 'Bill pay', mobileDepositDaily: 'Mobile deposits',
       atmDaily: 'ATM', cardDaily: 'Card purchases', singleTransactionMax: 'Any single transfer',
     };
     qs('[data-limits]').innerHTML = Object.entries(s.limits).map(([key, value]) => `
@@ -952,7 +1194,7 @@
 
     qs('[data-mail-configured]').textContent = data.emailConfigured
       ? 'Email is configured: alerts are delivered.'
-      : 'No mail provider configured: alerts are stored in the app but not emailed.';
+      : 'No mail provider configured: alerts show in online banking but are not emailed.';
 
     onSubmit(form, async (values) => {
       const limits = {};
@@ -986,6 +1228,7 @@
         limits,
         fees,
       });
+      if (window.HSName) window.HSName.apply(values.bankName);
       // The switch has to take hold on this page too: the Investments tab,
       // the ticker and every Convert button hang off this one class.
       const nowOn = Boolean(values.investEnabled);
@@ -994,163 +1237,9 @@
       if (codeInput) codeInput.value = '';
       const codeBox = qs('[data-invest-code]', form);
       if (codeBox) codeBox.hidden = nowOn;
-      toast('Settings saved. They apply to the next request.', 'ok');
+      toast('Settings saved. Every page shows them from the next one opened.', 'ok');
     });
   }
-
-  /* ------------------------------------------- booking a conversion by hand -- */
-
-  /** A one-off modal stacked on top of the customer sheet. */
-  function staffSheet(title, body, submitLabel) {
-    const el = document.createElement('div');
-    el.className = 'rf-modal-backdrop hs-stacked';
-    el.innerHTML = `<div class="rf-modal">
-      <div class="rf-modal-head"><h3>${esc(title)}</h3><button type="button" data-close-sheet aria-label="Close">&times;</button></div>
-      <form novalidate>
-        <div class="rf-modal-body">${body}<div class="rf-notice bad rf-hide" data-form-error></div></div>
-        <div class="rf-modal-foot"><button class="rf-btn ghost" type="button" data-close-sheet>Cancel</button><button class="rf-btn" type="submit" data-submit>${esc(submitLabel)}</button></div>
-      </form>
-    </div>`;
-    document.body.appendChild(el);
-    // The three-part date control is filled in the browser, so it has to be
-    // wired after the sheet is in the document rather than at page load.
-    RF.wireDateParts(el);
-    const close = () => el.remove();
-    qsa('[data-close-sheet]', el).forEach((b) => b.addEventListener('click', close));
-    el.addEventListener('click', (e) => { if (e.target === el) close(); });
-    return { el, form: qs('form', el), close };
-  }
-
-  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  const pad = (n) => String(n).padStart(2, '0');
-  const localDate = (iso) => { const d = new Date(iso); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
-  const localTime = (iso) => { const d = new Date(iso); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
-
-  /**
-   * When something happened: the same month / day / year scrollers the rest of
-   * the console uses, plus a time. Written here rather than at build time
-   * because these sheets are built in the browser.
-   */
-  function whenFields(iso, hint) {
-    const id = `sh-when-${Math.random().toString(36).slice(2, 8)}`;
-    return `<div class="rf-row">
-      <div class="rf-field rf-field-date">
-        <span class="rf-label" id="${id}-label">Date</span>
-        <div class="rf-dateparts" role="group" aria-labelledby="${id}-label" data-dateparts data-from="-10" data-to="0" data-order="desc">
-          <select class="rf-select" data-part="month" aria-label="Date: month"><option value="">Month</option>${MONTHS.map((m, i) => `<option value="${pad(i + 1)}">${m}</option>`).join('')}</select>
-          <select class="rf-select" data-part="day" aria-label="Date: day"><option value="">Day</option>${Array.from({ length: 31 }, (_, i) => `<option value="${pad(i + 1)}">${i + 1}</option>`).join('')}</select>
-          <select class="rf-select" data-part="year" aria-label="Date: year"><option value="">Year</option></select>
-          <input type="hidden" id="${id}" name="date" data-part="value" value="${iso ? localDate(iso) : ''}" />
-        </div>
-      </div>
-      <div class="rf-field"><label for="${id}-time">Time</label><input class="rf-input" id="${id}-time" type="time" name="time" value="${iso ? localTime(iso) : ''}" step="60" /></div>
-    </div>${hint ? `<p class="rf-small rf-muted" style="margin-top:-6px">${hint}</p>` : ''}`;
-  }
-
-  function whenOf(dateValue, timeValue) {
-    if (!dateValue) return '';
-    const d = new Date(`${dateValue}T${timeValue || '12:00'}`);
-    return Number.isNaN(d.getTime()) ? '' : d.toISOString();
-  }
-
-  // Delegated, because the holdings list paints after the sheet it sits in.
-  document.addEventListener('click', async (event) => {
-    /* Book a conversion or sale for the customer, at a price and a time. */
-    if (event.target.closest('[data-book-trade]')) {
-      event.preventDefault();
-      const data = acting.customerData;
-      const accounts = (data ? data.accounts : []).filter((a) => !a.isCredit && a.status === 'active');
-      if (!accounts.length) { toast('This customer has no active checking or savings account.', 'bad'); return; }
-      let assets = [];
-      try { assets = (await api.get('/markets')).assets; } catch (err) { assets = []; }
-      const { el, form, close } = staffSheet('Book a conversion', `
-        <div class="rf-segment rf-mb" data-side><button type="button" class="is-active" data-side-value="buy">Convert cash to an asset</button><button type="button" data-side-value="sell">Sell an asset to cash</button></div>
-        <input type="hidden" name="side" value="buy" />
-        <div class="rf-row">
-          <div class="rf-field"><label>Account</label><select class="rf-select" name="accountId">${accounts.map((a) => `<option value="${esc(a.id)}">${esc(a.nickname || a.name)} ${esc(a.accountMask)} - ${money(a.availableBalance)}</option>`).join('')}</select></div>
-          <div class="rf-field"><label>Asset</label><select class="rf-select" name="symbol">${assets.map((a) => `<option value="${esc(a.symbol)}" data-price="${a.quote ? a.quote.price : ''}" data-decimals="${a.decimals}">${esc(a.name)} (${esc(a.symbol)})</option>`).join('')}</select></div>
-        </div>
-        <div class="rf-row">
-          <div class="rf-field" data-buy-only><label>Cash amount</label><input class="rf-input money" name="amount" inputmode="decimal" placeholder="0.00" /></div>
-          <div class="rf-field" data-sell-only hidden><label>Units to sell</label><input class="rf-input money" name="units" inputmode="decimal" placeholder="0" /></div>
-          <div class="rf-field"><label>Price per unit</label><input class="rf-input money" name="price" inputmode="decimal" /><div class="hint" data-live-hint></div></div>
-        </div>
-        ${whenFields('', 'Leave blank for now. Set it to the time the customer gave the instruction.')}
-        <div class="rf-field"><label>Note (why it was booked by staff)</label><input class="rf-input" name="note" placeholder="Walk-in at branch 2" /></div>
-        <div class="hs-preview" data-book-preview></div>`, 'Book it');
-      const sideInput = qs('[name="side"]', form);
-      const symbol = qs('[name="symbol"]', form);
-      const price = qs('[name="price"]', form);
-      const preview = () => {
-        const p = Number(String(price.value).replace(/[^0-9.]/g, ''));
-        const out = qs('[data-book-preview]', form);
-        if (sideInput.value === 'buy') {
-          const amt = Number(String(qs('[name="amount"]', form).value).replace(/[^0-9.]/g, ''));
-          const dp = Number(symbol.selectedOptions[0] && symbol.selectedOptions[0].getAttribute('data-decimals')) || 6;
-          out.innerHTML = p > 0 && amt > 0 ? `<div><span>Units</span><strong>${(Math.floor((amt / p) * 10 ** dp) / 10 ** dp).toLocaleString('en-US', { maximumFractionDigits: dp })} ${esc(symbol.value)}</strong></div>` : '';
-        } else {
-          const u = Number(String(qs('[name="units"]', form).value).replace(/[^0-9.]/g, ''));
-          out.innerHTML = p > 0 && u > 0 ? `<div><span>Proceeds</span><strong>${money(Math.floor(u * p * 100))}</strong></div>` : '';
-        }
-      };
-      const fillPrice = () => {
-        const live = symbol.selectedOptions[0] && symbol.selectedOptions[0].getAttribute('data-price');
-        price.value = live || '';
-        qs('[data-live-hint]', form).textContent = live ? `Live price $${Number(live).toFixed(2)}. Change it to the agreed price.` : 'No live price: enter the agreed price.';
-        preview();
-      };
-      qsa('[data-side-value]', el).forEach((b) => b.addEventListener('click', () => {
-        qsa('[data-side-value]', el).forEach((x) => x.classList.toggle('is-active', x === b));
-        sideInput.value = b.getAttribute('data-side-value');
-        qs('[data-buy-only]', form).hidden = sideInput.value !== 'buy';
-        qs('[data-sell-only]', form).hidden = sideInput.value !== 'sell';
-        preview();
-      }));
-      symbol.addEventListener('change', fillPrice);
-      ['amount', 'units', 'price'].forEach((n) => qs(`[name="${n}"]`, form).addEventListener('input', preview));
-      fillPrice();
-      onSubmit(form, async (values) => {
-        const body = { customerId: acting.customerId, side: values.side, accountId: values.accountId, symbol: values.symbol, price: values.price, note: values.note, date: whenOf(values.date, values.time) || undefined };
-        if (values.side === 'sell') body.units = values.units; else body.amount = values.amount;
-        const res = await api.post('/admin/trades', body);
-        close();
-        toast(`${res.trade.side === 'buy' ? 'Booked' : 'Sold'} ${res.trade.units} ${res.trade.symbol} at ${money(res.trade.price)}.`, 'ok');
-        openCustomer(acting.customerId);
-      });
-      return;
-    }
-
-    /* Move a conversion to when it really happened. */
-    const timeBtn = event.target.closest('[data-trade-time]');
-    if (timeBtn) {
-      event.preventDefault();
-      const { form, close } = staffSheet('Change the time of this conversion', `
-        ${whenFields(timeBtn.getAttribute('data-trade-at'), 'Its ledger entry moves with it, and the running balances are restated.')}
-        <div class="rf-field"><label>Reason</label><input class="rf-input" name="note" placeholder="Instruction taken by phone during the outage" /></div>`, 'Save time');
-      onSubmit(form, async (values) => {
-        const when = whenOf(values.date, values.time);
-        if (!when) throw new Error('Enter a date and time.');
-        await api.patch(`/admin/trades/${timeBtn.getAttribute('data-trade-time')}`, { date: when, note: values.note });
-        close();
-        toast('Conversion re-timed.', 'ok');
-        openCustomer(acting.customerId);
-      });
-      return;
-    }
-
-    /* Undo a conversion completely. */
-    const revBtn = event.target.closest('[data-trade-reverse]');
-    if (revBtn) {
-      event.preventDefault();
-      const note = prompt(`Reverse this conversion?\n\n${revBtn.getAttribute('data-trade-label')}\n\nThe units come off the holding and the cash goes back. Why? (the customer sees this)`);
-      if (note == null) return;
-      try {
-        await api.post(`/admin/trades/${revBtn.getAttribute('data-trade-reverse')}/reverse`, { note });
-        toast('Conversion reversed.', 'ok');
-        openCustomer(acting.customerId);
-      } catch (err) { toast(err.message, 'bad'); }
-    }
-  });
 
   /* --------------------------------------------------------- investments -- */
 
@@ -1186,22 +1275,81 @@
     </li>`).join('') : '<li class="rf-muted rf-small">No conversions yet.</li>';
   }
 
+  /* --------------------------------------------------------------- setup -- */
+
+  async function setup() {
+    const list = qs('[data-setup-list]');
+    const data = await api.get('/admin/setup');
+    const counted = data.items.filter((i) => i.status !== 'optional');
+    const done = counted.filter((i) => i.status === 'done').length;
+    const pct = counted.length ? Math.round((done / counted.length) * 100) : 0;
+    qs('[data-setup-score]').textContent = `${done} of ${counted.length} done`;
+    qs('[data-setup-sub]').textContent = done === counted.length ? 'The backend is fully set up.' : `${counted.length - done} to do before real customers.`;
+    qs('[data-setup-bar]').style.width = `${pct}%`;
+    const label = { done: 'Done', todo: 'To do', blocked: 'Waiting', optional: 'Optional' };
+    const groups = Array.from(new Set(data.items.map((i) => i.group)));
+    list.innerHTML = groups.map((g) => `
+      <section class="rf-card rf-mb">
+        <div class="rf-card-head"><h3>${esc(g)}</h3></div>
+        <ul class="hs-setup-items">
+          ${data.items.filter((i) => i.group === g).map((i) => `
+          <li class="is-${esc(i.status)}">
+            <span class="hs-setup-dot" aria-hidden="true">${i.status === 'done' ? '&#10003;' : i.status === 'optional' ? '&#8226;' : '!'}</span>
+            <span class="hs-setup-text">
+              <strong>${esc(i.title)}</strong>
+              <span>${esc(i.detail)}</span>
+              ${i.status !== 'done' && i.fix ? `<span class="hs-setup-fix"><b>How:</b> ${esc(i.fix)}</span>` : ''}
+            </span>
+            <span class="hs-setup-tag">${label[i.status] || esc(i.status)}</span>
+          </li>`).join('')}
+        </ul>
+      </section>`).join('');
+    qsa('[data-staff-pip="setup"]').forEach((pip) => { const left = data.counts.todo || 0; pip.textContent = String(left || ''); pip.classList.toggle('rf-hide', !left); });
+  }
+
+  /* -------------------------------------------------------------- search -- */
+
+  function wireSearch() {
+    const form = qs('[data-staff-search]');
+    if (!form) return;
+    const input = qs('input', form);
+    const box = qs('[data-search-results]', form);
+    let timer = null;
+    let seq = 0;
+    const close = () => { box.hidden = true; };
+    const run = async () => {
+      const q = input.value.trim();
+      if (q.length < 2) { close(); return; }
+      const mine = ++seq;
+      try {
+        const data = await api.get(`/admin/customers?q=${encodeURIComponent(q)}&limit=8`);
+        if (mine !== seq) return;
+        box.innerHTML = data.customers.length ? data.customers.map((c) => `
+          <button type="button" data-customer="${esc(c.id)}">
+            <span class="rf-avatar sm">${esc(c.initials)}</span>
+            <span><strong>${esc(c.fullName)}</strong><small>${esc(c.email)} &middot; ${esc(c.customerNumber || '')}</small></span>
+          </button>`).join('') : '<p class="rf-muted rf-small">No customer matches that.</p>';
+        box.hidden = false;
+      } catch (err) { close(); }
+    };
+    input.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(run, 220); });
+    input.addEventListener('focus', () => { if (box.innerHTML && input.value.trim().length >= 2) box.hidden = false; });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const first = qs('[data-customer]', box);
+      if (first) first.click();
+    });
+    document.addEventListener('click', (e) => { if (!form.contains(e.target)) close(); });
+    box.addEventListener('click', (e) => { if (e.target.closest('[data-customer]')) { close(); input.value = ''; } });
+  }
+
   /* -------------------------------------------------------------- wiring -- */
 
-  const TABS = { overview, customers, register, queue, deposits, cards, messages, alerts, disputes, activity, settings, investments };
+  const TABS = { overview, customers, register, queue, deposits, cards, messages, alerts, disputes, activity, settings, investments, setup };
 
   // Any [data-customer] in a table or list opens the customer sheet. Elements
   // inside a modal are excluded: a modal's own controls must keep their normal
   // behaviour, and preventDefault() here would cancel a form submission.
-  // A tile or banner that points at another tab opens it rather than only
-  // moving the hash, which on its own would leave the tab unloaded.
-  document.addEventListener('click', (event) => {
-    const link = event.target.closest('[data-goto-tab]');
-    if (!link) return;
-    event.preventDefault();
-    showTab(link.getAttribute('data-goto-tab'));
-  });
-
   document.addEventListener('click', (event) => {
     const button = event.target.closest('[data-customer]');
     if (!button || button.closest('.rf-modal-backdrop')) return;
@@ -1209,10 +1357,30 @@
     openCustomer(button.getAttribute('data-customer')).catch((err) => toast(err.message, 'bad'));
   });
 
+  // Any link or tile that names a section opens it in place.
+  document.addEventListener('click', async (event) => {
+    const link = event.target.closest('[data-tab], [data-goto-tab]');
+    if (!link) return;
+    event.preventDefault();
+    // A tile can carry a filter: "customers?kyc=pending" opens the list already narrowed.
+    const [name, query] = String(link.getAttribute('data-tab') || link.getAttribute('data-goto-tab')).split('?');
+    const form = name === 'customers' && query ? qs('[data-customer-filters]') : null;
+    // Set the filter first, so a first visit loads the narrowed list rather
+    // than racing an unfiltered one; on a later visit, re-run the search.
+    const wasLoaded = loaded.has(name);
+    if (form) new URLSearchParams(query).forEach((value, key) => { if (form.elements[key]) form.elements[key].value = value; });
+    showTab(name);
+    if (form && wasLoaded) form.dispatchEvent(new Event('submit', { cancelable: true }));
+  });
+  window.addEventListener('hashchange', () => {
+    const name = location.hash.slice(1);
+    if (TABS[name]) showTab(name);
+  });
+
   RF.ready(async () => {
-    qsa('[data-tab]').forEach((button) => {
-      button.addEventListener('click', () => showTab(button.getAttribute('data-tab')));
-    });
+    wireSearch();
+    const refresh = qs('[data-setup-refresh]');
+    if (refresh) refresh.addEventListener('click', () => setup().catch((err) => toast(err.message, 'bad')));
     const initial = (location.hash || '#overview').slice(1);
     showTab(TABS[initial] ? initial : 'overview');
   });

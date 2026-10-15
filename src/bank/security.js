@@ -89,7 +89,10 @@ function encryptionKey() {
     warnedAboutKey = true;
     console.warn('[rockfield] BANK_ENCRYPTION_KEY is not set: using a development key. Do not run production this way.');
   }
-  return crypto.createHash('sha256').update('rockfield-development-key').digest();
+  // The string predates the Rockfield name and stays as it is: changing it
+  // would change the key, and anything a development install has already
+  // encrypted under it would stop decrypting.
+  return crypto.createHash('sha256').update('hedgestone-development-key').digest();
 }
 
 /** `v1:<iv>:<tag>:<ciphertext>`, all base64. */

@@ -21,6 +21,9 @@
 const defaults = require('../data/site.json');
 const { getSupabase } = require('./supabase');
 const bankSettings = require('../bank/settings');
+const { BANK, RETIRED_DEFAULTS } = require('../bank/constants');
+
+const BANK_NAME = BANK.name;
 
 const TABLE = 'site_settings';
 const ROW_ID = 'default';
@@ -50,7 +53,7 @@ const str = (value) => (value == null ? '' : String(value).trim());
  * list retires it when it stops being ours.
  */
 const RETIRED = {
-  email: ['support@rockfieldbank.com'],
+  email: RETIRED_DEFAULTS.supportEmail.map((address) => address.toLowerCase()),
 };
 
 /** True when a stored value is one we used to ship rather than one chosen. */
@@ -83,8 +86,11 @@ function fromConsole(cfg) {
 
 async function read() {
   let console_ = {};
+  let name = '';
   try {
-    console_ = fromConsole(await bankSettings.get());
+    const cfg = await bankSettings.get();
+    console_ = fromConsole(cfg);
+    name = str(cfg.bankName);
   } catch (err) {
     // The settings collection is optional; the desk and the defaults stand.
   }
@@ -112,13 +118,18 @@ async function read() {
   // A retired default is dropped before either test: it is neither a choice
   // nor worth preferring over the address we ship today.
   const stored = (key) => (inherited(key, console_[key]) ? '' : console_[key]);
+  // The desk's own row can hold a retired address too, typed in under the
+  // old name; it is no more a choice today than the console's.
+  const atDesk = (key) => (inherited(key, desk[key]) ? '' : desk[key]);
   const configured = (key) => (stored(key) && stored(key) !== str(defaults[key]) ? stored(key) : '');
 
   if (FIELDS.some(configured)) source = 'settings';
 
   const merged = {};
-  FIELDS.forEach((key) => { merged[key] = firstOf(configured(key), desk[key], stored(key), defaults[key]); });
-  return { ...merged, source };
+  FIELDS.forEach((key) => { merged[key] = firstOf(configured(key), atDesk(key), stored(key), defaults[key]); });
+  // The bank's name, as staff set it under Settings. The pages are built with
+  // the default and swap this in (public/js/bankname.js).
+  return { ...merged, name: name || BANK_NAME, source };
 }
 
 module.exports = { read, normalise, defaults, FIELDS, TABLE, ROW_ID };

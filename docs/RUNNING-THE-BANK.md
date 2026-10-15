@@ -117,10 +117,10 @@ answer 404 rather than merely hiding.
 
 To switch them on:
 
-1. Run `supabase/migrations/0005_bank_invest.sql` and
-   `0006_bank_backposting.sql` in the Supabase SQL editor. Without them a
-   conversion fails and **Setup** says which file is missing. (On files rather
-   than Supabase there is nothing to run.)
+1. Make sure `0005_bank_invest.sql` and `0006_bank_backposting.sql` have been
+   run — `supabase/setup.sql` contains both, and is safe to run again. The
+   console's **Setup** tab says if either is missing. (On files rather than
+   Supabase there is nothing to run.)
 2. **Settings, Investments**, tick the switch, and enter the unlock code
    (`6596` unless `BANK_INVEST_UNLOCK_CODE` is set). The code is checked by the
    server and never stored. Switching them *off* needs no code.
