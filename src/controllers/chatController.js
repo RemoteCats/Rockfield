@@ -14,7 +14,9 @@ function autoReply(text) {
   const has = (...words) => words.some((w) => t.includes(w));
 
   if (has('hello', 'hi ', 'hey', 'good morning', 'good afternoon') || t === 'hi') {
-    return "Hi, you're through to Rockfield client services. How can we help? Please never send a password, a card number or a one-time code in chat.";
+    // The widget has already greeted them; saying hello back again reads as a
+    // machine. Tell them a person is coming instead.
+    return 'Thanks for getting in touch. A customer service representative will be with you shortly. While you wait, tell us a little about what you need - and never share a password, a full card number or a one-time code here.';
   }
   if (has('career', 'job', 'hiring', 'vacancy', 'apply', 'position', 'role')) {
     return 'We hire across branch, operations, risk and technology. Open roles are on our Careers page, or tell me which area interests you.';
@@ -35,12 +37,12 @@ function autoReply(text) {
     return 'A customer service representative can go through that with you. Leave your email here and the account it concerns - never the full number - and one will come back to you the same business day.';
   }
   if (has('contact', 'call', 'phone', 'email', 'meet', 'speak', 'branch', 'hours')) {
-    return 'The fastest route is the contact page, where our client services number and hours are listed. Leave your email here and a customer service representative will come back to you the same business day.';
+    return 'You can reach us right here, by email from the contact page, or by secure message inside online banking. A customer service representative will be with you shortly - leave your email in case we need to follow up.';
   }
   if (has('thanks', 'thank you', 'cheers', 'great')) {
     return 'Any time. Anything else I can help with?';
   }
-  return "Thanks for the message. A customer service representative will follow up. If you leave your email and a line about what you need, we'll route it to the right person.";
+  return "Thanks for the message. A customer service representative will be with you shortly. If you leave your email and a line about what you need, we'll route it to the right person.";
 }
 
 /**
