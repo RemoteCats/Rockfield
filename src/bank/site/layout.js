@@ -192,7 +192,7 @@ function head({ title, description, noindex = false, styles = [], bodyClass, the
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>${title}</title>
   <meta name="description" content="${description}" />${noindex ? '\n  <meta name="robots" content="noindex, nofollow" />' : ''}
-  <meta name="theme-color" content="#002445" />
+  <meta name="theme-color" content="#12477f" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="${BANK.name}" />
   <meta property="og:title" content="${title}" />

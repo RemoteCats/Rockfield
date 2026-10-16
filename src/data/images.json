@@ -44,6 +44,7 @@
     "securityHeader": {
       "_where": "/security-center",
       "prefer": [
+        "rockfield-security",
         "rockfield",
         "rf"
       ],

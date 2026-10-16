@@ -181,7 +181,7 @@
         return;
       }
       // The breakdown: how the portfolio is split, then every holding.
-      const L = window.HSAssets || { logo: () => '', color: () => '#1d5bbf' };
+      const L = window.HSAssets || { logo: () => '', color: () => '#2f6fd8' };
       const total = inv.totals.value || 1;
       const rows = inv.holdings.map((h) => ({ ...h, share: h.value == null ? 0 : (h.value / total) * 100 }));
       const pct = (n) => `${n >= 0 ? '+' : ''}${Number(n).toFixed(2)}%`;

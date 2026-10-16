@@ -5,7 +5,7 @@
  *
  * ROCKFIELD in a roman serif, GLOBAL BANK spaced wide beneath it in a light
  * geometric sans, and a drawn key under both: white on the bank's navy
- * (#002445), or navy on paper. The monogram - for the sidebar, the favicon
+ * (#12477f), or navy on paper. The monogram - for the sidebar, the favicon
  * and the app icon - is the R from the wordmark on its own.
  *
  * scripts/build-brand.js renders every logo file from these functions in
@@ -13,8 +13,11 @@
  * changing the logo is an edit here and `npm run build:brand`.
  */
 
-const NAVY = '#002445';
+const NAVY = '#12477f';
 const SILVER = '#a9b9cf';
+/** The key is gold on both grounds: a little deeper on paper, so it holds against white. */
+const GOLD_ON_NAVY = '#d6b25e';
+const GOLD_ON_PAPER = '#b38a35';
 
 /**
  * The key under the wordmark, drawn in fine lines to sit with GLOBAL BANK.
@@ -67,13 +70,14 @@ const keySvg = (c) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 
  * third of the first, tracked out to two thirds of its width, and
  * the key a little under half the width of the wordmark.
  */
-function lockupHtml({ colour = '#ffffff', size = 100 } = {}) {
+function lockupHtml({ colour = '#ffffff', size = 100, keyColour } = {}) {
+  const key = keyColour || (colour.toLowerCase() === '#ffffff' ? GOLD_ON_NAVY : GOLD_ON_PAPER);
   const word = Math.round(size / 0.708);      // Playfair's caps are 0.708 em tall
   const sub = Math.round(size * 0.47);
   return `<div class="lockup" style="display:inline-flex;flex-direction:column;align-items:center;padding:${Math.round(size * 0.05)}px ${Math.round(size * 0.1)}px ${Math.round(size * 0.1)}px;color:${colour}">
   <span data-word style="display:block;font:600 ${word}px/1 'Playfair Display',Georgia,serif;letter-spacing:.115em;margin-right:-.115em;white-space:nowrap">ROCKFIELD</span>
   <span data-sub style="display:block;font:400 ${sub}px/1 'Jost',sans-serif;letter-spacing:.43em;margin:${Math.round(size * 0.34)}px -.43em 0 0;white-space:nowrap">GLOBAL BANK</span>
-  <span data-key style="display:block;margin-top:${Math.round(size * 0.26)}px">${keySvg(colour)}</span>
+  <span data-key style="display:block;margin-top:${Math.round(size * 0.26)}px">${keySvg(key)}</span>
 </div>`;
 }
 
@@ -89,4 +93,4 @@ function iconHtml(size) {
     font:600 ${Math.round(size * 0.72)}px/1 'Playfair Display',Georgia,serif">R</div>`;
 }
 
-module.exports = { NAVY, SILVER, keySvg, lockupHtml, markHtml, iconHtml };
+module.exports = { NAVY, SILVER, GOLD_ON_NAVY, GOLD_ON_PAPER, keySvg, lockupHtml, markHtml, iconHtml };

@@ -21,10 +21,10 @@
   --ink-soft:  #3b4a5e;
   --muted:     #66768c;
   --faint:     #98a5b7;
-  --line:      rgba(0, 36, 69, 0.14);
-  --line-2:    rgba(0, 36, 69, 0.08);
-  --accent:    #002445;
-  --accent-2:  #1d4f86;
+  --line:      rgba(18, 71, 127, 0.14);
+  --line-2:    rgba(18, 71, 127, 0.08);
+  --accent:    #12477f;
+  --accent-2:  #2a66ab;
   --accent-ink:#ffffff;
 
   /* The glass pane. Used by the ghost button and the nav control, so the two
@@ -1697,7 +1697,7 @@ main { background: #102534 !important; }
   --editorial-ink: #0d1b2e;
   --editorial-paper: #f4f6f9;
   --editorial-muted: #66768c;
-  --editorial-orange: #1d4f86;
+  --editorial-orange: #2a66ab;
   --editorial-yellow: #a9b9cf;
 }
 body, main { background: var(--editorial-paper) !important; color: var(--editorial-ink); }

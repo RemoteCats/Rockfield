@@ -75,16 +75,16 @@ function renderEmail({ heading, intro, rows = [], body = '', cta, footNote, bank
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f2ee;padding:28px 12px">
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border:1px solid #e4e0d8;border-radius:14px;overflow:hidden">
-        <tr><td style="background:#002445;padding:22px 26px">
+        <tr><td style="background:#12477f;padding:22px 26px">
           <span style="color:#ffffff;font:600 18px/1.2 'Playfair Display',Georgia,'Times New Roman',serif;letter-spacing:.14em;text-transform:uppercase">${escapeHtml(name)}</span>
           <span style="display:block;color:#a9b9cf;font:500 11px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase">Member FDIC</span>
         </td></tr>
         <tr><td style="padding:26px">
-          <h1 style="margin:0 0 10px;color:#002445;font:500 22px/1.3 'Playfair Display',Georgia,'Times New Roman',serif">${escapeHtml(heading)}</h1>
+          <h1 style="margin:0 0 10px;color:#12477f;font:500 22px/1.3 'Playfair Display',Georgia,'Times New Roman',serif">${escapeHtml(heading)}</h1>
           ${intro ? `<p style="margin:0 0 14px;color:#4a4640;font:400 15px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">${escapeHtml(intro)}</p>` : ''}
           ${rowsHtml}
           ${body ? `<p style="margin:0 0 14px;color:#4a4640;font:400 15px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;white-space:pre-wrap">${escapeHtml(body)}</p>` : ''}
-          ${cta ? `<p style="margin:22px 0 0"><a href="${escapeHtml(cta.href)}" style="display:inline-block;background:#002445;color:#ffffff;text-decoration:none;padding:14px 24px;border-radius:2px;letter-spacing:.14em;text-transform:uppercase;font-size:12.5px;font:600 14px/1 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">${escapeHtml(cta.label)}</a></p>` : ''}
+          ${cta ? `<p style="margin:22px 0 0"><a href="${escapeHtml(cta.href)}" style="display:inline-block;background:#12477f;color:#ffffff;text-decoration:none;padding:14px 24px;border-radius:2px;letter-spacing:.14em;text-transform:uppercase;font-size:12.5px;font:600 14px/1 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">${escapeHtml(cta.label)}</a></p>` : ''}
           ${footNote ? `<p style="margin:22px 0 0;color:#847f76;font:400 12px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">${escapeHtml(footNote)}</p>` : ''}
         </td></tr>
         <tr><td style="background:#faf8f4;border-top:1px solid #e8e5df;padding:18px 26px;color:#847f76;font:400 11px/1.7 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">

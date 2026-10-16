@@ -36,7 +36,7 @@
     if (file) {
       return '<img class="hs-logo is-file" src="' + esc(file) + '" alt="" width="' + px + '" height="' + px + '" style="--s:' + px + 'px"' + title + ' />';
     }
-    var b = BRAND[sym] || { bg: '#e9f1fd', fg: '#174a9c', text: sym.slice(0, 2), color: '#1d5bbf' };
+    var b = BRAND[sym] || { bg: '#e9f1fd', fg: '#255fbd', text: sym.slice(0, 2), color: '#2f6fd8' };
     var len = String(b.text).length;
     var fs = Math.round(px * (len >= 3 ? 0.34 : len === 2 ? 0.4 : 0.5));
     return '<span class="hs-logo" aria-hidden="true"' + title + ' style="--s:' + px + 'px;background:' + b.bg + ';color:' + b.fg + ';font-size:' + fs + 'px' + (b.ring ? ';box-shadow:inset 0 0 0 1px ' + b.ring : '') + '">' + esc(b.text) + '</span>';
@@ -45,7 +45,7 @@
   /** The asset's own colour, for allocation bars and legends. */
   function color(symbol) {
     var b = BRAND[String(symbol || '').toUpperCase()];
-    return b ? b.color : '#1d5bbf';
+    return b ? b.color : '#2f6fd8';
   }
 
   window.HSAssets = { logo: logo, color: color };
