@@ -61,6 +61,7 @@ app.use((req, res, next) => {
 // API namespace (rate limited).
 // Signed provider webhooks: verified by signature, not rate limited.
 app.use('/api/inbound', require('./routes/inbound'));
+app.use('/api/telnyx', require('./routes/telnyxVoice'));
 
 app.use('/api', rateLimiter, apiRoutes);
 
