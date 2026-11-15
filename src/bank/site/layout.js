@@ -546,6 +546,7 @@ function marketingFooter() {
           <a href="/support">Help centre</a>
           <a href="/security-center">Security centre</a>
           <a href="mailto:${BANK.email}">${BANK.email}</a>
+          <a href="tel:+16205824212">+1 (620) 582-4212</a>
         </div>
         <div>
           <h5>Legal</h5>
